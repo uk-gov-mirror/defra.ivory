@@ -1,0 +1,36 @@
+version: '3'
+services:
+  node_front_office:
+    build: "./ivory-front-office"
+    depends_on:
+      - redis
+      - node_api
+    ports:
+      - "3000:3000"
+    env_file:
+      - "./ivory-front-office/.env"
+    environment:
+      PORT: 3000
+      REDIS_PORT: 6379
+      REDIS_HOST: redis
+  node_api:
+    #image: "node:10.16.0-alpine"
+    build: "./ivory-api"
+    depends_on:
+      - postgres
+    ports:
+      - "3010:3010"
+    env_file:
+      - "./ivory-api/.env"
+    environment:
+      POSTGRES_PASSWORD: postgres
+  postgres:
+    image: "postgres:11.4-alpine"
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+  redis:
+    image: "redis:5.0.5-alpine"
+    ports:
+      - "6379:6379"
