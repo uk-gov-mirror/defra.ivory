@@ -28,6 +28,7 @@ services:
     image: "postgres:11.4-alpine"
     environment:
       POSTGRES_PASSWORD: postgres
+      LOAD_REFERENCE_DATA: 'true'
     ports:
       - "5432:5432"
   redis:
