@@ -10,7 +10,7 @@ Docker v18+
 
 `$ sh initialise.sh`
 
-This will clone both the ivory-api and ivory-front-office applications and perform an npm install
+This will clone both the [ivory-api](https://github.com/DEFRA/ivory-api) and [ivory-front-office](https://github.com/DEFRA/ivory-front-office) applications and perform an npm install
 
 # Building and running the applications using docker
 
@@ -22,8 +22,8 @@ This will get or generate the required images and then create the containers
 
 Here's the default structure for your project files.
 
-* **ivory-api** (created withinin initialise.sh script)
-* **ivory-front-office** ((created withinin initialise.sh script))
+* **[ivory-api](https://github.com/DEFRA/ivory-api)** (created withinin initialise.sh script)
+* **[ivory-front-office](https://github.com/DEFRA/ivory-front-office)** ((created withinin initialise.sh script))
 * **temp**
 * LICENCE
 * README.md
