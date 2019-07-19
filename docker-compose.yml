@@ -7,12 +7,16 @@ services:
       - node_api
     ports:
       - "3000:3000"
+    networks:
+      - dev_net
     env_file:
       - "./ivory-front-office/.env"
     environment:
       PORT: 3000
       REDIS_PORT: 6379
       REDIS_HOST: redis
+      SERVICE_API_PORT: 3010
+      SERVICE_API_HOST: dev_net
   node_api:
     #image: "node:10.16.0-alpine"
     build: "./ivory-api"
@@ -20,9 +24,14 @@ services:
       - postgres
     ports:
       - "3010:3010"
+    networks:
+      - dev_net
+    volumes:
+      - cachedata:/data
     env_file:
       - "./ivory-api/.env"
     environment:
+      PORT: 3010
       POSTGRES_PASSWORD: postgres
   postgres:
     image: "postgres:11.4-alpine"
@@ -31,7 +40,22 @@ services:
       LOAD_REFERENCE_DATA: 'true'
     ports:
       - "5432:5432"
+    networks:
+      - dev_net
+    volumes:
+      - dbdata:/var/lib/postgres
   redis:
     image: "redis:5.0.5-alpine"
     ports:
       - "6379:6379"
+    networks:
+      - dev_net
+
+networks:
+  dev_net:
+    driver: bridge
+volumes:
+  dbdata:
+    driver: local
+  cachedata:
+    driver: local
