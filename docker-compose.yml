@@ -13,6 +13,7 @@ services:
       PORT: 3000
       REDIS_PORT: 6379
       REDIS_HOST: redis
+      SERVICE_API_PORT: 3010
   node_api:
     #image: "node:10.16.0-alpine"
     build: "./ivory-api"
@@ -23,6 +24,7 @@ services:
     env_file:
       - "./ivory-api/.env"
     environment:
+      PORT: 3010
       POSTGRES_PASSWORD: postgres
   postgres:
     image: "postgres:11.4-alpine"
