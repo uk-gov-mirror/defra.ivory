@@ -16,9 +16,8 @@ services:
       REDIS_PORT: 6379
       REDIS_HOST: redis
       SERVICE_API_PORT: 3010
-      SERVICE_API_HOST: dev_net
+      SERVICE_API_HOST: node_api
   node_api:
-    #image: "node:10.16.0-alpine"
     build: "./ivory-api"
     depends_on:
       - postgres
