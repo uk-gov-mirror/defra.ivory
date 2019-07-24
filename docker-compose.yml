@@ -13,8 +13,10 @@ services:
       - "./ivory-front-office/.env"
     environment:
       PORT: 3000
+      REDIS_ENABLED: "true"
       REDIS_PORT: 6379
       REDIS_HOST: redis
+      SERVICE_API_ENABLED: "true"
       SERVICE_API_PORT: 3010
       SERVICE_API_HOST: node_api
   node_api:
@@ -31,12 +33,13 @@ services:
       - "./ivory-api/.env"
     environment:
       PORT: 3010
+      POSTGRES_ENABLED: "true"
       POSTGRES_PASSWORD: postgres
   postgres:
     image: "postgres:11.4-alpine"
     environment:
       POSTGRES_PASSWORD: postgres
-      LOAD_REFERENCE_DATA: 'true'
+      LOAD_REFERENCE_DATA: "true"
     ports:
       - "5432:5432"
     networks:
