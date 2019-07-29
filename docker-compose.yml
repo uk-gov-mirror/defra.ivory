@@ -30,7 +30,7 @@ services:
     volumes:
       - cachedata:/data
     env_file:
-      - "./ivory-api/.env"
+      - "./ivory-services/.env"
     environment:
       PORT: 3010
       POSTGRES_ENABLED: "true"
