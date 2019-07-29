@@ -1,10 +1,10 @@
 version: '3'
 services:
-  node_front_office:
+  ivory_front_office:
     build: "./ivory-front-office"
     depends_on:
       - redis
-      - node_api
+      - ivory_services
     expose:
       - "3000"
     networks:
@@ -18,9 +18,9 @@ services:
       REDIS_HOST: redis
       SERVICE_API_ENABLED: "true"
       SERVICE_API_PORT: 3010
-      SERVICE_API_HOST: node_api
-  node_api:
-    build: "./ivory-api"
+      SERVICE_API_HOST: ivory_services
+  ivory_services:
+    build: "./ivory-services"
     depends_on:
       - postgres
     ports:
@@ -57,7 +57,7 @@ services:
     volumes:
       - ./nginx.nginx:/etc/nginx/nginx.conf:ro
     depends_on:
-      - node_front_office
+      - ivory_front_office
     ports:
       - "4000:4000"
     networks:
