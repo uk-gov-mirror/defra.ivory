@@ -31,5 +31,6 @@ function clone_repo {
 
 # Get all the repos required for Waste Exemptions.
 clone_repo https://github.com/DEFRA/ivory-services.git
+clone_repo https://github.com/DEFRA/ivory-shared.git
 clone_repo https://github.com/DEFRA/ivory-front-office.git
 clone_repo https://github.com/DEFRA/ivory-back-office.git
