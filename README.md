@@ -28,7 +28,7 @@ This will clone the [ivory-api](https://github.com/DEFRA/ivory-api), [ivory-fron
 # Building and running the applications using docker
 
 ```bash
-/bin/bash sh initialise.sh
+/bin/bash initialise.sh
 docker-compose up --build
 ```
 
