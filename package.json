@@ -22,6 +22,10 @@
     "test": "npm run lint && npm run unit-test"
   },
   "devDependencies": {
+    "@hapi/code": "^6.0.0",
+    "@hapi/lab": "^19.1.0",
+    "codeclimate-test-reporter": "0.5.1",
+    "sinon": "^7.3.2",
     "standard": "13.1.0"
   }
 }
