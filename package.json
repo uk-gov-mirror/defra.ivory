@@ -19,7 +19,8 @@
   "scripts": {
     "lint": "standard",
     "unit-test": "lab --coverage --reporter console --output stdout --reporter lcov --output lcov.info --reporter html --output coverage.html --verbose",
-    "test": "npm run lint && npm run unit-test"
+    "test": "npm run lint && npm run unit-test",
+    "postinstall": "/bin/bash initialise.sh"
   },
   "devDependencies": {
     "@hapi/code": "^6.0.0",
