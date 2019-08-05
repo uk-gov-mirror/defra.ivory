@@ -28,7 +28,7 @@ This will clone the [ivory-api](https://github.com/DEFRA/ivory-api), [ivory-fron
 # Building and running the applications using docker
 
 ```bash
-npm install && sh initialise.sh
+npm install && /bin/bash sh initialise.sh
 ```
 
 This will get or generate the required images and then create the containers
