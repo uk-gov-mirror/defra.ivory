@@ -39,6 +39,7 @@ node_modules
 ivory-front-office
 ivory-back-office
 ivory-services
+ivory-shared
 
 # WebStorm users
 .idea
