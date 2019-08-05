@@ -32,9 +32,6 @@ nginx.conf
 # (A useful Node template https://github.com/github/gitignore/blob/master/Node.gitignore
 # ---------------------------
 
-# Dependency directories
-node_modules
-
 # Sub project directories
 ivory-front-office
 ivory-back-office
