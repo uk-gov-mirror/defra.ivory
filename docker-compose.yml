@@ -35,11 +35,12 @@ services:
       PORT: 3010
       POSTGRES_ENABLED: "true"
       POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      LOAD_REFERENCE_DATA: "true"
   postgres:
     image: "postgres:11.4-alpine"
     environment:
       POSTGRES_PASSWORD: postgres
-      LOAD_REFERENCE_DATA: "true"
     ports:
       - "5432:5432"
     networks:
