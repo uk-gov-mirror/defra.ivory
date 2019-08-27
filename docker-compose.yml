@@ -19,25 +19,6 @@ services:
       SERVICE_API_ENABLED: "true"
       SERVICE_API_PORT: 3010
       SERVICE_API_HOST: ivory_services
-  ivory_back_office:
-    build: "./ivory-back-office"
-    depends_on:
-      - redis
-      - ivory_services
-    expose:
-      - "3020"
-    networks:
-      - dev_net
-    env_file:
-      - "./ivory-back-office/.env"
-    environment:
-      PORT: 3020
-      REDIS_ENABLED: "true"
-      REDIS_PORT: 6379
-      REDIS_HOST: redis
-      SERVICE_API_ENABLED: "true"
-      SERVICE_API_PORT: 3010
-      SERVICE_API_HOST: ivory_services
   ivory_services:
     build: "./ivory-services"
     depends_on:
@@ -78,10 +59,8 @@ services:
       - ./nginx.nginx:/etc/nginx/nginx.conf:ro
     depends_on:
       - ivory_front_office
-      - ivory_back_office
     ports:
       - "4000:4000"
-      - "4020:4020"
     networks:
       - dev_net
 
