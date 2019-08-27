@@ -23,6 +23,7 @@ function clone_repo {
     if [ -d $repo_dir ]; then
         echo "-- Installing ${repo_dir} --"
         cd $repo_dir
+        rm -r node_modules
         npm install
         cd ..
         printf "\n\n"
