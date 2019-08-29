@@ -23,8 +23,12 @@ function clone_repo {
     if [ -d $repo_dir ]; then
         echo "-- Installing ${repo_dir} --"
         cd $repo_dir
-        rm -r node_modules
+        if [ -d node_modules ]; then
+            rm -r node_modules
+            rm npm-shrinkwrap.json
+        fi
         npm install
+        npm shrinkwrap
         cd ..
         printf "\n\n"
     fi
