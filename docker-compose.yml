@@ -39,7 +39,6 @@ services:
       POSTGRES_DATABASE: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      LOAD_REFERENCE_DATA: "true"
   postgres:
     image: "postgres:11.4-alpine"
     environment:
