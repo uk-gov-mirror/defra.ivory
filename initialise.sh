@@ -24,11 +24,13 @@ function clone_repo {
         echo "-- Installing ${repo_dir} --"
         cd $repo_dir
         if [ -d node_modules ]; then
-            rm -r node_modules
-            rm npm-shrinkwrap.json
+            npm update
+#            rm -r node_modules
+#            rm npm-shrinkwrap.json
+        else
+             npm install
+             npm shrinkwrap
         fi
-        npm install
-        npm shrinkwrap
         cd ..
         printf "\n\n"
     fi
@@ -36,6 +38,8 @@ function clone_repo {
 
 # Get all the repos required for Waste Exemptions.
 clone_repo https://github.com/DEFRA/ivory-shared.git
+clone_repo https://github.com/DEFRA/ivory-common-modules.git
+clone_repo https://github.com/DEFRA/ivory-data-mapping.git
 clone_repo https://github.com/DEFRA/ivory-services.git
 clone_repo https://github.com/DEFRA/ivory-front-office.git
 clone_repo https://github.com/DEFRA/ivory-back-office.git
