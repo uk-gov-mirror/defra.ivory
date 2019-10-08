@@ -37,6 +37,8 @@ ivory-front-office
 ivory-back-office
 ivory-services
 ivory-shared
+ivory-common-modules
+ivory-data-mapping
 
 # WebStorm users
 .idea
