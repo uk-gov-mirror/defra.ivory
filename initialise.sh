@@ -11,7 +11,7 @@ function clone_repo {
     if [ ! -d $repo_dir ]; then
         echo "-- Getting ${repo_dir} from ${git_host} --"
         git clone --branch master $1
-        cd $repo_dir
+        cd $repo_dir || return
         dev_branch_exists=`git ls-remote --heads $1 develop | wc -l`
         if [ $dev_branch_exists != 0 ]; then
             git checkout --track origin/develop
@@ -22,11 +22,10 @@ function clone_repo {
 
     if [ -d $repo_dir ]; then
         echo "-- Installing ${repo_dir} --"
-        cd $repo_dir
+        cd $repo_dir || return
         if [ -d node_modules ]; then
             npm update
-#            rm -r node_modules
-#            rm npm-shrinkwrap.json
+            npm install
         else
              npm install
              npm shrinkwrap
