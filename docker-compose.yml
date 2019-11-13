@@ -1,5 +1,25 @@
 version: '3'
 services:
+  ivory_services:
+    build: "./ivory-services"
+    depends_on:
+      - postgres
+    ports:
+      - "3010:3010"
+    networks:
+      - dev_net
+    volumes:
+      - cachedata:/data
+    env_file:
+      - "./ivory-services/.env"
+    environment:
+      PORT: 3010
+      POSTGRES_ENABLED: "true"
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: postgres
+      POSTGRES_DATABASE: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
   ivory_front_office:
     build: "./ivory-front-office"
     depends_on:
@@ -21,26 +41,27 @@ services:
       SERVICE_API_ENABLED: "true"
       SERVICE_API_PORT: 3010
       SERVICE_API_HOST: ivory_services
-  ivory_services:
-    build: "./ivory-services"
+  ivory_back_office:
+    build: "./ivory-back-office"
     depends_on:
-      - postgres
+      - redis
+      - ivory_services
     ports:
-      - "3010:3010"
+      - "3020:3020"
+    expose:
+      - "3020"
     networks:
       - dev_net
-    volumes:
-      - cachedata:/data
     env_file:
-      - "./ivory-services/.env"
+      - "./ivory-back-office/.env"
     environment:
-      PORT: 3010
-      POSTGRES_ENABLED: "true"
-      POSTGRES_PORT: 5432
-      POSTGRES_HOST: postgres
-      POSTGRES_DATABASE: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
+      PORT: 3020
+      REDIS_ENABLED: "true"
+      REDIS_PORT: 6379
+      REDIS_HOST: redis
+      SERVICE_API_ENABLED: "true"
+      SERVICE_API_PORT: 3010
+      SERVICE_API_HOST: ivory_services
   postgres:
     image: "postgres:11.4-alpine"
     environment:
