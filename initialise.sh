@@ -23,8 +23,8 @@ function clone_repo() {
   if [ -d $repo_dir ]; then
     echo "-- Installing ${repo_dir} --"
     cd $repo_dir || return
-    if [ -d node_modules/node-sass ]; then
-      if [ -d node_modules ]; then
+    if [ -d node_modules ]; then
+      if [ -d node_modules/node-sass ]; then
         npm rebuild node-sass
       fi
       npm install
