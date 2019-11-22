@@ -33,11 +33,11 @@ nginx.conf
 # ---------------------------
 
 # Sub project directories
+defra-hapi-utils
+defra-hapi-modules
 ivory-front-office
 ivory-back-office
 ivory-services
-ivory-shared
-ivory-common-modules
 ivory-data-mapping
 
 # WebStorm users
