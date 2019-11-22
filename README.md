@@ -32,8 +32,9 @@ This will get or generate the required images and then create the containers
 
 Here's the default structure for your project files.
 
-* **[ivory-services](https://github.com/DEFRA/ivory-services)** (created withinin npm install)
 * **[defra-hapi-utils](https://github.com/DEFRA/defra-hapi-utils)** (created withinin npm install)
+* **[defra-hapi-modules](https://github.com/DEFRA/defra-hapi-modules)** (created withinin npm install)
+* **[ivory-services](https://github.com/DEFRA/ivory-services)** (created withinin npm install)
 * **[ivory-front-office](https://github.com/DEFRA/ivory-front-office)** ((created withinin npm install))
 * **[ivory-back-office](https://github.com/DEFRA/ivory-back-office)** ((created withinin npm install))
 * **temp**
