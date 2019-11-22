@@ -17,7 +17,7 @@ Docker v18+
 git clone https://github.com/DEFRA/ivory.git
 ```
 
-This will clone the [ivory-services](https://github.com/DEFRA/ivory-services), [ivory-shared](https://github.com/DEFRA/ivory-shared), [ivory-front-office](https://github.com/DEFRA/ivory-front-office) and [ivory-back-office](https://github.com/DEFRA/ivory-back-office) applications and perform an npm install
+This will clone the [ivory-services](https://github.com/DEFRA/ivory-services), [defra-hapi-utils](https://github.com/DEFRA/defra-hapi-utils), [ivory-front-office](https://github.com/DEFRA/ivory-front-office) and [ivory-back-office](https://github.com/DEFRA/ivory-back-office) applications and perform an npm install
 
 # Building and running the applications using docker
 
@@ -33,7 +33,7 @@ This will get or generate the required images and then create the containers
 Here's the default structure for your project files.
 
 * **[ivory-services](https://github.com/DEFRA/ivory-services)** (created withinin npm install)
-* **[ivory-shared](https://github.com/DEFRA/ivory-shared)** (created withinin npm install)
+* **[defra-hapi-utils](https://github.com/DEFRA/defra-hapi-utils)** (created withinin npm install)
 * **[ivory-front-office](https://github.com/DEFRA/ivory-front-office)** ((created withinin npm install))
 * **[ivory-back-office](https://github.com/DEFRA/ivory-back-office)** ((created withinin npm install))
 * **temp**
