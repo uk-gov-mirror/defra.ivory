@@ -28,7 +28,6 @@ function clone_repo() {
         npm rebuild node-sass
       fi
       npm install
-      npm audit fix
       npm update
       npm install
     else
