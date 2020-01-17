@@ -26,7 +26,6 @@ This will clone the [ivory-services](https://github.com/DEFRA/ivory-services), [
 
 ```bash
 /bin/bash initialise.sh
-docker-compose up --build
 ```
 This will perform an npm install on each module and service
 
@@ -34,10 +33,32 @@ This will perform an npm install on each module and service
 # Building and running the applications using docker
 
 ```bash
-/bin/bash initialise.sh
 docker-compose up --build
 ```
 This will get or generate the required images and then create the containers
+
+Note that although this seems to work fine in the jenkins build (see web-ops),
+I don't seem to be able to get the sharp dependency to compile correctly within docker locally for both the
+front and back office services.
+
+Instead, I do the following:
+
+Open a terminal, navigate to the ivory directory and run the redis and postgres instances within docker:
+```bash
+docker-compose up redis postgres
+```
+Open a second terminal, navigate to the ivory-services directory and run the ivory-service:
+```bash
+npm start
+```
+Open a third terminal, navigate to the ivory-front-office directory and run the ivory-front-office:
+```bash
+npm start
+```
+Open a fourth terminal, navigate to the ivory-back-office directory and run the ivory-back-office:
+```bash
+npm start
+```
 
 
 ## Project structure
