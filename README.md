@@ -2,22 +2,34 @@
 
 Digital service to support the Ivory Act.
 
+
 ## Development Team
 
 This module was developed by the Ivory team as part of a digital transformation project at [DEFRA](https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs), a department of the UK government
+
 
 # Prerequisites
 
 Node v10+
 Docker v18+
 
+
 # Installing the project
 
 ```bash
 git clone https://github.com/DEFRA/ivory.git
 ```
+This will clone the [ivory-services](https://github.com/DEFRA/ivory-services), [ivory-front-office](https://github.com/DEFRA/ivory-front-office) and [ivory-back-office](https://github.com/DEFRA/ivory-back-office) applications as well as the [defra-hapi-utils](https://github.com/DEFRA/defra-hapi-utils) and [ivory-data-mapping](https://github.com/DEFRA/ivory-data-mapping) modules
 
-This will clone the [ivory-services](https://github.com/DEFRA/ivory-services), [defra-hapi-utils](https://github.com/DEFRA/defra-hapi-utils), [ivory-front-office](https://github.com/DEFRA/ivory-front-office) and [ivory-back-office](https://github.com/DEFRA/ivory-back-office) applications and perform an npm install
+
+# Building the applications
+
+```bash
+/bin/bash initialise.sh
+docker-compose up --build
+```
+This will perform an npm install on each module and service
+
 
 # Building and running the applications using docker
 
@@ -25,15 +37,15 @@ This will clone the [ivory-services](https://github.com/DEFRA/ivory-services), [
 /bin/bash initialise.sh
 docker-compose up --build
 ```
-
 This will get or generate the required images and then create the containers
+
 
 ## Project structure
 
 Here's the default structure for your project files.
 
 * **[defra-hapi-utils](https://github.com/DEFRA/defra-hapi-utils)** (created withinin npm install)
-* **[defra-hapi-modules](https://github.com/DEFRA/defra-hapi-modules)** (created withinin npm install)
+* **[ivory-data-mapping](https://github.com/DEFRA/ivory-data-mapping)** (created withinin npm install)
 * **[ivory-services](https://github.com/DEFRA/ivory-services)** (created withinin npm install)
 * **[ivory-front-office](https://github.com/DEFRA/ivory-front-office)** ((created withinin npm install))
 * **[ivory-back-office](https://github.com/DEFRA/ivory-back-office)** ((created withinin npm install))
@@ -41,6 +53,7 @@ Here's the default structure for your project files.
 * LICENCE
 * README.md
 * docker-compose.yml (will build the docker containers and run them)
+
 
 ## License
 
