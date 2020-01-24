@@ -34,6 +34,10 @@ function clone_repo() {
       npm install
       npm shrinkwrap
     fi
+    if [ -f .env.example ] && [ ! -f .env ]; then
+      echo "-- Creating .env --"
+      cp .env.example .env
+    fi
     cd ..
     printf "\n\n"
   fi
