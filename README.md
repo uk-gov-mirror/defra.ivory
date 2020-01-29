@@ -63,7 +63,7 @@ npm test
 Once you are happy the tests run successfully, the environment variables will need to be set correctly within the ``.env`` file of each of the three services in order to test the three services together.
 
 
-# Building and running the applications using docker
+## Building and running the applications using docker
 
 ```bash
 docker-compose up --build
