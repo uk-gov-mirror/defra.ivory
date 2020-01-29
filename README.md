@@ -61,7 +61,7 @@ npm test
 ## Setting up the environment variables
 
 Once you are happy the tests run successfully, the environment variables will need to be set correctly within the ``.env`` file of each of the three services in order to test the three services together.
-
+If working on this project within DEFRA it's possible that web operations will have a development environment with values that can be used found on a private instance of gitlab.
 
 ## Building and running the applications using docker
 
