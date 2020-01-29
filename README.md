@@ -8,26 +8,59 @@ Digital service to support the Ivory Act.
 This module was developed by the Ivory team as part of a digital transformation project at [DEFRA](https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs), a department of the UK government
 
 
-# Prerequisites
+## Prerequisites
 
 Node v10+
 Docker v18+
 
 
-# Installing the project
+## Installing the project
 
 ```bash
 git clone https://github.com/DEFRA/ivory.git
 ```
 This will clone the [ivory-services](https://github.com/DEFRA/ivory-services), [ivory-front-office](https://github.com/DEFRA/ivory-front-office) and [ivory-back-office](https://github.com/DEFRA/ivory-back-office) applications as well as the [defra-hapi-utils](https://github.com/DEFRA/defra-hapi-utils) and [ivory-data-mapping](https://github.com/DEFRA/ivory-data-mapping) modules
 
-
-# Building the applications
+## Installing the services
 
 ```bash
 /bin/bash initialise.sh
 ```
-This will perform an npm install on each module and service
+This will perform an npm install on each module and service.
+
+### Making sure the services have installed successfully
+
+The best way to check this is to make sure the unit-tests run successfully for each service by doing the following:
+
+Open a terminal, navigate to the defra-hapi-utils directory and run the defra-hapi-utils tests:
+```bash
+cd defra-hapi-utils
+npm test
+```
+Navigate to the ivory-data-mapping directory and run the ivory-data-mapping tests:
+```bash
+cd ../ivory-data-mapping
+npm test
+```
+Navigate to the ivory-service directory and run the ivory-service tests:
+```bash
+cd ../ivory-service
+npm test
+```
+Navigate to the ivory-front-office directory and run the ivory-front-office tests:
+```bash
+cd ../ivory-front-office
+npm test
+```
+Navigate to the ivory-back-office directory and run the ivory-back-office:
+```bash
+cd ../ivory-back-office
+npm test
+```
+
+## Setting up the environment variables
+
+Once you are happy the tests run successfully, the environment variables will need to be set correctly within the ``.env`` file of each of the three services in order to test the three services together.
 
 
 # Building and running the applications using docker
