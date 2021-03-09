@@ -1,0 +1,48 @@
+{
+  "name": "ivory",
+  "version": "0.0.1",
+  "description": "Digital service to support the Ivory Act",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build:css": "bin/build-css",
+    "build": "bin/build",
+    "docker:build": "docker build --no-cache -t ivory/ivory .",
+    "docker:run": "docker run -p \"3000:3000\" --env-file .env ivory/ivory",
+    "lint": "standard",
+    "unit-test": "lab -c -r console -o stdout -r lcov -o lcov.info",
+    "test": "npm run lint && npm run unit-test",
+    "postinstall": "npm run build"
+  },
+  "author": "Department for Environment, Food & Rural Affairs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jozzey/ivory-service/issues"
+  },
+  "homepage": "https://github.com/Jozzey/ivory-service#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jozzey/ivory-service.git"
+  },
+  "engines": {
+    "node": "14.x"
+  },
+  "dependencies": {
+    "@hapi/boom": "^9.1.1",
+    "@hapi/hapi": "^20.1.0",
+    "@hapi/inert": "^6.0.3",
+    "@hapi/vision": "^6.0.1",
+    "blipp": "^4.0.2",
+    "govuk-frontend": "^3.11.0",
+    "hapi-pino": "8.3.0",
+    "joi": "^17.4.0",
+    "nunjucks": "3.2.3"
+  },
+  "devDependencies": {
+    "@hapi/code": "^8.0.2",
+    "@hapi/lab": "^24.1.1",
+    "codeclimate-test-reporter": "^0.5.1",
+    "node-sass": "^5.0.0",
+    "standard": "^16.0.3"
+  }
+}
