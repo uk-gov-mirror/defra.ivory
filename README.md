@@ -1,19 +1,19 @@
 [![Build Status](https://travis-ci.com/DEFRA/hapi-web-boilerplate.svg?branch=master)](https://travis-ci.com/DEFRA/hapi-web-boilerplate) [![Maintainability](https://api.codeclimate.com/v1/badges/5c3956c73c9b1496dadd/maintainability)](https://codeclimate.com/github/DEFRA/hapi-web-boilerplate/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/5c3956c73c9b1496dadd/test_coverage)](https://codeclimate.com/github/DEFRA/hapi-web-boilerplate/test_coverage) [![Greenkeeper badge](https://badges.greenkeeper.io/DEFRA/hapi-web-boilerplate.svg)](https://greenkeeper.io/)
 
-# (Enter service name)
-(Description of the service)
+# Ivory Project
+Digital service to support the Ivory Act.
 
 # Environment variables
 (Be sure to describe any environment variables here by maintaining a list like this)
 
 | name     | description      | required | default |            valid            | notes |
 |----------|------------------|:--------:|---------|:---------------------------:|-------|
-| NODE_ENV | Node environment |    no    |         | development,test,production |       |
+| NODE_ENV | Node environment |    no    |         | dev,test,prod |       |
 | PORT     | Port number      |    no    | 3000    |                             |       |
 
 # Prerequisites
 
-Node v8+
+Node v14+
 
 
 # (Checklist)
@@ -28,15 +28,15 @@ Once you clone this repository you'll need to make a few changes before you're r
 
 # Running the application
 
-First build the application using:
+First install the dependencies & build the application using:
 
-`$ npm run build`
+`$ npm install`
 
 Currently this will just build the `govuk-frontend` sass but may be extended to include other build tasks as needed (e.g. client-side js using browserify or webpack etc.)
 
 Now the application is ready to run:
 
-`$ node index.js`
+`$ npm start` or `$ node index.js`
 
 
 (You can delete the remainder of this readme once you're up and running)
