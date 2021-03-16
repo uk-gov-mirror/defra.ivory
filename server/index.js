@@ -20,7 +20,9 @@ async function createServer () {
   await server.register(require('./plugins/router'))
   await server.register(require('./plugins/error-pages'))
   await server.register(require('./plugins/logging'))
-  await server.register(require('./plugins/redis'))
+  if (process.env.REDIS_ENABLED === 'true') {
+    await server.register(require('./plugins/redis'))
+  }
   await server.register(require('blipp'))
 
   return server

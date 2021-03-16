@@ -8,7 +8,7 @@
     "build:css": "bin/build-css",
     "build": "bin/build",
     "docker:build": "docker build --no-cache -t ivory/ivory .",
-    "docker:run": "docker run -p \"3000:3000\" --env-file .env ivory/ivory",
+    "docker:run": "docker run -p \"3000:3000\" ivory/ivory",
     "lint": "standard",
     "unit-test": "lab -c -r console -o stdout -r lcov -o lcov.info",
     "test": "npm run lint && npm run unit-test",
