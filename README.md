@@ -26,6 +26,8 @@ Now the application is ready to run:
 
 `$ npm start` or `$ node index.js`
 
+### To run the application in Docker
+`$ npm run docker:build` followed by `$ npm run docker:run`
 
 ## Project structure
 
