@@ -1,5 +1,5 @@
 const joi = require('joi')
-const envs = ['dev', 'test', 'prod']
+const envs = ['development', 'test', 'production']
 
 // Define config schema
 const schema = joi.object().keys({
@@ -22,6 +22,6 @@ if (error) {
 }
 
 // Add some helper props
-value.isDev = value.env === 'dev'
+value.isDev = value.env === 'development'
 
 module.exports = value
