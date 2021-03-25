@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+
+{% block content %}
+  <div class="govuk-grid-row">
+
+    {% if errorText %}
+      {{ govukErrorSummary({
+        "titleText": "There is a problem",
+        "errorList": [
+          {
+            "text": errorSummaryText,
+            "href": "#ivoryAdded"
+          }
+        ]
+      }) }}
+    {% endif %}
+
+    <div class="govuk-grid-column-two-thirds">
+      <form method="post">
+
+        <textarea name="pageName" hidden>{{ pageName }}</textarea>
+
+        {{ govukRadios({
+          idPrefix: "ivoryAdded",
+          name: "ivoryAdded",
+          fieldset: {
+            legend: {
+              text: title,
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          hint: {
+            text: hintText
+          },
+          errorMessage: errorText,
+          items: [
+            {
+              value: "Yes",
+              text: "Yes"
+            },
+            {
+              value: "No",
+              text: "No"
+            },
+            {
+              value: "I dont know",
+              text: "I don't know"
+            }
+          ]
+        }) }}
+
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
