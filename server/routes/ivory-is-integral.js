@@ -1,6 +1,7 @@
 const handlers = {
   get: (request, h) => {
     return h.view('ivory-is-integral', {
+      errorSummaryText: '',
       errorText: false
     })
   },
@@ -12,6 +13,7 @@ const handlers = {
       return h.view('ivory-is-integral')
     } else {
       return h.view('ivory-is-integral', {
+        errorSummaryText: 'You must tell us how the ivory is integral to the item',
         errorText: {
           text: 'You must tell us how the ivory is integral to the item'
         }

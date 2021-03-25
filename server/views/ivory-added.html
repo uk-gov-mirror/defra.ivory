@@ -14,7 +14,7 @@
         "errorList": [
           {
             "text": errorSummaryText,
-            "href": "#ivoryIsIntegral"
+            "href": "#ivoryAdded"
           }
         ]
       }) }}
@@ -23,29 +23,34 @@
     <div class="govuk-grid-column-two-thirds">
       <form method="post">
 
+        <textarea name="pageName" hidden>{{ pageName }}</textarea>
+
         {{ govukRadios({
-          idPrefix: "ivoryIsIntegral",
-          name: "ivoryIsIntegral",
+          idPrefix: "ivoryAdded",
+          name: "ivoryAdded",
           fieldset: {
             legend: {
-              text: "How is the ivory integral to the item?",
+              text: title,
               isPageHeading: true,
               classes: "govuk-fieldset__legend--l"
             }
           },
+          hint: {
+            text: hintText
+          },
           errorMessage: errorText,
           items: [
             {
-              value: "The ivory is essential to the design or function of the item",
-              text: "The ivory is essential to the design or function of the item"
+              value: "Yes",
+              text: "Yes"
             },
             {
-              value: "You cannot remove the ivory easily or without damaging the item",
-              text: "You cannot remove the ivory easily or without damaging the item"
+              value: "No",
+              text: "No"
             },
             {
-              value: "Both reasons - You cannot remove the ivory easily or without risk of damage and the ivory is essential to the design or function of the item",
-              text: "Both of the above"
+              value: "I dont know",
+              text: "I don't know"
             }
           ]
         }) }}
