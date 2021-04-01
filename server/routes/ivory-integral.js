@@ -1,6 +1,6 @@
 const handlers = {
   get: (request, h) => {
-    return h.view('ivory-is-integral', {
+    return h.view('ivory-integral', {
       errorSummaryText: '',
       errorText: false
     })
@@ -9,10 +9,10 @@ const handlers = {
     const payload = request.payload
     if (payload.ivoryIsIntegral) {
       const client = request.redis.client
-      client.set('ivory-is-integral', payload.ivoryIsIntegral)
-      return h.view('ivory-is-integral')
+      client.set('ivory-integral', payload.ivoryIsIntegral)
+      return h.view('ivory-integral')
     } else {
-      return h.view('ivory-is-integral', {
+      return h.view('ivory-integral', {
         errorSummaryText: 'You must tell us how the ivory is integral to the item',
         errorText: {
           text: 'You must tell us how the ivory is integral to the item'
@@ -24,10 +24,10 @@ const handlers = {
 
 module.exports = [{
   method: 'GET',
-  path: '/ivory-is-integral',
+  path: '/ivory-integral',
   handler: handlers.get
 }, {
   method: 'POST',
-  path: '/ivory-is-integral',
+  path: '/ivory-integral',
   handler: handlers.post
 }]
