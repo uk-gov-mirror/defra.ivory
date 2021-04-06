@@ -9,8 +9,8 @@ const handlers = {
   },
   post: (request, h) => {
     const payload = request.payload
-    
-    if (!payload.ivoryAdded) {
+
+    if (!payload.yesNoIdk) {
       return h.view('yes-no-idk', {
         title: 'Was the replacement ivory taken from the elephant on or after 1 January 1975?',
         hintText: '',
@@ -20,9 +20,9 @@ const handlers = {
         }
       })
     } else
-    if (payload.ivoryAdded === 'No') {
+    if (payload.yesNoIdk === 'No') {
       const client = request.redis.client
-      client.set('ivory-added', "yes-pre-1975")
+      client.set('ivory-added', 'yes-pre-1975')
       return h.view('yes-no-idk', {
         title: 'Was the replacement ivory taken from the elephant on or after 1 January 1975?',
         hintText: '',
@@ -30,10 +30,10 @@ const handlers = {
         errorText: false
       })
     } else
-    if (payload.ivoryAdded === 'I dont know') {
+    if (payload.yesNoIdk === 'I dont know') {
       return 'Best find out then!'
     } else
-    if (payload.ivoryAdded === 'Yes') {
+    if (payload.yesNoIdk === 'Yes') {
       return 'Those poor elephants, you are not selling that!'
     }
   }
