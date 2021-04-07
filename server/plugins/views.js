@@ -35,7 +35,7 @@ module.exports = {
     context: {
       appVersion: pkg.version,
       assetPath: '/assets',
-      serviceName: process.env.SERVICE_NAME,
+      serviceName: config.serviceName,
       pageTitle: 'Tell us you want to sell or hire out ivory - GOV.UK',
       analyticsAccount: analyticsAccount
     }

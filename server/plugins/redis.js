@@ -1,9 +1,11 @@
+const config = require('../config')
+
 module.exports = {
   plugin: require('hapi-redis2'),
   options: {
     settings: {
-      port: process.env.REDIS_PORT, // Redis port
-      host: process.env.REDIS_HOST // Redis host
+      host: config.redisHost,
+      port: config.redisPort
     },
     decorate: true
   }
