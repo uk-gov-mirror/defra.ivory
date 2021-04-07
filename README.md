@@ -2,16 +2,25 @@
 Digital service to support the Ivory Act.
 
 # Environment variables
-(Be sure to describe any environment variables here by maintaining a list like this)
+The default values will be used if the environment variables are missing or commented out.
 
-| name     | description      | required | default |            valid            | notes |
-|----------|------------------|:--------:|---------|:---------------------------:|-------|
-| NODE_ENV | Node environment |    no    |         | development,test,production |       |
-| PORT     | Port number      |    no    | 3000    |                             |       |
+| name                | description              | required | default   |            valid            | notes |
+|---------------------|--------------------------|:--------:|-----------|:---------------------------:|-------|
+| NODE_ENV            | Node environment         |    no    |           | development,test,production |       |
+| PORT                | Port number              |    no    | 3000      |                             |       |
+| SERVICE_NAME        | Name of the service      |    no    |           | Any text string             |       |
+| REDIS_HOST          | Redis server IP address  |    no    | 127.0.0.1 |                             |       |
+| REDIS_PORT          | Redis port number        |    no    | 6379      |                             |       |
+| SERVICE_API_ENABLED | Enable/disable ivory API |    yes   | false     | true,false                  |       |
+| SERVICE_API_HOST    | Ivory API IP address     |    no    | 127.0.0.1 |                             |       |
+| SERVICE_API_PORT    | Ivory API port number    |    no    | 3010      |                             |       |
+
 
 # Prerequisites
 
-Node v14+
+Node v14.x
+
+Redis
 
 
 # Running the application
@@ -20,14 +29,16 @@ First install the dependencies & build the application using:
 
 `$ npm install`
 
-Currently this will just build the `govuk-frontend` sass but may be extended to include other build tasks as needed (e.g. client-side js using browserify or webpack etc.)
+Currently this will just build the `govuk-frontend` sass and create a default .env file if one doesn't already exist. But may be extended to include other build tasks as needed (e.g. client-side js using browserify or webpack etc.)
+
+If installing on a Windows machine you may encounter an error when running `$ npm install` relating to your OS not being able to run the Bash scripts which are part of the installation. Should you have this problem first ensure that you have installed [Git for Windows](https://gitforwindows.org/). Then run the command `$ npm config set script-shell %userprofile%\cmder\vendor\git-for-windows\bin\bash` followed by `$ npm install`.
 
 Now the application is ready to run:
 
 `$ npm start` or `$ node index.js`
 
 ### To run the application in Docker
-`$ npm run docker:build` followed by `$ npm run docker:run`
+`$ npm run docker` or `$ npm run docker:build` followed by `$ npm run docker:run`
 
 ## Project structure
 
@@ -118,8 +129,12 @@ The task runner is simply `npm` using `npm-scripts`.
 
 The predefined tasks are:
 
+- `npm start` (Runs the application)
 - `npm run build` (Runs all build sub-tasks)
 - `npm run build:css` (Builds the client-side sass)
+- `npm run docker` (Runs all Docker sub-tasks)
+- `npm run docker:build` (Builds the application in a Docker container)
+- `npm run docker:run` (Runs the application in the Docker container)
 - `npm run lint` (Runs the lint task using standard.js)
 - `npm run unit-test` (Runs the `lab` tests in the `/test` folder)
 - `npm test` (Runs the `lint` task then the `unit-tests`)
