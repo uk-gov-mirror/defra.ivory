@@ -1,0 +1,95 @@
+{% extends 'layout.html' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+
+{% block content %}
+  <div class="govuk-grid-row">
+
+    {% if errorText %}
+      {{ govukErrorSummary({
+        "titleText": "There is a problem",
+        "errorList": [
+          {
+            "text": errorSummaryText,
+            "href": "#agree"
+          }
+        ]
+      }) }}
+    {% endif %}
+
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">Check your answers (incomplete)</h1>
+
+      {{ govukSummaryList({
+        classes: 'govuk-!-margin-bottom-9',
+        rows: [
+          {
+            key: {
+              text: "Is ivory integral?"
+            },
+            value: {
+              text: ivoryIntegral
+            },
+            actions: {
+              items: [
+                {
+                  href: "ivory-integral",
+                  text: "Change",
+                  visuallyHiddenText: "if the ivory is integral to the item"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Has ivory been added?"
+            },
+            value: {
+              text: ivoryAdded
+            },
+            actions: {
+              items: [
+                {
+                  href: "ivory-added",
+                  text: "Change",
+                  visuallyHiddenText: "if ivory has been added to the item"
+                }
+              ]
+            }
+          }
+        ]
+      }) }}
+
+      <h2 class="govuk-heading-m">Legal declaration</h2>
+
+      <p class="govuk-body">Before you continue, you must agree to the following:</p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>the information you’ve provided is complete and correct</li>
+      </ul>
+
+      <form method="post">
+        {{ govukCheckboxes({
+          idPrefix: "agree",
+          name: "agree",
+          errorMessage: errorText,
+          items: [
+            {
+              value: "agree",
+              text: "I agree"
+            }
+          ]
+        }) }}
+
+        {{ govukButton({
+          text: "Agree and submit"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
