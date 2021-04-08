@@ -23,12 +23,7 @@ const handlers = {
     if (payload.yesNoIdk === 'No') {
       const client = request.redis.client
       client.set('ivory-added', 'yes-pre-1975')
-      return h.view('yes-no-idk', {
-        title: 'Was the replacement ivory taken from the elephant on or after 1 January 1975?',
-        hintText: '',
-        errorSummaryText: '',
-        errorText: false
-      })
+      return h.redirect('check-your-answers')
     } else
     if (payload.yesNoIdk === 'I dont know') {
       return 'Best find out then!'
