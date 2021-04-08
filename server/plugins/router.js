@@ -4,7 +4,10 @@ const routes = [].concat(
   require('../routes/check-your-answers'),
   require('../routes/ivory-integral'),
   require('../routes/ivory-added'),
-  require('../routes/taken-from-elephant')
+  require('../routes/taken-from-elephant'),
+  require('../routes/addresses/owner-applicant/international-address'),
+  require('../routes/addresses/owner/international-address'),
+  require('../routes/addresses/applicant/international-address')
 )
 
 module.exports = {
