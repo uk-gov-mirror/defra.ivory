@@ -10,7 +10,7 @@ const handlers = {
     if (payload.ivoryIsIntegral) {
       const client = request.redis.client
       client.set('ivory-integral', payload.ivoryIsIntegral)
-      return h.view('ivory-integral')
+      return h.redirect('check-your-answers')
     } else {
       return h.view('ivory-integral', {
         errorSummaryText: 'You must tell us how the ivory is integral to the item',

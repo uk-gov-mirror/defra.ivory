@@ -22,12 +22,7 @@ const handlers = {
     if (payload.yesNoIdk === 'No') {
       const client = request.redis.client
       client.set('ivory-added', 'no')
-      return h.view('yes-no-idk', {
-        title: 'Has any replacement ivory been added to the item since it was made?',
-        hintText: 'This could have been to repair or restore damaged ivory.',
-        errorSummaryText: '',
-        errorText: false
-      })
+      return h.redirect('check-your-answers')
     } else
     if (payload.yesNoIdk === 'I dont know') {
       return 'Game over man...game over!'
