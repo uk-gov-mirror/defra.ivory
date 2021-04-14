@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+
+{% block content %}
+  <div class="govuk-grid-row">
+
+    {% if errorText %}
+      {{ govukErrorSummary({
+        "titleText": "There is a problem",
+        "errorList": [
+          {
+            "text": errorSummaryText,
+            "href": "#postcode"
+          }
+        ]
+      }) }}
+    {% endif %}
+
+    <div class="govuk-grid-column-two-thirds">
+      <form method="post">
+
+        <div class="govuk-form-group">
+          <h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--l" for="postcode">
+              What is your postcode?
+            </label>
+          </h1>
+          <input class="govuk-input" id="postcode" name="postcode" type="text">
+        </div>
+
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
