@@ -1,7 +1,9 @@
+'use strict'
+
 const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
-const lab = exports.lab = Lab.script()
-const createServer = require('../server')
+const lab = (exports.lab = Lab.script())
+const createServer = require('../../server')
 
 lab.experiment('Web test', () => {
   let server

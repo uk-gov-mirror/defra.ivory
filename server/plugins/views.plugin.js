@@ -1,6 +1,8 @@
+'use strict'
+
 const path = require('path')
 const nunjucks = require('nunjucks')
-const config = require('../config')
+const config = require('../utils/config')
 const pkg = require('../../package.json')
 const analyticsAccount = config.analyticsAccount
 
@@ -12,18 +14,21 @@ module.exports = {
         compile: (src, options) => {
           const template = nunjucks.compile(src, options.environment)
 
-          return (context) => {
+          return context => {
             return template.render(context)
           }
         },
         prepare: (options, next) => {
-          options.compileOptions.environment = nunjucks.configure([
-            path.join(options.relativeTo || process.cwd(), options.path),
-            'node_modules/govuk-frontend/'
-          ], {
-            autoescape: true,
-            watch: false
-          })
+          options.compileOptions.environment = nunjucks.configure(
+            [
+              path.join(options.relativeTo || process.cwd(), options.path),
+              'node_modules/govuk-frontend/'
+            ],
+            {
+              autoescape: true,
+              watch: false
+            }
+          )
 
           return next()
         }

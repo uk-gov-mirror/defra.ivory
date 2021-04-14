@@ -1,14 +1,22 @@
+'use strict'
+
 const joi = require('joi')
 const envs = ['development', 'test', 'production']
 
 // Define config schema
 const schema = joi.object().keys({
-  env: joi.string().valid(...envs).default(envs[0]),
+  env: joi
+    .string()
+    .valid(...envs)
+    .default(envs[0]),
   port: joi.number().default(3000),
   serviceName: joi.string().default('No service name in .env'),
   redisHost: joi.string().default('127.0.0.1'),
   redisPort: joi.number().default(6379),
-  serviceApiEnabled: joi.bool().valid(true, false).default(false),
+  serviceApiEnabled: joi
+    .bool()
+    .valid(true, false)
+    .default(false),
   serviceApiHost: joi.string().default('127.0.0.1'),
   serviceApiPort: joi.number().default(3010)
 })

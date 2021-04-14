@@ -1,18 +1,23 @@
+'use strict'
+
+const { Views } = require('../utils/constants')
+
 const handlers = {
   get: async (request, h) => {
     const client = request.redis.client
-    return h.view('check-your-answers', {
+    return h.view(Views.CHECK_YOUR_ANSWERS, {
       ivoryIntegral: await client.get('ivory-integral'),
       ivoryAdded: await client.get('ivory-added'),
       errorSummaryText: '',
       errorText: false
     })
   },
+
   post: async (request, h) => {
     const payload = request.payload
     if (!payload.agree) {
       const client = request.redis.client
-      return h.view('check-your-answers', {
+      return h.view(Views.CHECK_YOUR_ANSWERS, {
         ivoryIntegral: await client.get('ivory-integral'),
         ivoryAdded: await client.get('ivory-added'),
         errorSummaryText: 'You must agree to the declaration',
@@ -26,12 +31,15 @@ const handlers = {
   }
 }
 
-module.exports = [{
-  method: 'GET',
-  path: '/check-your-answers',
-  handler: handlers.get
-}, {
-  method: 'POST',
-  path: '/check-your-answers',
-  handler: handlers.post
-}]
+module.exports = [
+  {
+    method: 'GET',
+    path: `/${Views.CHECK_YOUR_ANSWERS}`,
+    handler: handlers.get
+  },
+  {
+    method: 'POST',
+    path: `/${Views.CHECK_YOUR_ANSWERS}`,
+    handler: handlers.post
+  }
+]
