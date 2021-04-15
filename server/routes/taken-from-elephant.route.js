@@ -1,8 +1,10 @@
 'use strict'
 
+const { Views } = require('../utils/constants')
+
 const handlers = {
   get: (request, h) => {
-    return h.view('yes-no-idk', {
+    return h.view(Views.YES_NO_IDK, {
       title:
         'Was the replacement ivory taken from the elephant on or after 1 January 1975?',
       hintText: '',
@@ -15,7 +17,7 @@ const handlers = {
     const payload = request.payload
 
     if (!payload.yesNoIdk) {
-      return h.view('yes-no-idk', {
+      return h.view(Views.YES_NO_IDK, {
         title:
           'Was the replacement ivory taken from the elephant on or after 1 January 1975?',
         hintText: '',
@@ -29,7 +31,7 @@ const handlers = {
     } else if (payload.yesNoIdk === 'No') {
       const client = request.redis.client
       client.set('ivory-added', 'yes-pre-1975')
-      return h.redirect('check-your-answers')
+      return h.redirect(Views.CHECK_YOUR_ANSWERS)
     } else if (payload.yesNoIdk === 'I dont know') {
       return 'Best find out then!'
     } else if (payload.yesNoIdk === 'Yes') {
@@ -41,12 +43,12 @@ const handlers = {
 module.exports = [
   {
     method: 'GET',
-    path: '/taken-from-elephant',
+    path: `/${Views.TAKEN_FROM_ELEPHANT}`,
     handler: handlers.get
   },
   {
     method: 'POST',
-    path: '/taken-from-elephant',
+    path: `/${Views.TAKEN_FROM_ELEPHANT}`,
     handler: handlers.post
   }
 ]

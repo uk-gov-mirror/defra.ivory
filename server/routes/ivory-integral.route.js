@@ -15,7 +15,7 @@ const handlers = {
     if (payload.ivoryIsIntegral) {
       const client = request.redis.client
       client.set('ivory-integral', payload.ivoryIsIntegral)
-      return h.redirect('check-your-answers')
+      return h.redirect(Views.CHECK_YOUR_ANSWERS)
     } else {
       return h.view(Views.IVORY_INTEGRAL, {
         errorSummaryText:

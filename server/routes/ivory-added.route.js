@@ -30,11 +30,11 @@ const handlers = {
     } else if (payload.yesNoIdk === 'No') {
       const client = request.redis.client
       client.set('ivory-added', 'no')
-      return h.redirect('check-your-answers')
+      return h.redirect(Views.CHECK_YOUR_ANSWERS)
     } else if (payload.yesNoIdk === 'I dont know') {
       return 'Game over man...game over!'
     } else if (payload.yesNoIdk === 'Yes') {
-      return h.redirect('taken-from-elephant')
+      return h.redirect(Views.TAKEN_FROM_ELEPHANT)
     }
   }
 }

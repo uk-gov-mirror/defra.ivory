@@ -26,7 +26,7 @@ const handlers = {
         }
       })
     } else {
-      return h.redirect('check-your-answers')
+      return h.redirect(Views.CHECK_YOUR_ANSWERS)
     }
   }
 }
