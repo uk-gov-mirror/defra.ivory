@@ -1,6 +1,6 @@
 'use strict'
 
-const { Views } = require('../utils/constants')
+const { Paths, Views } = require('../utils/constants')
 
 const handlers = {
   get: (request, h) => {
@@ -30,11 +30,11 @@ const handlers = {
     } else if (payload.yesNoIdk === 'No') {
       const client = request.redis.client
       client.set('ivory-added', 'no')
-      return h.redirect(Views.CHECK_YOUR_ANSWERS)
+      return h.redirect(Paths.CHECK_YOUR_ANSWERS)
     } else if (payload.yesNoIdk === 'I dont know') {
       return 'Game over man...game over!'
     } else if (payload.yesNoIdk === 'Yes') {
-      return h.redirect(Views.TAKEN_FROM_ELEPHANT)
+      return h.redirect(Paths.TAKEN_FROM_ELEPHANT)
     }
   }
 }
@@ -42,12 +42,12 @@ const handlers = {
 module.exports = [
   {
     method: 'GET',
-    path: `/${Views.IVORY_ADDED}`,
+    path: `/${Paths.IVORY_ADDED}`,
     handler: handlers.get
   },
   {
     method: 'POST',
-    path: `/${Views.IVORY_ADDED}`,
+    path: `/${Paths.IVORY_ADDED}`,
     handler: handlers.post
   }
 ]

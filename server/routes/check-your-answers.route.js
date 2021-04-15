@@ -1,6 +1,6 @@
 'use strict'
 
-const { Views } = require('../utils/constants')
+const { Paths, Views } = require('../utils/constants')
 
 const handlers = {
   get: async (request, h) => {
@@ -26,7 +26,7 @@ const handlers = {
         }
       })
     } else {
-      return h.redirect(Views.CHECK_YOUR_ANSWERS)
+      return h.redirect(Paths.CHECK_YOUR_ANSWERS)
     }
   }
 }
@@ -34,12 +34,12 @@ const handlers = {
 module.exports = [
   {
     method: 'GET',
-    path: `/${Views.CHECK_YOUR_ANSWERS}`,
+    path: `/${Paths.CHECK_YOUR_ANSWERS}`,
     handler: handlers.get
   },
   {
     method: 'POST',
-    path: `/${Views.CHECK_YOUR_ANSWERS}`,
+    path: `/${Paths.CHECK_YOUR_ANSWERS}`,
     handler: handlers.post
   }
 ]

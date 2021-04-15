@@ -1,6 +1,6 @@
 'use strict'
 
-const { Views } = require('../utils/constants')
+const { Paths, Views } = require('../utils/constants')
 
 const handlers = {
   get: (request, h) => {
@@ -15,7 +15,7 @@ const handlers = {
     if (payload.ivoryIsIntegral) {
       const client = request.redis.client
       client.set('ivory-integral', payload.ivoryIsIntegral)
-      return h.redirect(Views.CHECK_YOUR_ANSWERS)
+      return h.redirect(Paths.CHECK_YOUR_ANSWERS)
     } else {
       return h.view(Views.IVORY_INTEGRAL, {
         errorSummaryText:
@@ -31,12 +31,12 @@ const handlers = {
 module.exports = [
   {
     method: 'GET',
-    path: `/${Views.IVORY_INTEGRAL}`,
+    path: `/${Paths.IVORY_INTEGRAL}`,
     handler: handlers.get
   },
   {
     method: 'POST',
-    path: `/${Views.IVORY_INTEGRAL}`,
+    path: `/${Paths.IVORY_INTEGRAL}`,
     handler: handlers.post
   }
 ]
