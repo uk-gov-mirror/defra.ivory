@@ -42,12 +42,12 @@ const handlers = {
 module.exports = [
   {
     method: 'GET',
-    path: `/${Paths.IVORY_ADDED}`,
+    path: `${Paths.IVORY_ADDED}`,
     handler: handlers.get
   },
   {
     method: 'POST',
-    path: `/${Paths.IVORY_ADDED}`,
+    path: `${Paths.IVORY_ADDED}`,
     handler: handlers.post
   }
 ]

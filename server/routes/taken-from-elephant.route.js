@@ -43,12 +43,12 @@ const handlers = {
 module.exports = [
   {
     method: 'GET',
-    path: `/${Paths.TAKEN_FROM_ELEPHANT}`,
+    path: `${Paths.TAKEN_FROM_ELEPHANT}`,
     handler: handlers.get
   },
   {
     method: 'POST',
-    path: `/${Paths.TAKEN_FROM_ELEPHANT}`,
+    path: `${Paths.TAKEN_FROM_ELEPHANT}`,
     handler: handlers.post
   }
 ]

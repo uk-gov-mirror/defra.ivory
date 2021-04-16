@@ -31,12 +31,12 @@ const handlers = {
 module.exports = [
   {
     method: 'GET',
-    path: `/${Paths.IVORY_INTEGRAL}`,
+    path: `${Paths.IVORY_INTEGRAL}`,
     handler: handlers.get
   },
   {
     method: 'POST',
-    path: `/${Paths.IVORY_INTEGRAL}`,
+    path: `${Paths.IVORY_INTEGRAL}`,
     handler: handlers.post
   }
 ]
