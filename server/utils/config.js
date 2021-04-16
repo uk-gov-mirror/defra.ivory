@@ -19,7 +19,7 @@ const schema = joi.object().keys({
     .default(false),
   serviceApiHost: joi.string().default('127.0.0.1'),
   serviceApiPort: joi.number().default(3010),
-  cookieValidationPassword: joi.string().required()
+  cookieValidationPassword: joi.string()
 })
 
 // Build config
