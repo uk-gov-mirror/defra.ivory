@@ -4,7 +4,7 @@ Constants.Paths = {
   CHECK_YOUR_ANSWERS: 'check-your-answers',
   IVORY_ADDED: 'ivory-added',
   IVORY_INTEGRAL: 'ivory-integral',
-  TAKEN_FROM_ELEMENT: 'taken-from-elephant'
+  TAKEN_FROM_ELEPHANT: 'taken-from-elephant'
 }
 
 Constants.Views = {
@@ -12,6 +12,6 @@ Constants.Views = {
   HOME: 'home',
   IVORY_ADDED: 'ivory-added',
   IVORY_INTEGRAL: 'ivory-integral',
-  TAKEN_FROM_ELEMENT: 'taken-from-elephant',
+  TAKEN_FROM_ELEPHANT: 'taken-from-elephant',
   YES_NO_IDK: 'yes-no-idk'
 }

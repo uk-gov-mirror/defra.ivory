@@ -1,12 +1,11 @@
 'use strict'
 
+const { Paths } = require('../utils/constants')
+
 const routes = [].concat(
   require('../routes/home.route'),
   require('../routes/public.route'),
-  require('../routes/check-your-answers.route'),
-  require('../routes/ivory-integral.route'),
-  require('../routes/ivory-added.route'),
-  require('../routes/taken-from-elephant.route')
+  ...Object.values(Paths).map(path => require(`../routes/${path}.route`))
 )
 
 module.exports = {
