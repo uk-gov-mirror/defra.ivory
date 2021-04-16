@@ -5,8 +5,7 @@ const { SESSION_ID, Views } = require('../utils/constants')
 
 const handlers = {
   get: (request, h) => {
-    const sessionId = uuidv4()
-    h.state(SESSION_ID, sessionId)
+    _setCookieSessionId(h)
 
     return h.view(Views.HOME, {
       title: 'Hello',
@@ -20,6 +19,10 @@ const handlers = {
       message: 'Elephants'
     })
   }
+}
+
+const _setCookieSessionId = h => {
+  h.state(SESSION_ID, uuidv4())
 }
 
 module.exports = [
