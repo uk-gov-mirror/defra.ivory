@@ -10,7 +10,9 @@ const Paths = {
   IVORY_INTEGRAL: '/ivory-integral',
   OWNER_DETAILS: '/user-details/owner/contact-details',
   TAKEN_FROM_ELEPHANT: '/taken-from-elephant',
-  WHO_OWNS_ITEM: '/who-owns-the-item'
+  WHO_OWNS_ITEM: '/who-owns-the-item',
+  OWNER_ADDRESS_FIND: '/user-details/owner/address-find',
+  OWNER_ADDRESS_INTERNATIONAL: '/user-details/owner/address-international'
 }
 
 const Views = {
@@ -21,7 +23,9 @@ const Views = {
   CONTACT_DETAILS: 'user-details/contact-details',
   TAKEN_FROM_ELEPHANT: 'taken-from-elephant',
   WHO_OWNS_ITEM: 'who-owns-the-item',
-  YES_NO_IDK: 'yes-no-idk'
+  YES_NO_IDK: 'yes-no-idk',
+  ADDRESS_FIND: 'user-details/address-find',
+  ADDRESS_INTERNATIONAL: 'user-details/address-international'
 }
 
 const RedisKeys = {

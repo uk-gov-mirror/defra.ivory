@@ -1,10 +1,12 @@
-// This route gets the address details for the item
+'use strict'
+
+const { Paths, Views } = require('../../../utils/constants')
 const { postcodeValidator } = require('postcode-validator')
 const completedBy = 'owner' // Temporary until previous page built then will use value saved in Redis. Use 'owner' or '3rdParty'
 
 const handlers = {
   get: (request, h) => {
-    return h.view('address/find', {
+    return h.view(Views.ADDRESS_FIND, {
       title: completedBy === 'owner' ? 'What is your address?' : 'What is the owner\'s address?',
       message: completedBy === 'owner' ? 'If your business is the legal owner of the item, give your business address.' : 'If the legal owner of the item is a business, give the business address.',
       errorText: false
@@ -12,11 +14,10 @@ const handlers = {
   },
   post: (request, h) => {
     const payload = request.payload
-    const noAddresses = 10 // Temporary value for number of results returned from search
 
     // If no postcode entered
     if (!payload.postcode) {
-      return h.view('address/find', {
+      return h.view(Views.ADDRESS_FIND, {
         title: completedBy === 'owner' ? 'What is your address?' : 'What is the owner\'s address?',
         message: completedBy === 'owner' ? 'If your business is the legal owner of the item, give your business address.' : 'If the legal owner of the item is a business, give the business address.',
         errorSummaryText: completedBy === 'owner' ? 'Enter your postcode' : 'Enter the owner\'s postcode',
@@ -26,7 +27,7 @@ const handlers = {
       })
     // If an invalid postcode entered
     } else if (!postcodeValidator(payload.postcode, 'GB')) {
-      return h.view('address/find', {
+      return h.view(Views.ADDRESS_FIND, {
         title: completedBy === 'owner' ? 'What is your address?' : 'What is the owner\'s address?',
         message: completedBy === 'owner' ? 'If your business is the legal owner of the item, give your business address.' : 'If the legal owner of the item is a business, give the business address.',
         errorSummaryText: 'Enter a UK postcode in the correct format',
@@ -42,10 +43,10 @@ const handlers = {
 
 module.exports = [{
   method: 'GET',
-  path: '/address/item/find',
+  path: `/${Paths.OWNER_ADDRESS_FIND}`,
   handler: handlers.get
 }, {
   method: 'POST',
-  path: '/address/item/find',
+  path: `/${Paths.OWNER_ADDRESS_FIND}`,
   handler: handlers.post
 }]
