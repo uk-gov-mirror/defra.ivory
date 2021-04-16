@@ -1,4 +1,6 @@
-const config = require('../config')
+'use strict'
+
+const config = require('../utils/config')
 
 module.exports = {
   plugin: require('hapi-pino'),

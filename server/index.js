@@ -1,5 +1,7 @@
+'use strict'
+
 const hapi = require('@hapi/hapi')
-const config = require('./config')
+const config = require('./utils/config')
 
 async function createServer () {
   // Create the hapi server
@@ -15,13 +17,16 @@ async function createServer () {
   })
 
   // Register the plugins
-  await server.register(require('@hapi/inert'))
-  await server.register(require('./plugins/views'))
-  await server.register(require('./plugins/router'))
-  await server.register(require('./plugins/error-pages'))
-  await server.register(require('./plugins/logging'))
-  await server.register(require('blipp'))
-  await server.register(require('./plugins/redis'))
+  await server.register(require('./plugins/blipp.plugin'))
+  await server.register(require('./plugins/disinfect.plugin'))
+  await server.register(require('./plugins/error-pages.plugin'))
+  await server.register(require('./plugins/hapi-sanitize-payload.plugin'))
+  await server.register(require('./plugins/inert.plugin'))
+  await server.register(require('./plugins/logging.plugin'))
+  await server.register(require('./plugins/redis.plugin'))
+  await server.register(require('./plugins/robots.plugin'))
+  await server.register(require('./plugins/router.plugin'))
+  await server.register(require('./plugins/views.plugin'))
 
   return server
 }

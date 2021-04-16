@@ -1,6 +1,8 @@
 /*
-* Add an `onPreResponse` listener to return error pages
-*/
+ * Add an `onPreResponse` listener to return error pages
+ */
+
+'use strict'
 
 module.exports = {
   plugin: {

@@ -41,7 +41,12 @@
   }) }}
 
   {{ govukBackLink({
-    text: "Back"
+      text: "Back",
+      href: "#",
+      attributes: {
+          id: "back-link",
+          onclick: "window.history.go(-1); return false;"
+      }
   }) }}
 
 {% endblock %}
