@@ -5,7 +5,7 @@ const config = require('./utils/config')
 const cookieConfig = require('./utils/cookieConfig')
 const { DEFRA_IVORY_SESSION_KEY } = require('./utils/constants')
 
-async function createServer () {
+const createServer = async () => {
   const server = hapi.server({
     port: config.port,
     routes: {
@@ -17,9 +17,9 @@ async function createServer () {
     }
   })
 
-  _registerPlugins()
+  _registerPlugins(server)
 
-  _createSessionCookie()
+  _createSessionCookie(server)
 
   return server
 }
