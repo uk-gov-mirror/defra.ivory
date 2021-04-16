@@ -2,6 +2,8 @@
 
 const hapi = require('@hapi/hapi')
 const config = require('./utils/config')
+const cookieConfig = require('./utils/cookieConfig')
+const { DEFRA_IVORY_SESSION_KEY } = require('./utils/constants')
 
 async function createServer () {
   // Create the hapi server
@@ -27,6 +29,9 @@ async function createServer () {
   await server.register(require('./plugins/robots.plugin'))
   await server.register(require('./plugins/router.plugin'))
   await server.register(require('./plugins/views.plugin'))
+
+  // Create a session cookie in which to store a waste permit application token
+  server.state(DEFRA_IVORY_SESSION_KEY, cookieConfig.options)
 
   return server
 }

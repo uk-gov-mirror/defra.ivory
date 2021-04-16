@@ -1,13 +1,13 @@
 'use strict'
 
-const { Paths, Views } = require('../utils/constants')
+const RedisService = require('../services/redis.service')
+const { Paths, RedisKeys, Views } = require('../utils/constants')
 
 const handlers = {
   get: async (request, h) => {
-    const client = request.redis.client
     return h.view(Views.CHECK_YOUR_ANSWERS, {
-      ivoryIntegral: await client.get('ivory-integral'),
-      ivoryAdded: await client.get('ivory-added'),
+      ivoryIntegral: await RedisService.get(request, RedisKeys.IVORY_INTEGRTAL),
+      ivoryAdded: await RedisService.get(request, RedisKeys.IVORY_ADDED),
       errorSummaryText: '',
       errorText: false
     })
@@ -16,10 +16,12 @@ const handlers = {
   post: async (request, h) => {
     const payload = request.payload
     if (!payload.agree) {
-      const client = request.redis.client
       return h.view(Views.CHECK_YOUR_ANSWERS, {
-        ivoryIntegral: await client.get('ivory-integral'),
-        ivoryAdded: await client.get('ivory-added'),
+        ivoryIntegral: await RedisService.get(
+          request,
+          RedisKeys.IVORY_INTEGRTAL
+        ),
+        ivoryAdded: await RedisService.get(request, RedisKeys.IVORY_ADDED),
         errorSummaryText: 'You must agree to the declaration',
         errorText: {
           text: 'You must agree to the declaration'

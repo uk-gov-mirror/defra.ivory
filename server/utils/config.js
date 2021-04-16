@@ -18,7 +18,8 @@ const schema = joi.object().keys({
     .valid(true, false)
     .default(false),
   serviceApiHost: joi.string().default('127.0.0.1'),
-  serviceApiPort: joi.number().default(3010)
+  serviceApiPort: joi.number().default(3010),
+  cookieValidationPassword: joi.string().required()
 })
 
 // Build config
@@ -30,7 +31,8 @@ const config = {
   redisPort: process.env.REDIS_PORT,
   serviceApiEnabled: process.env.SERVICE_API_ENABLED,
   serviceApiHost: process.env.SERVICE_API_HOST,
-  serviceApiPort: process.env.SERVICE_API_PORT
+  serviceApiPort: process.env.SERVICE_API_PORT,
+  cookieValidationPassword: process.env.COOKIE_VALIDATION_PASSWORD
 }
 
 // Validate config

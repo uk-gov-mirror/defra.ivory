@@ -1,12 +1,15 @@
 'use strict'
 
-const { Paths, Views } = require('../utils/constants')
+const RedisService = require('../services/redis.service')
+const { Paths, RedisKeys, Views } = require('../utils/constants')
+
+const title =
+  'Was the replacement ivory taken from the elephant on or after 1 January 1975?'
 
 const handlers = {
   get: (request, h) => {
     return h.view(Views.YES_NO_IDK, {
-      title:
-        'Was the replacement ivory taken from the elephant on or after 1 January 1975?',
+      title,
       hintText: '',
       errorSummaryText: '',
       errorText: false
@@ -17,20 +20,18 @@ const handlers = {
     const payload = request.payload
 
     if (!payload.yesNoIdk) {
+      const errorText =
+        'You must tell us if the replacement ivory was taken from an elephant on or after 1 January 1975'
       return h.view(Views.YES_NO_IDK, {
-        title:
-          'Was the replacement ivory taken from the elephant on or after 1 January 1975?',
+        title,
         hintText: '',
-        errorSummaryText:
-          'You must tell us if the replacement ivory was taken from an elephant on or after 1 January 1975',
+        errorSummaryText: errorText,
         errorText: {
-          text:
-            'You must tell us if the replacement ivory was taken from an elephant on or after 1 January 1975'
+          text: errorText
         }
       })
     } else if (payload.yesNoIdk === 'No') {
-      const client = request.redis.client
-      client.set('ivory-added', 'yes-pre-1975')
+      RedisService.set(request, RedisKeys.IVORY_ADDED, 'yes-pre-1975')
       return h.redirect(Paths.CHECK_YOUR_ANSWERS)
     } else if (payload.yesNoIdk === 'I dont know') {
       return 'Best find out then!'
