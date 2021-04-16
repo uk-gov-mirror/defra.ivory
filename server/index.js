@@ -6,7 +6,6 @@ const cookieConfig = require('./utils/cookieConfig')
 const { DEFRA_IVORY_SESSION_KEY } = require('./utils/constants')
 
 async function createServer () {
-  // Create the hapi server
   const server = hapi.server({
     port: config.port,
     routes: {
@@ -18,7 +17,14 @@ async function createServer () {
     }
   })
 
-  // Register the plugins
+  _registerPlugins()
+
+  _createSessionCookie()
+
+  return server
+}
+
+const _registerPlugins = async server => {
   await server.register(require('./plugins/blipp.plugin'))
   await server.register(require('./plugins/disinfect.plugin'))
   await server.register(require('./plugins/error-pages.plugin'))
@@ -29,11 +35,10 @@ async function createServer () {
   await server.register(require('./plugins/robots.plugin'))
   await server.register(require('./plugins/router.plugin'))
   await server.register(require('./plugins/views.plugin'))
+}
 
-  // Create a session cookie in which to store a waste permit application token
+const _createSessionCookie = server => {
   server.state(DEFRA_IVORY_SESSION_KEY, cookieConfig.options)
-
-  return server
 }
 
 module.exports = createServer
