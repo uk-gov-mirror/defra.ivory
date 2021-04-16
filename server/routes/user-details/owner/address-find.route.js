@@ -47,10 +47,10 @@ const handlers = {
 
 module.exports = [{
   method: 'GET',
-  path: `/${Paths.OWNER_ADDRESS_FIND}`,
+  path: `${Paths.OWNER_ADDRESS_FIND}`,
   handler: handlers.get
 }, {
   method: 'POST',
-  path: `/${Paths.OWNER_ADDRESS_FIND}`,
+  path: `${Paths.OWNER_ADDRESS_FIND}`,
   handler: handlers.post
 }]
