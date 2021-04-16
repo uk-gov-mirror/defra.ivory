@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+
+{% block content %}
+  <div class="govuk-grid-row">
+
+    {% if errorText %}
+      {{ govukErrorSummary({
+        "titleText": "There is a problem",
+        "errorList": [
+          {
+            "text": errorSummaryText,
+            "href": "#internationalAddress"
+          }
+        ]
+      }) }}
+    {% endif %}
+
+    <div class="govuk-grid-column-two-thirds">
+      <form method="post">
+
+        {{ govukTextarea({
+          name: "internationalAddress",
+          id: "internationalAddress",
+          label: {
+            text: title,
+            classes: "govuk-label--l",
+            isPageHeading: true
+          },
+          hint: {
+            text: hintText
+          },
+          errorMessage: errorText
+        }) }}
+
+        {{ govukButton({
+          text: "Confirm and continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
