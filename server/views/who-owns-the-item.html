@@ -1,27 +1,14 @@
-{% extends 'layout.html' %}
+{% extends 'form-layout.html' %}
 
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
+{% block formContent %}
 
-{% block content %}
   <div class="govuk-grid-row">
 
-    {% if errorText %}
-      {{ govukErrorSummary({
-        "titleText": "There is a problem",
-        "errorList": [
-          {
-            "text": errorSummaryText,
-            "href": "#whoOwnsItem"
-          }
-        ]
-      }) }}
-    {% endif %}
-
     <div class="govuk-grid-column-two-thirds">
-      <form method="post">
 
         {{ govukRadios({
           idPrefix: "whoOwnsItem",
@@ -33,7 +20,7 @@
               classes: "govuk-fieldset__legend--l"
             }
           },
-          errorMessage: errorText,
+          errorMessage: fieldErrors['whoOwnsItem'],
           items: [
             {
               value: "I own it",
@@ -53,7 +40,7 @@
             text: "Continue"
           })
         }}
-      </form>
+
     </div>
   </div>
 {% endblock %}

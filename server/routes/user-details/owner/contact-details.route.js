@@ -1,41 +1,156 @@
 'use strict'
 
-const { Paths, Views } = require('../../../utils/constants')
+const { Options, Paths, RedisKeys, Views } = require('../../../utils/constants')
+const { buildErrorSummary } = require('../../../utils/validation')
 
 const handlers = {
   get: async (request, h) => {
     const client = request.redis.client
-    const ownerApplicant = await client.get('owner-applicant')
+    const ownerApplicant = await client.get(RedisKeys.OWNER_APPLICANT)
 
     return h.view(Views.CONTACT_DETAILS, {
-      title: ownerApplicant === 'yes' ? 'Your contact details' : `Owner's contact details`,
-      ownerApplicant: ownerApplicant === 'yes',
-      errorSummaryText: '',
-      errorText: false
+      title: _getTitle(ownerApplicant),
+      ownerApplicant: ownerApplicant === Options.YES
     })
   },
 
   post: async (request, h) => {
     const client = request.redis.client
-    const ownerApplicant = await client.get('owner-applicant')
+    const ownerApplicant = await client.get(RedisKeys.OWNER_APPLICANT)
 
     const payload = request.payload
-    if (ownerApplicant === 'yes') {
-      client.set('owner.name', payload.businessName ?? payload.name)
-      client.set('owner.emailAddress', payload.emailAddress)
-      client.set('applicant.name', payload.name)
-      client.set('applicant.emailAddress', payload.emailAddress)
-    } else {
-      client.set('owner.name', payload.name)
-      client.set('owner.emailAddress', payload.emailAddress)
-    }
 
-    if (ownerApplicant === 'yes') {
-      return h.redirect(Paths.CHECK_YOUR_ANSWERS)
+    const errors = _validateForm(payload, ownerApplicant)
+
+    if (errors.length) {
+      return h.view(Views.CONTACT_DETAILS, {
+        title: _getTitle(ownerApplicant),
+        ownerApplicant: ownerApplicant === Options.YES,
+        ..._getContext(request),
+        ...buildErrorSummary(errors)
+      })
     } else {
-      return h.redirect(Paths.APPLICANT_DETAILS)
+      if (ownerApplicant === Options.YES) {
+        client.set(RedisKeys.OWNER_NAME, payload.businessName ?? payload.name)
+        client.set(RedisKeys.OWNER_EMAIL_ADDRESS, payload.emailAddress)
+        client.set(RedisKeys.APPLICANT_NAME, payload.name)
+        client.set(RedisKeys.APPLICANT_EMAIL_ADDRESS, payload.emailAddress)
+      } else {
+        client.set(RedisKeys.OWNER_NAME, payload.name)
+        client.set(RedisKeys.OWNER_EMAIL_ADDRESS, payload.emailAddress)
+      }
+
+      return h.redirect(
+        ownerApplicant === Options.YES
+          ? Paths.CHECK_YOUR_ANSWERS
+          : Paths.APPLICANT_DETAILS
+      )
     }
   }
+}
+
+const _getTitle = ownerApplicant => {
+  return ownerApplicant === Options.YES
+    ? 'Your contact details'
+    : "Owner's contact details"
+}
+
+const _getContext = request => {
+  const context = {}
+  if (request.payload) {
+    context.name = request.payload.name
+    context.emailAddress = request.payload.emailAddress
+    context.confirmEmailAddress = request.payload.confirmEmailAddress
+  }
+  return context
+}
+
+const _validateForm = (payload, ownerApplicant) => {
+  return ownerApplicant === Options.YES
+    ? _validateOwnerApplicant(payload)
+    : _validateApplicant(payload)
+}
+
+const _validateOwnerApplicant = payload => {
+  const errors = []
+
+  if (!payload.name || !payload.name.trim().length) {
+    errors.push({
+      name: 'name',
+      text: 'Enter your name'
+    })
+  }
+
+  if (!payload.emailAddress || !payload.emailAddress.trim().length) {
+    errors.push({
+      name: 'emailAddress',
+      text: 'Enter your email address'
+    })
+  } else if (!_isValidEmail(payload.emailAddress)) {
+    errors.push({
+      name: 'emailAddress',
+      text:
+        'Enter an email address in the correct format, like name@example.com'
+    })
+  }
+
+  if (!payload.confirmEmailAddress) {
+    errors.push({
+      name: 'confirmEmailAddress',
+      text: 'You must confirm your email address'
+    })
+  } else if (payload.confirmEmailAddress !== payload.emailAddress) {
+    errors.push({
+      name: 'confirmEmailAddress',
+      text: 'This confirmation does not match your email address'
+    })
+  }
+
+  return errors
+}
+
+const _validateApplicant = payload => {
+  const errors = []
+
+  if (!payload.name || !payload.name.trim().length) {
+    errors.push({
+      name: 'name',
+      text: "Enter the owner's name"
+    })
+  }
+
+  if (!payload.emailAddress || !payload.emailAddress.trim().length) {
+    errors.push({
+      name: 'emailAddress',
+      text: 'Enter your email address'
+    })
+  } else if (!_isValidEmail(payload.emailAddress)) {
+    errors.push({
+      name: 'emailAddress',
+      text:
+        'Enter an email address in the correct format, like name@example.com'
+    })
+  }
+
+  if (!payload.confirmEmailAddress) {
+    errors.push({
+      name: 'confirmEmailAddress',
+      text: "You must confirm the owner's email address"
+    })
+  } else if (payload.confirmEmailAddress !== payload.emailAddress) {
+    errors.push({
+      name: 'confirmEmailAddress',
+      text: "This confirmation does not match the owner's email address"
+    })
+  }
+
+  return errors
+}
+
+const _isValidEmail = email => {
+  return email.match(
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+  )
 }
 
 module.exports = [
