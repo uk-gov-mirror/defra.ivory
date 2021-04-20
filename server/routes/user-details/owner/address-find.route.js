@@ -2,6 +2,7 @@
 
 const { Paths, Views } = require('../../../utils/constants')
 const { postcodeValidator } = require('postcode-validator')
+const AddressService = require('../../../services/address.service')
 const completedBy = 'owner' // Temporary until previous page built then will use value saved in Redis. Use 'owner' or '3rdParty'
 
 const handlers = {
@@ -12,7 +13,7 @@ const handlers = {
       errorText: false
     })
   },
-  post: (request, h) => {
+  post: async (request, h) => {
     const payload = request.payload
 
     // If no postcode entered
@@ -36,7 +37,10 @@ const handlers = {
         }
       })
     } else {
-      // Go look up the postcode
+      const test = await AddressService.addressSearch(payload.postcode)
+      console.log(test)
+      const address = test.results
+      console.log(address)
     }
   }
 }
