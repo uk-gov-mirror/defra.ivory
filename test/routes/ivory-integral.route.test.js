@@ -3,6 +3,7 @@
 const createServer = require('../../server')
 
 const TestHelper = require('../utils/test-helper')
+const { ServerEvents } = require('../../server/utils/constants')
 
 describe('ivory-integral route', () => {
   let server
@@ -20,7 +21,9 @@ describe('ivory-integral route', () => {
 
   beforeAll(async done => {
     server = await createServer()
-    done()
+    server.events.on(ServerEvents.PLUGINS_LOADED, () => {
+      done()
+    })
   })
 
   afterAll(() => {

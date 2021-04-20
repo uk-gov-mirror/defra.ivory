@@ -5,10 +5,12 @@ const { Paths, RedisKeys, Views } = require('../utils/constants')
 
 const handlers = {
   get: (request, h) => {
-    return h.view(Views.IVORY_INTEGRAL, {
-      errorSummaryText: '',
-      errorText: false
-    })
+    return h
+      .view(Views.IVORY_INTEGRAL, {
+        errorSummaryText: '',
+        errorText: false
+      })
+      .code(200)
   },
 
   post: (request, h) => {

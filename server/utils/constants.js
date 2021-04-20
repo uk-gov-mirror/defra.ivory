@@ -21,5 +21,8 @@ Constants.RedisKeys = {
   IVORY_INTEGRAL: 'ivory-integral'
 }
 
+Constants.ServerEvents = {
+  PLUGINS_LOADED: 'pluginsLoaded'
+}
 Constants.DEFRA_IVORY_SESSION_KEY = 'DefraIvorySession'
 Constants.SESSION_ID = 'sessionId'
