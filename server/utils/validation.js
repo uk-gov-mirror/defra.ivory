@@ -3,8 +3,8 @@
 const VALIDATION_SUMMARY_HEADING = 'There is a problem'
 
 /**
- * Validates an email using a regular expresssion to determine whether or not it is a valid
- * email address i.e. in the correct format.
+ * Performs validation, checks an email address using a regular expresssion to determine whether or not it is valid
+ * i.e. in a correct email format.
  * @param {*} value The email address to validate.
  * @returns True if the email address is valid, otherwise false.
  */
@@ -14,6 +14,11 @@ const email = value => {
   )
 }
 
+/**
+ * Performs validation, checks whether or not the incoming value is empty.
+ * @param {*} value The value to be validated.
+ * @returns True if the value is empty, otherwise false.
+ */
 const empty = value => {
   return !value || value.toString().trim().length === 0
 }

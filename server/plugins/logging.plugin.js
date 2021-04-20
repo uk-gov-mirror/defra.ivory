@@ -7,6 +7,8 @@ module.exports = {
   options: {
     logPayload: true,
     prettyPrint: config.isDev,
-    level: config.isDev ? 'debug' : 'warn'
+
+    // ///////
+    level: 'warn'
   }
 }
