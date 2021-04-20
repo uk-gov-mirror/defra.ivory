@@ -23,14 +23,16 @@ const handlers = {
     if (!payload.yesNoIdk) {
       const errorText =
         'You must tell us if any ivory has been added to the item since it was made'
-      return h.view(Views.YES_NO_IDK, {
-        title,
-        hintText,
-        errorSummaryText: errorText,
-        errorText: {
-          text: errorText
-        }
-      })
+      return h
+        .view(Views.YES_NO_IDK, {
+          title,
+          hintText,
+          errorSummaryText: errorText,
+          errorText: {
+            text: errorText
+          }
+        })
+        .code(400)
     } else if (payload.yesNoIdk === 'No') {
       RedisService.set(request, RedisKeys.IVORY_ADDED, 'no')
       return h.redirect(Paths.CHECK_YOUR_ANSWERS)

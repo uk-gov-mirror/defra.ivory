@@ -22,14 +22,16 @@ const handlers = {
     if (!payload.yesNoIdk) {
       const errorText =
         'You must tell us if the replacement ivory was taken from an elephant on or after 1 January 1975'
-      return h.view(Views.YES_NO_IDK, {
-        title,
-        hintText: '',
-        errorSummaryText: errorText,
-        errorText: {
-          text: errorText
-        }
-      })
+      return h
+        .view(Views.YES_NO_IDK, {
+          title,
+          hintText: '',
+          errorSummaryText: errorText,
+          errorText: {
+            text: errorText
+          }
+        })
+        .code(400)
     } else if (payload.yesNoIdk === 'No') {
       RedisService.set(request, RedisKeys.IVORY_ADDED, 'yes-pre-1975')
       return h.redirect(Paths.CHECK_YOUR_ANSWERS)

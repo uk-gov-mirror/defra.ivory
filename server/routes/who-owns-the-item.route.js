@@ -15,9 +15,11 @@ const handlers = {
     const errors = _validateForm(payload)
 
     if (errors.length) {
-      return h.view(Views.WHO_OWNS_ITEM, {
-        ...buildErrorSummary(errors)
-      })
+      return h
+        .view(Views.WHO_OWNS_ITEM, {
+          ...buildErrorSummary(errors)
+        })
+        .code(400)
     } else {
       RedisService.set(
         request,

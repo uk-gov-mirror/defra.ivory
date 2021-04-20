@@ -13,13 +13,15 @@ const handlers = {
   post: async (request, h) => {
     const payload = request.payload
     if (!payload.agree) {
-      return h.view(Views.CHECK_YOUR_ANSWERS, {
-        ...(await _getContext(request)),
-        errorSummaryText: 'You must agree to the declaration',
-        errorText: {
-          text: 'You must agree to the declaration'
-        }
-      })
+      return h
+        .view(Views.CHECK_YOUR_ANSWERS, {
+          ...(await _getContext(request)),
+          errorSummaryText: 'You must agree to the declaration',
+          errorText: {
+            text: 'You must agree to the declaration'
+          }
+        })
+        .code(400)
     } else {
       return h.redirect(Paths.CHECK_YOUR_ANSWERS)
     }

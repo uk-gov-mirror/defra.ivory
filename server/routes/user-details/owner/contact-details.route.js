@@ -23,19 +23,19 @@ const handlers = {
       RedisKeys.OWNER_APPLICANT
     )
 
-    console.log(ownerApplicant)
-
     const payload = request.payload
 
     const errors = _validateForm(payload, ownerApplicant)
 
     if (errors.length) {
-      return h.view(Views.CONTACT_DETAILS, {
-        title: _getTitle(ownerApplicant),
-        ownerApplicant: ownerApplicant === Options.YES,
-        ..._getContext(request),
-        ...buildErrorSummary(errors)
-      })
+      return h
+        .view(Views.CONTACT_DETAILS, {
+          title: _getTitle(ownerApplicant),
+          ownerApplicant: ownerApplicant === Options.YES,
+          ..._getContext(request),
+          ...buildErrorSummary(errors)
+        })
+        .code(400)
     } else {
       if (ownerApplicant === Options.YES) {
         RedisService.set(

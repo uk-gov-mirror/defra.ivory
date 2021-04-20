@@ -16,10 +16,12 @@ const handlers = {
     const errors = _validateForm(payload)
 
     if (errors.length) {
-      return h.view(Views.CONTACT_DETAILS, {
-        ..._getContext(request),
-        ...buildErrorSummary(errors)
-      })
+      return h
+        .view(Views.CONTACT_DETAILS, {
+          ..._getContext(request),
+          ...buildErrorSummary(errors)
+        })
+        .code(400)
     }
 
     RedisService.set(request, RedisKeys.APPLICANT_NAME, payload.name)
