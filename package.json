@@ -11,8 +11,10 @@
     "docker:build": "docker build --no-cache -t ivory/ivory .",
     "docker:run": "docker run -p \"3000:3000\" ivory/ivory",
     "lint": "standard",
+    "jest-unit-test": "jest --runInBand --verbose",
     "unit-test": "lab -c -r console -o stdout -r lcov -o lcov.info",
     "test": "npm run lint && npm run unit-test",
+    "test-jest": "npm run lint && npm run jest-unit-test",
     "postinstall": "npm run build"
   },
   "author": "Department for Environment, Food & Rural Affairs",
@@ -49,6 +51,21 @@
     "@hapi/code": "^8.0.3",
     "@hapi/lab": "^24.1.1",
     "codeclimate-test-reporter": "^0.5.1",
+    "jest-junit": "^12.0.0",
+    "jsdom": "^16.5.3",
+    "nock": "^13.0.11",
     "standard": "^16.0.3"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "beforeEach",
+      "expect",
+      "it",
+      "afterEach",
+      "jest",
+      "beforeAll",
+      "afterAll"
+    ]
   }
 }

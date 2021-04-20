@@ -17,13 +17,15 @@ const handlers = {
       client.set('ivory-integral', payload.ivoryIsIntegral)
       return h.redirect(Paths.CHECK_YOUR_ANSWERS)
     } else {
-      return h.view(Views.IVORY_INTEGRAL, {
-        errorSummaryText:
-          'You must tell us how the ivory is integral to the item',
-        errorText: {
-          text: 'You must tell us how the ivory is integral to the item'
-        }
-      })
+      return h
+        .view(Views.IVORY_INTEGRAL, {
+          errorSummaryText:
+            'You must tell us how the ivory is integral to the item',
+          errorText: {
+            text: 'You must tell us how the ivory is integral to the item'
+          }
+        })
+        .code(400)
     }
   }
 }
