@@ -2,7 +2,7 @@
 
 const { Options, Paths, Views, RedisKeys } = require('../utils/constants')
 const RedisService = require('../services/redis.service')
-const { buildErrorSummary } = require('../utils/validation')
+const { buildErrorSummary, Validators } = require('../utils/validation')
 
 const handlers = {
   get: (request, h) => {
@@ -34,7 +34,7 @@ const handlers = {
 
 const _validateForm = payload => {
   const errors = []
-  if (!payload.whoOwnsItem) {
+  if (Validators.empty(payload.whoOwnsItem)) {
     errors.push({
       name: 'whoOwnsItem',
       text: 'Tell us who owns the item'

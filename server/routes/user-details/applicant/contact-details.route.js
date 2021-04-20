@@ -2,7 +2,7 @@
 
 const RedisService = require('../../../services/redis.service')
 const { Paths, RedisKeys, Views } = require('../../../utils/constants')
-const { buildErrorSummary } = require('../../../utils/validation')
+const { buildErrorSummary, Validators } = require('../../../utils/validation')
 
 const title = 'Your contact details'
 
@@ -49,19 +49,19 @@ const _getContext = request => {
 const _validateForm = payload => {
   const errors = []
 
-  if (!payload.name) {
+  if (Validators.empty(payload.name)) {
     errors.push({
       name: 'name',
       text: 'Enter your full name'
     })
   }
 
-  if (!payload.emailAddress || !payload.emailAddress.trim().length) {
+  if (Validators.empty(payload.emailAddress)) {
     errors.push({
       name: 'emailAddress',
       text: 'Enter your email address'
     })
-  } else if (!_isValidEmail(payload.emailAddress)) {
+  } else if (!Validators.email(payload.emailAddress)) {
     errors.push({
       name: 'emailAddress',
       text:
@@ -69,7 +69,7 @@ const _validateForm = payload => {
     })
   }
 
-  if (!payload.confirmEmailAddress) {
+  if (Validators.empty(payload.confirmEmailAddress)) {
     errors.push({
       name: 'confirmEmailAddress',
       text: 'You must confirm your email address'
@@ -82,12 +82,6 @@ const _validateForm = payload => {
   }
 
   return errors
-}
-
-const _isValidEmail = email => {
-  return email.match(
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-  )
 }
 
 module.exports = [

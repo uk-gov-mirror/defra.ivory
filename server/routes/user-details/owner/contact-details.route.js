@@ -2,7 +2,7 @@
 
 const { Options, Paths, RedisKeys, Views } = require('../../../utils/constants')
 const RedisService = require('../../../services/redis.service')
-const { buildErrorSummary } = require('../../../utils/validation')
+const { buildErrorSummary, Validators } = require('../../../utils/validation')
 
 const handlers = {
   get: async (request, h) => {
@@ -97,19 +97,19 @@ const _validateForm = (payload, ownerApplicant) => {
 const _validateOwnerApplicant = payload => {
   const errors = []
 
-  if (!payload.name || !payload.name.trim().length) {
+  if (Validators.empty(payload.name)) {
     errors.push({
       name: 'name',
       text: 'Enter your full name'
     })
   }
 
-  if (!payload.emailAddress || !payload.emailAddress.trim().length) {
+  if (Validators.empty(payload.emailAddress)) {
     errors.push({
       name: 'emailAddress',
       text: 'Enter your email address'
     })
-  } else if (!_isValidEmail(payload.emailAddress)) {
+  } else if (!Validators.email(payload.emailAddress)) {
     errors.push({
       name: 'emailAddress',
       text:
@@ -117,7 +117,7 @@ const _validateOwnerApplicant = payload => {
     })
   }
 
-  if (!payload.confirmEmailAddress) {
+  if (Validators.empty(payload.confirmEmailAddress)) {
     errors.push({
       name: 'confirmEmailAddress',
       text: 'You must confirm your email address'
@@ -135,19 +135,19 @@ const _validateOwnerApplicant = payload => {
 const _validateApplicant = payload => {
   const errors = []
 
-  if (!payload.name || !payload.name.trim().length) {
+  if (Validators.empty(payload.name)) {
     errors.push({
       name: 'name',
       text: "Enter the owner's full name or business name"
     })
   }
 
-  if (!payload.emailAddress || !payload.emailAddress.trim().length) {
+  if (Validators.empty(payload.emailAddress)) {
     errors.push({
       name: 'emailAddress',
       text: "Enter the owner's email address"
     })
-  } else if (!_isValidEmail(payload.emailAddress)) {
+  } else if (!Validators.email(payload.emailAddress)) {
     errors.push({
       name: 'emailAddress',
       text:
@@ -155,7 +155,7 @@ const _validateApplicant = payload => {
     })
   }
 
-  if (!payload.confirmEmailAddress) {
+  if (Validators.empty(payload.confirmEmailAddress)) {
     errors.push({
       name: 'confirmEmailAddress',
       text: "You must confirm the owner's email address"
@@ -168,12 +168,6 @@ const _validateApplicant = payload => {
   }
 
   return errors
-}
-
-const _isValidEmail = email => {
-  return email.match(
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-  )
 }
 
 module.exports = [
