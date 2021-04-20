@@ -1,6 +1,7 @@
 'use strict'
 
-const { Paths, Views } = require('../utils/constants')
+const RedisService = require('../services/redis.service')
+const { Paths, RedisKeys, Views } = require('../utils/constants')
 
 const handlers = {
   get: (request, h) => {
@@ -13,8 +14,11 @@ const handlers = {
   post: (request, h) => {
     const payload = request.payload
     if (payload.ivoryIsIntegral) {
-      const client = request.redis.client
-      client.set('ivory-integral', payload.ivoryIsIntegral)
+      RedisService.set(
+        request,
+        RedisKeys.IVORY_INTEGRAL,
+        payload.ivoryIsIntegral
+      )
       return h.redirect(Paths.CHECK_YOUR_ANSWERS)
     } else {
       return h
