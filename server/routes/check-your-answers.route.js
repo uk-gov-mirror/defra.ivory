@@ -2,6 +2,7 @@
 
 const { Paths, Views, RedisKeys } = require('../utils/constants')
 const RedisService = require('../services/redis.service')
+const { buildErrorSummary, Validators } = require('../utils/validation')
 
 const handlers = {
   get: async (request, h) => {
@@ -12,14 +13,12 @@ const handlers = {
 
   post: async (request, h) => {
     const payload = request.payload
-    if (!payload.agree) {
+    const errors = _validateForm(payload)
+    if (errors.length) {
       return h
         .view(Views.CHECK_YOUR_ANSWERS, {
           ...(await _getContext(request)),
-          errorSummaryText: 'You must agree to the declaration',
-          errorText: {
-            text: 'You must agree to the declaration'
-          }
+          ...buildErrorSummary(errors)
         })
         .code(400)
     } else {
@@ -41,6 +40,17 @@ const _getContext = async request => {
       RedisKeys.APPLICANT_NAME
     )} ${await RedisService.get(request, RedisKeys.APPLICANT_EMAIL_ADDRESS)}`
   }
+}
+
+const _validateForm = payload => {
+  const errors = []
+  if (Validators.empty(payload.agree)) {
+    errors.push({
+      name: 'agree',
+      text: 'You must agree to the declaration'
+    })
+  }
+  return errors
 }
 
 module.exports = [

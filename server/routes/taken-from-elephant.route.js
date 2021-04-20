@@ -2,34 +2,24 @@
 
 const RedisService = require('../services/redis.service')
 const { Paths, RedisKeys, Views } = require('../utils/constants')
-
-const title =
-  'Was the replacement ivory taken from the elephant on or after 1 January 1975?'
+const { buildErrorSummary, Validators } = require('../utils/validation')
 
 const handlers = {
   get: (request, h) => {
     return h.view(Views.YES_NO_IDK, {
-      title,
-      hintText: '',
-      errorSummaryText: '',
-      errorText: false
+      ..._getContext()
     })
   },
 
   post: (request, h) => {
     const payload = request.payload
+    const errors = _validateForm(payload)
 
-    if (!payload.yesNoIdk) {
-      const errorText =
-        'You must tell us if the replacement ivory was taken from an elephant on or after 1 January 1975'
+    if (errors.length) {
       return h
         .view(Views.YES_NO_IDK, {
-          title,
-          hintText: '',
-          errorSummaryText: errorText,
-          errorText: {
-            text: errorText
-          }
+          ..._getContext(),
+          ...buildErrorSummary(errors)
         })
         .code(400)
     } else if (payload.yesNoIdk === 'No') {
@@ -41,6 +31,25 @@ const handlers = {
       return 'Those poor elephants, you are not selling that!'
     }
   }
+}
+
+const _getContext = () => {
+  return {
+    title:
+      'Was the replacement ivory taken from the elephant on or after 1 January 1975?'
+  }
+}
+
+const _validateForm = payload => {
+  const errors = []
+  if (Validators.empty(payload.yesNoIdk)) {
+    errors.push({
+      name: 'yesNoIdk',
+      text:
+        'You must tell us if the replacement ivory was taken from an elephant on or after 1 January 1975'
+    })
+  }
+  return errors
 }
 
 module.exports = [
