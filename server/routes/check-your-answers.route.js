@@ -6,7 +6,7 @@ const RedisService = require('../services/redis.service')
 const handlers = {
   get: async (request, h) => {
     return h.view(Views.CHECK_YOUR_ANSWERS, {
-      ..._getContext()
+      ...(await _getContext(request))
     })
   },
 
@@ -14,7 +14,7 @@ const handlers = {
     const payload = request.payload
     if (!payload.agree) {
       return h.view(Views.CHECK_YOUR_ANSWERS, {
-        ..._getContext(),
+        ...(await _getContext(request)),
         errorSummaryText: 'You must agree to the declaration',
         errorText: {
           text: 'You must agree to the declaration'
