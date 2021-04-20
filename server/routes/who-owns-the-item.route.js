@@ -1,6 +1,6 @@
 'use strict'
 
-const { Options, Paths, Views } = require('../utils/constants')
+const { Options, Paths, Views, RedisKeys } = require('../utils/constants')
 const RedisService = require('../services/redis.service')
 const { buildErrorSummary } = require('../utils/validation')
 
@@ -23,7 +23,7 @@ const handlers = {
     } else {
       RedisService.set(
         request,
-        'owner-applicant',
+        RedisKeys.OWNER_APPLICANT,
         payload.whoOwnsItem === 'I own it' ? Options.YES : Options.NO
       )
 
