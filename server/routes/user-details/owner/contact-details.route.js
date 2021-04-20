@@ -100,7 +100,7 @@ const _validateOwnerApplicant = payload => {
   if (!payload.name || !payload.name.trim().length) {
     errors.push({
       name: 'name',
-      text: 'Enter your name'
+      text: 'Enter your full name'
     })
   }
 
@@ -138,14 +138,14 @@ const _validateApplicant = payload => {
   if (!payload.name || !payload.name.trim().length) {
     errors.push({
       name: 'name',
-      text: "Enter the owner's name"
+      text: "Enter the owner's full name or business name"
     })
   }
 
   if (!payload.emailAddress || !payload.emailAddress.trim().length) {
     errors.push({
       name: 'emailAddress',
-      text: 'Enter your email address'
+      text: "Enter the owner's email address"
     })
   } else if (!_isValidEmail(payload.emailAddress)) {
     errors.push({
