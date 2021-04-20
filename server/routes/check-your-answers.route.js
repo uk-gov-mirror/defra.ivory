@@ -1,6 +1,7 @@
 'use strict'
 
 const { Paths, Views, RedisKeys } = require('../utils/constants')
+const RedisService = require('../services/redis.service')
 
 const handlers = {
   get: async (request, h) => {
@@ -26,16 +27,17 @@ const handlers = {
 }
 
 const _getContext = async request => {
-  const client = request.redis.client
   return {
-    ivoryIntegral: await client.get('ivory-integral'),
-    ivoryAdded: await client.get('ivory-added'),
-    ownerDetails: `${await client.get(RedisKeys.OWNER_NAME)} ${await client.get(
-      RedisKeys.OWNER_EMAIL_ADDRESS
-    )}`,
-    applicantDetails: `${await client.get('applicant.name')} ${await client.get(
-      RedisKeys.APPLICANT_EMAIL_ADDRESS
-    )}`
+    ivoryIntegral: await RedisService.get(request, RedisKeys.IVORY_INTEGRAL),
+    ivoryAdded: await RedisService.get(request, RedisKeys.IVORY_ADDED),
+    ownerDetails: `${await RedisService.get(
+      request,
+      RedisKeys.OWNER_NAME
+    )} ${await RedisService.get(request, RedisKeys.OWNER_EMAIL_ADDRESS)}`,
+    applicantDetails: `${await RedisService.get(
+      request,
+      RedisKeys.APPLICANT_NAME
+    )} ${await RedisService.get(request, RedisKeys.APPLICANT_EMAIL_ADDRESS)}`
   }
 }
 

@@ -38,5 +38,7 @@ module.exports = Object.freeze({
   Options,
   Paths,
   Views,
-  RedisKeys
+  RedisKeys,
+  DEFRA_IVORY_SESSION_KEY: 'DefraIvorySession',
+  SESSION_ID: 'sessionId'
 })

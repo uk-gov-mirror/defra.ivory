@@ -1,12 +1,15 @@
 'use strict'
 
 const { Options, Paths, RedisKeys, Views } = require('../../../utils/constants')
+const RedisService = require('../../../services/redis.service')
 const { buildErrorSummary } = require('../../../utils/validation')
 
 const handlers = {
   get: async (request, h) => {
-    const client = request.redis.client
-    const ownerApplicant = await client.get(RedisKeys.OWNER_APPLICANT)
+    const ownerApplicant = await RedisService.get(
+      request,
+      RedisKeys.OWNER_APPLICANT
+    )
 
     return h.view(Views.CONTACT_DETAILS, {
       title: _getTitle(ownerApplicant),
@@ -15,8 +18,12 @@ const handlers = {
   },
 
   post: async (request, h) => {
-    const client = request.redis.client
-    const ownerApplicant = await client.get(RedisKeys.OWNER_APPLICANT)
+    const ownerApplicant = await RedisService.get(
+      request,
+      RedisKeys.OWNER_APPLICANT
+    )
+
+    console.log(ownerApplicant)
 
     const payload = request.payload
 
@@ -31,13 +38,29 @@ const handlers = {
       })
     } else {
       if (ownerApplicant === Options.YES) {
-        client.set(RedisKeys.OWNER_NAME, payload.businessName ?? payload.name)
-        client.set(RedisKeys.OWNER_EMAIL_ADDRESS, payload.emailAddress)
-        client.set(RedisKeys.APPLICANT_NAME, payload.name)
-        client.set(RedisKeys.APPLICANT_EMAIL_ADDRESS, payload.emailAddress)
+        RedisService.set(
+          request,
+          RedisKeys.OWNER_NAME,
+          payload.businessName ?? payload.name
+        )
+        RedisService.set(
+          request,
+          RedisKeys.OWNER_EMAIL_ADDRESS,
+          payload.emailAddress
+        )
+        RedisService.set(request, RedisKeys.APPLICANT_NAME, payload.name)
+        RedisService.set(
+          request,
+          RedisKeys.APPLICANT_EMAIL_ADDRESS,
+          payload.emailAddress
+        )
       } else {
-        client.set(RedisKeys.OWNER_NAME, payload.name)
-        client.set(RedisKeys.OWNER_EMAIL_ADDRESS, payload.emailAddress)
+        RedisService.set(request, RedisKeys.OWNER_NAME, payload.name)
+        RedisService.set(
+          request,
+          RedisKeys.OWNER_EMAIL_ADDRESS,
+          payload.emailAddress
+        )
       }
 
       return h.redirect(

@@ -2,9 +2,10 @@
 
 const hapi = require('@hapi/hapi')
 const config = require('./utils/config')
+const cookieConfig = require('./utils/cookieConfig')
+const { DEFRA_IVORY_SESSION_KEY } = require('./utils/constants')
 
-async function createServer () {
-  // Create the hapi server
+const createServer = async () => {
   const server = hapi.server({
     port: config.port,
     routes: {
@@ -16,7 +17,14 @@ async function createServer () {
     }
   })
 
-  // Register the plugins
+  _registerPlugins(server)
+
+  _createSessionCookie(server)
+
+  return server
+}
+
+const _registerPlugins = async server => {
   await server.register(require('./plugins/blipp.plugin'))
   await server.register(require('./plugins/disinfect.plugin'))
   await server.register(require('./plugins/error-pages.plugin'))
@@ -27,8 +35,10 @@ async function createServer () {
   await server.register(require('./plugins/robots.plugin'))
   await server.register(require('./plugins/router.plugin'))
   await server.register(require('./plugins/views.plugin'))
+}
 
-  return server
+const _createSessionCookie = server => {
+  server.state(DEFRA_IVORY_SESSION_KEY, cookieConfig.options)
 }
 
 module.exports = createServer

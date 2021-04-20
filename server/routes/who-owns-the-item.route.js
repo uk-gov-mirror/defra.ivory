@@ -1,6 +1,7 @@
 'use strict'
 
 const { Options, Paths, Views } = require('../utils/constants')
+const RedisService = require('../services/redis.service')
 const { buildErrorSummary } = require('../utils/validation')
 
 const handlers = {
@@ -18,8 +19,8 @@ const handlers = {
         ...buildErrorSummary(errors)
       })
     } else {
-      const client = request.redis.client
-      client.set(
+      RedisService.set(
+        request,
         'owner-applicant',
         payload.whoOwnsItem === 'I own it' ? Options.YES : Options.NO
       )

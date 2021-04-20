@@ -1,5 +1,6 @@
 'use strict'
 
+const RedisService = require('../../../services/redis.service')
 const { Paths, RedisKeys, Views } = require('../../../utils/constants')
 const { buildErrorSummary } = require('../../../utils/validation')
 
@@ -21,9 +22,12 @@ const handlers = {
       })
     }
 
-    const client = request.redis.client
-    client.set(RedisKeys.APPLICANT_NAME, payload.name)
-    client.set(RedisKeys.APPLICANT_EMAIL_ADDRESS, payload.emailAddress)
+    RedisService.set(request, RedisKeys.APPLICANT_NAME, payload.name)
+    RedisService.set(
+      request,
+      RedisKeys.APPLICANT_EMAIL_ADDRESS,
+      payload.emailAddress
+    )
 
     return h.redirect(Paths.CHECK_YOUR_ANSWERS)
   }

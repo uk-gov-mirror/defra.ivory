@@ -1,27 +1,28 @@
 # Ivory Project
+
 Digital service to support the Ivory Act.
 
 # Environment variables
+
 The default values will be used if the environment variables are missing or commented out.
 
-| name                | description              | required | default   |            valid            | notes |
-|---------------------|--------------------------|:--------:|-----------|:---------------------------:|-------|
-| NODE_ENV            | Node environment         |    no    |           | development,test,production |       |
-| PORT                | Port number              |    no    | 3000      |                             |       |
-| SERVICE_NAME        | Name of the service      |    no    |           | Any text string             |       |
-| REDIS_HOST          | Redis server IP address  |    no    | 127.0.0.1 |                             |       |
-| REDIS_PORT          | Redis port number        |    no    | 6379      |                             |       |
-| SERVICE_API_ENABLED | Enable/disable ivory API |    yes   | false     | true,false                  |       |
-| SERVICE_API_HOST    | Ivory API IP address     |    no    | 127.0.0.1 |                             |       |
-| SERVICE_API_PORT    | Ivory API port number    |    no    | 3010      |                             |       |
-
+| name                       | description              | required | default   |            valid            | notes |
+| -------------------------- | ------------------------ | :------: | --------- | :-------------------------: | ----- |
+| NODE_ENV                   | Node environment         |    no    |           | development,test,production |       |
+| PORT                       | Port number              |    no    | 3000      |                             |       |
+| SERVICE_NAME               | Name of the service      |    no    |           |       Any text string       |       |
+| COOKIE_VALIDATION_PASSWORD | Cookie encoding password |   yes    |           |       Any text string       |       |
+| REDIS_HOST                 | Redis server IP address  |    no    | 127.0.0.1 |                             |       |
+| REDIS_PORT                 | Redis port number        |    no    | 6379      |                             |       |
+| SERVICE_API_ENABLED        | Enable/disable ivory API |   yes    | false     |         true,false          |       |
+| SERVICE_API_HOST           | Ivory API IP address     |    no    | 127.0.0.1 |                             |       |
+| SERVICE_API_PORT           | Ivory API port number    |    no    | 3010      |                             |       |
 
 # Prerequisites
 
 Node v14.x
 
 Redis
-
 
 # Running the application
 
@@ -38,26 +39,28 @@ Now the application is ready to run:
 `$ npm start` or `$ node index.js`
 
 ### To run the application in Docker
+
 `$ npm run docker` or `$ npm run docker:build` followed by `$ npm run docker:run`
 
 ## Project structure
 
 Here's the default structure for your project files.
 
-* **bin** (build tasks)
-* **client** (client js/sass code)
-* **server**
-  * **plugins**
-  * **public**  (This folder is publicly served)
-    * **static** (Put all static assets in here)
-    * **build** (This contains the build output files (js/css etc.) and is not checked-in)
-  * **routes**
-  * **views**
-  * config.js
-  * index.js (Exports a function that creates a server)
-* **test**
-* README.md
-* index.js (startup server)
+- **bin** (build tasks)
+- **client** (client js/sass code)
+- **server**
+  - **plugins**
+  - **public** (This folder is publicly served)
+    - **static** (Put all static assets in here)
+    - **build** (This contains the build output files (js/css etc.) and is not checked-in)
+  - **routes**
+  - **services**
+  - **views**
+  - config.js
+  - index.js (Exports a function that creates a server)
+- **test**
+- README.md
+- index.js (startup server)
 
 ## Config
 
@@ -96,7 +99,7 @@ Any build output should write to `server/public/build`. This path is in the `.gi
 
 ## Routes
 
-Incoming requests are handled by the server via routes. 
+Incoming requests are handled by the server via routes.
 Each route describes an HTTP endpoint with a path, method, and other properties.
 
 Routes are found in the `server/routes` directory and loaded using the `server/plugins/router.js` plugin.
