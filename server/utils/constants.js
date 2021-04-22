@@ -39,6 +39,9 @@ module.exports = Object.freeze({
   Paths,
   Views,
   RedisKeys,
+  ServerEvents: {
+    PLUGINS_LOADED: 'pluginsLoaded'
+  },
   DEFRA_IVORY_SESSION_KEY: 'DefraIvorySession',
   SESSION_ID: 'sessionId'
 })
