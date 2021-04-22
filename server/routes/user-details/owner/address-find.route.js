@@ -37,7 +37,7 @@ const handlers = {
         }
       })
     } else {
-      const test = await AddressService.addressSearch(payload.postcode)
+      const test = await AddressService.addressSearch(payload.nameNumber, payload.postcode)
       console.log(test)
       const address = test.results
       console.log(address)

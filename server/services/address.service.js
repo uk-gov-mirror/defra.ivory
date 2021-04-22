@@ -1,16 +1,17 @@
 'use strict'
 
+const config = require('../utils/config')
 const fetch = require('node-fetch')
 const { readFileSync } = require('fs')
 const { resolve } = require('path')
 const https = require('https')
 
 module.exports = class AddressService {
-  static async addressSearch (postcode) {
+  static async addressSearch (nameNumber, postcode) {
     const authOptions = {
-      passphrase: '3pJ8jUhvKQ',
+      passphrase: config.addressLookupPassphrase,
       pfx: readFileSync(
-        resolve('ivory-client-cert-snd.pfx')
+        resolve(config.addressLookupPfxCert)
       ),
       keepAlive: false
     }
@@ -20,8 +21,12 @@ module.exports = class AddressService {
       agent: tlsConfiguredAgent
     }
 
-    const response = await fetch(`https://integration-snd.azure.defra.cloud/ws/rest/DEFRA/v1/address/postcodes?postcode=${postcode}`, searchOptions)
+    const response = await fetch(`${config.addressLookupUrl}/ws/rest/DEFRA/v1/address/postcodes?postcode=${postcode}`, searchOptions)
     const json = await response.json()
+
+    if (nameNumber) {
+      // Filter the results
+    }
     return json
   }
 }
