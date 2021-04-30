@@ -20,6 +20,13 @@ const schema = joi.object().keys({
     .default(false),
   serviceApiHost: joi.string().default('127.0.0.1'),
   serviceApiPort: joi.number().default(3010),
+  addressLookupEnabled: joi
+    .bool()
+    .valid(true, false)
+    .default(false),
+  addressLookupUrl: joi.string().default('http://some-url'),
+  addressLookupPassphrase: joi.string(),
+  addressLookupPfxCert: joi.string(),
   cookieValidationPassword: joi.string()
 })
 
@@ -34,6 +41,10 @@ const config = {
   serviceApiEnabled: process.env.SERVICE_API_ENABLED,
   serviceApiHost: process.env.SERVICE_API_HOST,
   serviceApiPort: process.env.SERVICE_API_PORT,
+  addressLookupEnabled: process.env.ADDRESS_LOOKUP_ENABLED,
+  addressLookupUrl: process.env.ADDRESS_LOOKUP_URL,
+  addressLookupPassphrase: process.env.ADDRESS_LOOKUP_PASSPHRASE,
+  addressLookupPfxCert: process.env.ADDRESS_LOOKUP_PFX_CERT,
   cookieValidationPassword: process.env.COOKIE_VALIDATION_PASSWORD
 }
 

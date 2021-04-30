@@ -3,6 +3,7 @@
 const { Options, Paths, RedisKeys, Views } = require('../../../utils/constants')
 const RedisService = require('../../../services/redis.service')
 const { buildErrorSummary, Validators } = require('../../../utils/validation')
+const { addPayloadToContext } = require('../../../utils/general')
 
 const handlers = {
   get: async (request, h) => {
@@ -65,7 +66,7 @@ const handlers = {
 
     return h.redirect(
       ownerApplicant === Options.YES
-        ? Paths.CHECK_YOUR_ANSWERS
+        ? Paths.OWNER_ADDRESS_FIND
         : Paths.APPLICANT_DETAILS
     )
   }
@@ -78,13 +79,7 @@ const _getTitle = ownerApplicant => {
 }
 
 const _getContext = request => {
-  const context = {}
-  if (request.payload) {
-    context.name = request.payload.name
-    context.emailAddress = request.payload.emailAddress
-    context.confirmEmailAddress = request.payload.confirmEmailAddress
-  }
-  return context
+  return addPayloadToContext(request)
 }
 
 const _validateForm = (payload, ownerApplicant) => {

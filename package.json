@@ -43,8 +43,10 @@
     "hapi-robots": "^3.2.2",
     "hapi-sanitize-payload": "^2.0.0",
     "joi": "^17.4.0",
+    "node-fetch": "^2.6.1",
     "node-sass": "^5.0.0",
     "nunjucks": "3.2.3",
+    "postcode-validator": "^3.2.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

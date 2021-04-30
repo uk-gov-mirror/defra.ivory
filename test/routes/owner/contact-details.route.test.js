@@ -11,11 +11,11 @@ const RedisService = require('../../../server/services/redis.service')
 describe('/contact-details route', () => {
   let server
   const url = '/user-details/owner/contact-details'
-  const nextUrl = '/check-your-answers'
+  const nextUrl = '/user-details/owner/address-find'
   const nextUrlNonOwnerApplicant = '/user-details/applicant/contact-details'
 
   const elementIds = {
-    pageHeading: 'page-heading',
+    pageHeading: 'pageHeading',
     name: 'name',
     ownerApplicant: {
       businessName: 'businessName'
@@ -167,7 +167,7 @@ describe('/contact-details route', () => {
     })
   })
 
-  describe('POST: Owner applicant', () => {
+  describe('POST', () => {
     let postOptions
 
     beforeEach(() => {
@@ -189,6 +189,8 @@ describe('/contact-details route', () => {
           emailAddress: 'some-email@somewhere.com',
           confirmEmailAddress: 'some-email@somewhere.com'
         }
+
+        expect(RedisService.set).toBeCalledTimes(0)
 
         const response = await TestHelper.submitPostRequest(
           server,
@@ -213,6 +215,8 @@ describe('/contact-details route', () => {
           emailAddress: 'some-email@somewhere.com',
           confirmEmailAddress: 'some-email@somewhere.com'
         }
+
+        expect(RedisService.set).toBeCalledTimes(0)
 
         const response = await TestHelper.submitPostRequest(
           server,
