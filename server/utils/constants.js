@@ -21,12 +21,14 @@ const Paths = {
   CHECK_YOUR_ANSWERS: '/check-your-answers',
   IVORY_ADDED: '/ivory-added',
   IVORY_INTEGRAL: '/ivory-integral',
+  MAKE_PAYMENT: '/make-payment',
   OWNER_ADDRESS_CHOOSE: '/user-details/owner/address-choose',
   OWNER_ADDRESS_CONFIRM: '/user-details/owner/address-confirm',
   OWNER_ADDRESS_ENTER: '/user-details/owner/address-enter',
   OWNER_ADDRESS_FIND: '/user-details/owner/address-find',
   OWNER_ADDRESS_INTERNATIONAL: '/user-details/owner/address-international',
   OWNER_CONTACT_DETAILS: '/user-details/owner/contact-details',
+  SERVICE_COMPLETE: '/service-complete',
   TAKEN_FROM_ELEPHANT: '/taken-from-elephant',
   WHAT_TYPE_OF_ITEM_IS_IT: '/what-type-of-item-is-it',
   WHO_OWNS_ITEM: '/who-owns-the-item'
@@ -43,6 +45,7 @@ const Views = {
   HOME: 'home',
   IVORY_ADDED: 'ivory-added',
   IVORY_INTEGRAL: 'ivory-integral',
+  SERVICE_COMPLETE: 'service-complete',
   TAKEN_FROM_ELEPHANT: 'taken-from-elephant',
   WHAT_TYPE_OF_ITEM_IS_IT: 'what-type-of-item-is-it',
   WHO_OWNS_ITEM: 'who-owns-the-item',
@@ -60,6 +63,9 @@ const RedisKeys = {
   OWNER_ADDRESS: 'owner.address',
   OWNER_EMAIL_ADDRESS: 'owner.emailAddress',
   OWNER_NAME: 'owner.name',
+  PAYMENT_ID: 'payment-id',
+  PAYMENT_AMOUNT: 'payment-amount',
+  PAYMENT_REFERENCE: 'payment-reference',
   WHAT_TYPE_OF_ITEM_IS_IT: 'what-type-of-item-is-it'
 }
 

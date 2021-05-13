@@ -2,19 +2,20 @@
 
 const hapi = require('@hapi/hapi')
 const config = require('./utils/config')
-const cookieConfig = require('./utils/cookieConfig')
+const { options } = require('./utils/cookie-config')
 const { DEFRA_IVORY_SESSION_KEY, ServerEvents } = require('./utils/constants')
 
 const createServer = async () => {
   const server = hapi.server({
-    port: config.port,
+    port: config.servicePort,
     routes: {
       validate: {
         options: {
           abortEarly: false
         }
       }
-    }
+    },
+    state: options
   })
 
   server.event(ServerEvents.PLUGINS_LOADED)
@@ -42,7 +43,7 @@ const _registerPlugins = async server => {
 }
 
 const _createSessionCookie = server => {
-  server.state(DEFRA_IVORY_SESSION_KEY, cookieConfig.options)
+  server.state(DEFRA_IVORY_SESSION_KEY)
 }
 
 module.exports = createServer

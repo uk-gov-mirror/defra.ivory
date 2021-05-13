@@ -1,0 +1,17 @@
+{% extends 'form-layout.html' %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% block formContent %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        attributes: {
+          id: "pageTitle"
+        },
+        titleText: "Application complete",
+        html: "Your reference number<br><strong id='referenceNumber'>" + paymentReference + "</strong>"
+      }) }}
+    </div>
+  </div>
+{% endblock %}

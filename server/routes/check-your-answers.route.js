@@ -24,7 +24,7 @@ const handlers = {
         .code(400)
     }
 
-    return h.redirect(Paths.CHECK_YOUR_ANSWERS)
+    return h.redirect(Paths.MAKE_PAYMENT)
   }
 }
 
@@ -51,7 +51,9 @@ const _getContext = async request => {
     applicantAddress: `${await RedisService.get(
       request,
       RedisKeys.APPLICANT_ADDRESS
-    )}`
+    )}`,
+    cost:
+      parseInt(await RedisService.get(request, RedisKeys.PAYMENT_AMOUNT)) / 100
   }
 }
 
