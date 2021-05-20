@@ -38,7 +38,7 @@ const handlers = {
 
     await RedisService.set(request, RedisKeys.PAYMENT_AMOUNT, cost)
 
-    return h.redirect(Paths.DESCRIBE_THE_ITEM)
+    return h.redirect(Paths.CAN_CONTINUE)
   }
 }
 
