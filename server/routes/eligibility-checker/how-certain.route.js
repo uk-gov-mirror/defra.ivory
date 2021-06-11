@@ -8,7 +8,7 @@ const handlers = {
     return h.view(Views.HOW_CERTAIN)
   },
 
-  post: async (request, h) => {
+  post: (request, h) => {
     const payload = request.payload
     const errors = _validateForm(payload)
 
@@ -23,7 +23,7 @@ const handlers = {
     if (payload.howCertain === 'Completely') {
       return h.redirect(Paths.WHAT_TYPE_OF_ITEM_IS_IT)
     } else {
-      return h.redirect(Paths.CHECK_YOUR_ANSWERS)
+      return h.redirect(Paths.CONTAIN_ELEPHANT_IVORY)
     }
   }
 }

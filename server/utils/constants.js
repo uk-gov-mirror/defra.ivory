@@ -12,7 +12,8 @@ const CharacterLimits = {
 
 const Options = {
   YES: 'Yes',
-  NO: 'No'
+  NO: 'No',
+  I_DONT_KNOW: 'I dont know'
 }
 
 const ItemType = {
@@ -31,6 +32,10 @@ const SaleIntention = {
   NOT_SURE_YET: "I'm not sure yet"
 }
 
+const Urls = {
+  GOV_UK_HOME: 'https://www.gov.uk/'
+}
+
 const Paths = {
   ACCESSIBILITY_STATEMENT: '/accessibility-statement',
   API_TEST: '/api-test',
@@ -41,16 +46,30 @@ const Paths = {
   APPLICANT_ADDRESS_INTERNATIONAL:
     '/user-details/applicant/address-international',
   APPLICANT_CONTACT_DETAILS: '/user-details/applicant/contact-details',
+  ARE_YOU_A_MUSEUM: '/eligibility-checker/are-you-a-museum',
   CAN_CONTINUE: '/can-continue',
+  CANNOT_CONTINUE: '/eligibility-checker/cannot-continue',
+  CANNOT_TRADE: '/eligibility-checker/cannot-trade',
   CHECK_YOUR_ANSWERS: '/check-your-answers',
+  CONTAIN_ELEPHANT_IVORY: '/eligibility-checker/contain-elephant-ivory',
   DESCRIBE_THE_ITEM: '/describe-the-item',
+  DO_NOT_NEED_SERVICE: '/eligibility-checker/do-not-need-service',
   HOW_CERTAIN: '/eligibility-checker/how-certain',
   INTENTION_FOR_ITEM: '/intention-for-item',
-  IVORY_ADDED: '/ivory-added',
+  IS_IT_A_MUSICAL_INSTRUMENT: '/eligibility-checker/is-it-a-musical-instrument',
+  IS_IT_A_PORTRAIT_MINIATURE: '/eligibility-checker/is-it-a-portrait-miniature',
+  IS_IT_RMI: '/eligibility-checker/is-it-rmi',
+  IS_ITEM_PRE_1918: '/eligibility-checker/is-item-pre-1918',
+  IVORY_ADDED: '/eligibility-checker/ivory-added',
   IVORY_AGE: '/ivory-age',
   IVORY_INTEGRAL: '/ivory-integral',
   IVORY_VOLUME: '/ivory-volume',
   LEGAL_REPONSIBILITY: '/legal-responsibility',
+  LESS_THAN_10_IVORY: '/eligibility-checker/less-than-10-ivory',
+  LESS_THAN_20_IVORY: '/eligibility-checker/less-than-20-ivory',
+  LESS_THAN_320CM_SQUARED: '/eligibility-checker/less-than-320cm-squared',
+  MADE_BEFORE_1947: '/eligibility-checker/made-before-1947',
+  MADE_BEFORE_1975: '/eligibility-checker/made-before-1975',
   MAKE_PAYMENT: '/make-payment',
   OWNER_ADDRESS_CHOOSE: '/user-details/owner/address-choose',
   OWNER_ADDRESS_CONFIRM: '/user-details/owner/address-confirm',
@@ -61,10 +80,12 @@ const Paths = {
   PAGE_NOT_FOUND: '/page-not-found',
   PRIVACY_NOTICE: '/privacy-notice',
   PROBLEM_WITH_SERVICE: '/problem-with-service',
+  RMI_AND_PRE_1918: '/eligibility-checker/rmi-and-pre-1918',
   SALE_INTENTION: '/sale-intention',
+  SELLING_TO_MUSEUM: '/eligibility-checker/selling-to-museum',
   SERVICE_COMPLETE: '/service-complete',
   SERVICE_UNAVAILABLE: '/service-unavailable',
-  TAKEN_FROM_ELEPHANT: '/taken-from-elephant',
+  TAKEN_FROM_ELEPHANT: '/eligibility-checker/taken-from-elephant',
   UPLOAD_PHOTOS: '/upload-photos',
   WHAT_TYPE_OF_ITEM_IS_IT: '/what-type-of-item-is-it',
   WHERE_IS_ITEM: '/where-is-item',
@@ -81,31 +102,46 @@ const Views = {
   ADDRESS_ENTER: 'user-details/address-enter',
   ADDRESS_FIND: 'user-details/address-find',
   ADDRESS_INTERNATIONAL: 'user-details/address-international',
+  ARE_YOU_A_MUSEUM: 'eligibility-checker/are-you-a-museum',
   CAN_CONTINUE: 'can-continue',
+  CANNOT_CONTINUE: 'eligibility-checker/cannot-continue',
+  CANNOT_TRADE: 'eligibility-checker/cannot-trade',
   CHECK_YOUR_ANSWERS: 'check-your-answers',
   CONTACT_DETAILS: 'user-details/contact-details',
+  CONTAIN_ELEPHANT_IVORY: 'eligibility-checker/contain-elephant-ivory',
   DESCRIBE_THE_ITEM: 'describe-the-item',
+  DO_NOT_NEED_SERVICE: 'eligibility-checker/do-not-need-service',
   HOME: 'home',
   HOW_CERTAIN: 'eligibility-checker/how-certain',
   INTENTION_FOR_ITEM: 'intention-for-item',
-  IVORY_ADDED: 'ivory-added',
+  IS_IT_A_MUSICAL_INSTRUMENT: 'eligibility-checker/is-it-a-musical-instrument',
+  IS_IT_A_PORTRAIT_MINIATURE: 'eligibility-checker/is-it-a-portrait-miniature',
+  IS_IT_RMI: 'eligibility-checker/is-it-rmi',
+  IS_ITEM_PRE_1918: 'eligibility-checker/is-item-pre-1918',
+  IVORY_ADDED: 'eligibility-checker/ivory-added',
   IVORY_AGE: 'ivory-age',
   IVORY_INTEGRAL: 'ivory-integral',
   IVORY_VOLUME: 'ivory-volume',
   LEGAL_REPONSIBILITY: 'legal-responsibility',
+  LESS_THAN_10_IVORY: 'eligibility-checker/less-than-10-ivory',
+  LESS_THAN_20_IVORY: 'eligibility-checker/less-than-20-ivory',
+  LESS_THAN_320CM_SQUARED: 'eligibility-checker/less-than-320cm-squared',
+  MADE_BEFORE_1947: 'eligibility-checker/made-before-1947',
+  MADE_BEFORE_1975: 'eligibility-checker/made-before-1975',
   PAGE_NOT_FOUND: 'page-not-found',
   PRIVACY_NOTICE: 'privacy-notice',
   PROBLEM_WITH_SERVICE: 'problem-with-service',
+  RMI_AND_PRE_1918: 'eligibility-checker/rmi-and-pre-1918',
   SALE_INTENTION: 'sale-intention',
+  SELLING_TO_MUSEUM: 'eligibility-checker/selling-to-museum',
   SERVICE_COMPLETE: 'service-complete',
   SERVICE_UNAVAILABLE: 'service-unavailable',
-  TAKEN_FROM_ELEPHANT: 'taken-from-elephant',
+  TAKEN_FROM_ELEPHANT: 'eligibility-checker/taken-from-elephant',
   UPLOAD_PHOTOS: 'upload-photos',
   WHAT_TYPE_OF_ITEM_IS_IT: 'what-type-of-item-is-it',
   WHERE_IS_ITEM: 'where-is-item',
   WHO_OWNS_ITEM: 'who-owns-the-item',
   WHY_IS_ITEM_RMI: 'why-is-item-rmi',
-  YES_NO_IDK: 'yes-no-idk',
   YOUR_PHOTOS: 'your-photos'
 }
 
@@ -118,7 +154,6 @@ const RedisKeys = {
   APPLICANT_NAME: 'applicant.name',
   DESCRIBE_THE_ITEM: 'describe-the-item',
   INTENTION_FOR_ITEM: 'intention-for-item',
-  IVORY_ADDED: 'ivory-added',
   IVORY_AGE: 'ivory-age',
   IVORY_INTEGRAL: 'ivory-integral',
   IVORY_VOLUME: 'ivory-volume',
@@ -156,5 +191,6 @@ module.exports = Object.freeze({
   RedisKeys,
   SaleIntention,
   StatusCodes,
+  Urls,
   DEFRA_IVORY_SESSION_KEY: 'DefraIvorySession'
 })
