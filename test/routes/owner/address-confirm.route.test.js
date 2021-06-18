@@ -107,11 +107,9 @@ describe('/user-details/owner/address-confirm route', () => {
 
       it('should have the correct "Edit the address" link', () => {
         const element = document.querySelector(`#${elementIds.editTheAddress}`)
-        TestHelper.checkLink(
-          element,
-          'Edit the address',
-          '/user-details/owner/address-enter'
-        )
+        expect(element).toBeTruthy()
+        expect(TestHelper.getTextContent(element)).toEqual('Edit the address')
+        expect(element.href).toEqual('/user-details/owner/address-enter')
       })
 
       it('should have the correct Call to Action button', () => {
@@ -179,11 +177,9 @@ describe('/user-details/owner/address-confirm route', () => {
 
       it('should have the correct "Edit the address" link', () => {
         const element = document.querySelector(`#${elementIds.editTheAddress}`)
-        TestHelper.checkLink(
-          element,
-          'Edit the address',
-          '/user-details/owner/address-enter'
-        )
+        expect(element).toBeTruthy()
+        expect(TestHelper.getTextContent(element)).toEqual('Edit the address')
+        expect(element.href).toEqual('/user-details/owner/address-enter')
       })
 
       it('should have the correct Call to Action button', () => {

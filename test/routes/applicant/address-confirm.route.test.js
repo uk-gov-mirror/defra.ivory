@@ -105,11 +105,9 @@ describe('/user-details/applicant/address-confirm route', () => {
 
       it('should have the correct "Edit the address" link', () => {
         const element = document.querySelector(`#${elementIds.editTheAddress}`)
-        TestHelper.checkLink(
-          element,
-          'Edit the address',
-          '/user-details/applicant/address-enter'
-        )
+        expect(element).toBeTruthy()
+        expect(TestHelper.getTextContent(element)).toEqual('Edit the address')
+        expect(element.href).toEqual('/user-details/applicant/address-enter')
       })
 
       it('should have the correct Call to Action button', () => {

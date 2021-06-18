@@ -4,8 +4,7 @@
 
 'use strict'
 
-const { Paths, RedisKeys, StatusCodes } = require('../utils/constants')
-const RedisService = require('../services/redis.service')
+const { Paths, StatusCodes } = require('../utils/constants')
 
 module.exports = {
   plugin: {
@@ -28,15 +27,7 @@ module.exports = {
             return h.redirect(Paths.PAGE_NOT_FOUND)
           }
 
-          if (statusCode === StatusCodes.REQUEST_TIMEOUT) {
-            return h.redirect(Paths.UPLOAD_TIMEOUT)
-          }
-
           if (statusCode === StatusCodes.PAYLOAD_TOO_LARGE) {
-            if (request.route.path === Paths.UPLOAD_PHOTOS) {
-              RedisService.set(request, RedisKeys.UPLOAD_PHOTOS_ERROR, true)
-            }
-
             return h.redirect(request.route.path)
           }
 

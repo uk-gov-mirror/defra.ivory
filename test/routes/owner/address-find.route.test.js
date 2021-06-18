@@ -114,11 +114,11 @@ describe('/user-details/owner/address-find route', () => {
 
     it('should have the correct "Outside UK" link', () => {
       const element = document.querySelector(`#${elementIds.outsideUkLink}`)
-      TestHelper.checkLink(
-        element,
-        'The address is outside the UK',
-        'address-international'
+      expect(element).toBeTruthy()
+      expect(TestHelper.getTextContent(element)).toEqual(
+        'The address is outside the UK'
       )
+      expect(element.href).toEqual('address-international')
     })
   })
 
@@ -181,11 +181,11 @@ describe('/user-details/owner/address-find route', () => {
 
     it('should have the correct "Outside UK" link', () => {
       const element = document.querySelector(`#${elementIds.outsideUkLink}`)
-      TestHelper.checkLink(
-        element,
-        'The address is outside the UK',
-        'address-international'
+      expect(element).toBeTruthy()
+      expect(TestHelper.getTextContent(element)).toEqual(
+        'The address is outside the UK'
       )
+      expect(element.href).toEqual('address-international')
     })
   })
 

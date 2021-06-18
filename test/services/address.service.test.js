@@ -1,5 +1,7 @@
 'use strict'
 
+jest.mock('fs')
+
 const nock = require('nock')
 const config = require('../../server/utils/config')
 
