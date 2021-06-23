@@ -2,6 +2,7 @@
 
 const { Paths, Views, Options } = require('../../utils/constants')
 const { buildErrorSummary, Validators } = require('../../utils/validation')
+const { getStandardOptions } = require('../../utils/general')
 
 const handlers = {
   get: (request, h) => {
@@ -36,7 +37,9 @@ const handlers = {
 
 const _getContext = () => {
   return {
-    pageTitle: 'Does your item contain elephant ivory?'
+    pageTitle: 'Does your item contain elephant ivory?',
+    helpText: 'Any ivory in your item must be ‘worked’ ivory. This means it has been carved or significantly altered from its original raw state in some way.',
+    items: getStandardOptions()
   }
 }
 
@@ -45,7 +48,7 @@ const _validateForm = payload => {
   if (Validators.empty(payload.containElephantIvory)) {
     errors.push({
       name: 'containElephantIvory',
-      text: 'You need to select something!'
+      text: 'Tell us whether your item contains elephant ivory'
     })
   }
   return errors

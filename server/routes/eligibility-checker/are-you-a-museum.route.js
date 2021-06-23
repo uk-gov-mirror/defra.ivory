@@ -3,6 +3,7 @@
 const { ItemType, Paths, RedisKeys, Views, Options } = require('../../utils/constants')
 const RedisService = require('../../services/redis.service')
 const { buildErrorSummary, Validators } = require('../../utils/validation')
+const { getStandardOptions } = require('../../utils/general')
 
 const handlers = {
   get: (request, h) => {
@@ -40,7 +41,9 @@ const handlers = {
 
 const _getContext = () => {
   return {
-    pageTitle: 'Are you selling or hiring the item out on behalf of a museum?'
+    pageTitle: 'Are you selling or hiring the item out on behalf of a museum?',
+    helpText: 'You must be acting on behalf of a museum that is a member of the International Council of Museums, or accredited by one of the following:',
+    items: getStandardOptions(false)
   }
 }
 
@@ -49,7 +52,7 @@ const _validateForm = payload => {
   if (Validators.empty(payload.areYouAMuseum)) {
     errors.push({
       name: 'areYouAMuseum',
-      text: 'You need to select something!'
+      text: 'Tell us whether you are acting on behalf of a museum'
     })
   }
   return errors

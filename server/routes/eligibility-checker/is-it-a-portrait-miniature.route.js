@@ -3,6 +3,7 @@
 const { ItemType, Paths, RedisKeys, Views, Options } = require('../../utils/constants')
 const RedisService = require('../../services/redis.service')
 const { buildErrorSummary, Validators } = require('../../utils/validation')
+const { getStandardOptions } = require('../../utils/general')
 
 const handlers = {
   get: (request, h) => {
@@ -47,7 +48,9 @@ const handlers = {
 
 const _getContext = () => {
   return {
-    pageTitle: 'Is it a portrait miniature?'
+    pageTitle: 'Is your item a portrait miniature?',
+    helpText: 'Portrait miniatures are small portraits, popular in the 18th or 19th century, that were often painted on very thin pieces of ivory.',
+    items: getStandardOptions()
   }
 }
 
@@ -56,7 +59,7 @@ const _validateForm = payload => {
   if (Validators.empty(payload.isItAPortraitMiniature)) {
     errors.push({
       name: 'isItAPortraitMiniature',
-      text: 'You need to select something!'
+      text: 'Tell us whether your item is a portrait miniature'
     })
   }
   return errors

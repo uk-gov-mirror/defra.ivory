@@ -2,6 +2,7 @@
 
 const { Paths, Views, Options } = require('../../utils/constants')
 const { buildErrorSummary, Validators } = require('../../utils/validation')
+const { getStandardOptions } = require('../../utils/general')
 
 const handlers = {
   get: (request, h) => {
@@ -37,7 +38,8 @@ const handlers = {
 const _getContext = () => {
   return {
     pageTitle:
-      'Has any ivory been added to the item since 1 January 1975 to repair or restore it?'
+      'Has any ivory been added since 1 January 1975 to restore the item to its original state?',
+    items: getStandardOptions()
   }
 }
 

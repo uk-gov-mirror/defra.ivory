@@ -3,6 +3,7 @@
 const { ItemType, Paths, RedisKeys, Views, Options } = require('../../utils/constants')
 const RedisService = require('../../services/redis.service')
 const { buildErrorSummary, Validators } = require('../../utils/validation')
+const { getStandardOptions } = require('../../utils/general')
 
 const handlers = {
   get: (request, h) => {
@@ -42,7 +43,9 @@ const handlers = {
 
 const _getContext = () => {
   return {
-    pageTitle: 'Is the item pre 1918?'
+    pageTitle: 'Was your item made before 1 January 1918?',
+    helpText: 'The following might help you decide:',
+    items: getStandardOptions()
   }
 }
 
@@ -51,7 +54,7 @@ const _validateForm = payload => {
   if (Validators.empty(payload.isItemPre1918)) {
     errors.push({
       name: 'isItemPre1918',
-      text: 'You need to select something!'
+      text: 'Tell us whether your item was made before 1918'
     })
   }
   return errors

@@ -2,6 +2,7 @@
 
 const { Paths, Views, Options } = require('../../utils/constants')
 const { buildErrorSummary, Validators } = require('../../utils/validation')
+const { getStandardOptions } = require('../../utils/general')
 
 const handlers = {
   get: (request, h) => {
@@ -36,7 +37,9 @@ const handlers = {
 
 const _getContext = () => {
   return {
-    pageTitle: 'Are you selling or hiring the item out to a museum?'
+    pageTitle: 'Are you selling or hiring your item out to a museum?',
+    helpText: 'The museum must be a member of the International Council of Museums, or accredited by one of the following:',
+    items: getStandardOptions()
   }
 }
 
@@ -45,7 +48,7 @@ const _validateForm = payload => {
   if (Validators.empty(payload.sellingToMuseum)) {
     errors.push({
       name: 'sellingToMuseum',
-      text: 'You need to select something!'
+      text: 'Tell us whether you are selling or hiring out your item to a museum'
     })
   }
   return errors

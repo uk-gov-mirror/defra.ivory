@@ -2,6 +2,7 @@
 
 const { Paths, Views, Options } = require('../../utils/constants')
 const { buildErrorSummary, Validators } = require('../../utils/validation')
+const { getStandardOptions } = require('../../utils/general')
 
 const handlers = {
   get: (request, h) => {
@@ -36,7 +37,9 @@ const handlers = {
 
 const _getContext = () => {
   return {
-    pageTitle: 'Was the item made before 1 January 1975?'
+    pageTitle: 'Was your item made before 1 January 1975?',
+    helpText: 'The following might help you decide:',
+    items: getStandardOptions()
   }
 }
 
@@ -45,7 +48,7 @@ const _validateForm = payload => {
   if (Validators.empty(payload.madeBefore1975)) {
     errors.push({
       name: 'madeBefore1975',
-      text: 'You need to select something!'
+      text: 'Tell us whether your item was made before 1975'
     })
   }
   return errors

@@ -2,6 +2,7 @@
 
 const { Paths, Views, Options } = require('../../utils/constants')
 const { buildErrorSummary, Validators } = require('../../utils/validation')
+const { getStandardOptions } = require('../../utils/general')
 
 const handlers = {
   get: (request, h) => {
@@ -36,7 +37,9 @@ const handlers = {
 
 const _getContext = () => {
   return {
-    pageTitle: 'Less than 320cm squared?'
+    pageTitle: 'Does the portrait miniature have an ivory surface area of less than 320 square centimetres?',
+    helpText: 'Only measure the parts of the portrait you can see. Do not include the frame or areas covered by the frame.',
+    items: getStandardOptions()
   }
 }
 
@@ -45,7 +48,7 @@ const _validateForm = payload => {
   if (Validators.empty(payload.lessThan320cmSquared)) {
     errors.push({
       name: 'lessThan320cmSquared',
-      text: 'You need to select something!'
+      text: 'Tell us whether your portrait miniature has an ivory surface area of less than 320 square centimetres'
     })
   }
   return errors

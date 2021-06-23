@@ -4,17 +4,20 @@ const createServer = require('../../../server')
 
 const TestHelper = require('../../utils/test-helper')
 
-describe('/eligibility-checker/taken-from-elephant route', () => {
+describe('/eligibility-checker/made-before-1975 route', () => {
   let server
-  const url = '/eligibility-checker/taken-from-elephant'
+  const url = '/eligibility-checker/made-before-1975'
+  const nextUrlLessThan20Ivory = '/eligibility-checker/less-than-20-ivory'
   const nextUrlCannotTrade = '/eligibility-checker/cannot-trade'
-  const nextUrlCanContinue = '/can-continue'
   const nextUrlCannotContinue = '/eligibility-checker/cannot-continue'
 
   const elementIds = {
-    takenFromElephant: 'takenFromElephant',
-    takenFromElephant2: 'takenFromElephant-2',
-    takenFromElephant3: 'takenFromElephant-3',
+    pageTitle: 'pageTitle',
+    helpText: 'helpText',
+    helpTextList: 'helpTextList',
+    madeBefore1975: 'madeBefore1975',
+    madeBefore19752: 'madeBefore1975-2',
+    madeBefore19753: 'madeBefore1975-3',
     continue: 'continue'
   }
 
@@ -47,31 +50,44 @@ describe('/eligibility-checker/taken-from-elephant route', () => {
     })
 
     it('should have the correct page heading', () => {
-      const element = document.querySelector('.govuk-fieldset__legend')
+      const element = document.querySelector(`#${elementIds.pageTitle}`)
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        'Was the replacement ivory taken from an elephant on or after 1 January 1975?'
+        'Was your item made before 1 January 1975?'
       )
+    })
+
+    it('should have the correct help text', () => {
+      const element = document.querySelector(`#${elementIds.helpText}`)
+      expect(element).toBeTruthy()
+      expect(TestHelper.getTextContent(element)).toEqual(
+        'The following might help you decide:'
+      )
+    })
+
+    it('should have a help text list', () => {
+      const element = document.querySelector(`#${elementIds.helpTextList}`)
+      expect(element).toBeTruthy()
     })
 
     it('should have the correct radio buttons', () => {
       TestHelper.checkRadioOption(
         document,
-        elementIds.takenFromElephant,
+        elementIds.madeBefore1975,
         'Yes',
         'Yes'
       )
 
       TestHelper.checkRadioOption(
         document,
-        elementIds.takenFromElephant2,
+        elementIds.madeBefore19752,
         'No',
         'No'
       )
 
       TestHelper.checkRadioOption(
         document,
-        elementIds.takenFromElephant3,
+        elementIds.madeBefore19753,
         'I don’t know',
         'I don’t know'
       )
@@ -96,25 +112,25 @@ describe('/eligibility-checker/taken-from-elephant route', () => {
     })
 
     describe('Success', () => {
-      it('should progress to the next route when "Yes" has been selected', async () => {
+      it('should progress to the next route when the first option has been selected', async () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
           'Yes',
-          nextUrlCannotTrade
+          nextUrlLessThan20Ivory
         )
       })
 
-      it('should progress to the next route when "No" has been selected', async () => {
+      it('should progress to the next route when the second option has been selected', async () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
           'No',
-          nextUrlCanContinue
+          nextUrlCannotTrade
         )
       })
 
-      it('should progress to the next route when "I dont know" has been selected', async () => {
+      it('should progress to the next route when the third option has been selected', async () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
@@ -122,22 +138,22 @@ describe('/eligibility-checker/taken-from-elephant route', () => {
           nextUrlCannotContinue
         )
       })
-    })
 
-    describe('Failure', () => {
-      it('should display a validation error message if the user does not select an item', async () => {
-        postOptions.payload.takenFromElephant = ''
-        const response = await TestHelper.submitPostRequest(
-          server,
-          postOptions,
-          400
-        )
-        await TestHelper.checkValidationError(
-          response,
-          'takenFromElephant',
-          'takenFromElephant-error',
-          'You must tell us whether the replacement ivory was taken from an elephant on or after 1 January 1975'
-        )
+      describe('Failure', () => {
+        it('should display a validation error message if the user does not select an item', async () => {
+          postOptions.payload.madeBefore1975 = ''
+          const response = await TestHelper.submitPostRequest(
+            server,
+            postOptions,
+            400
+          )
+          await TestHelper.checkValidationError(
+            response,
+            'madeBefore1975',
+            'madeBefore1975-error',
+            'Tell us whether your item was made before 1975'
+          )
+        })
       })
     })
   })
@@ -149,7 +165,7 @@ const _checkSelectedRadioAction = async (
   selectedOption,
   nextUrl
 ) => {
-  postOptions.payload.takenFromElephant = selectedOption
+  postOptions.payload.madeBefore1975 = selectedOption
 
   const response = await TestHelper.submitPostRequest(server, postOptions)
 

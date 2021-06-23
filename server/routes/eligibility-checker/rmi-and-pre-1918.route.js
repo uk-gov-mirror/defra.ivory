@@ -3,6 +3,7 @@
 const { ItemType, Paths, RedisKeys, Views, Options } = require('../../utils/constants')
 const RedisService = require('../../services/redis.service')
 const { buildErrorSummary, Validators } = require('../../utils/validation')
+const { getStandardOptions } = require('../../utils/general')
 
 const handlers = {
   get: (request, h) => {
@@ -42,7 +43,9 @@ const handlers = {
 
 const _getContext = () => {
   return {
-    pageTitle: 'Is it a pre-1918 item of outstandingly high artistic, cultural or historical value?'
+    pageTitle: 'Is it a pre-1918 item of outstandingly high artistic, cultural or historical value?',
+    helpText: 'The item must:',
+    items: getStandardOptions()
   }
 }
 
@@ -51,7 +54,7 @@ const _validateForm = payload => {
   if (Validators.empty(payload.rmiAndPre1918)) {
     errors.push({
       name: 'rmiAndPre1918',
-      text: 'You need to select something!'
+      text: 'Tell us whether your item is a pre-1918 item of outstandingly high artistic, cultural or historical value'
     })
   }
   return errors
