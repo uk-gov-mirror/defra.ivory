@@ -167,6 +167,7 @@ const RedisKeys = {
   PAYMENT_REFERENCE: 'payment-reference',
   UPLOAD_PHOTOS: 'upload-photos',
   UPLOAD_PHOTOS_ERROR: 'upload-photos.error',
+  USED_CHECKER: 'used-checker',
   WHAT_TYPE_OF_ITEM_IS_IT: 'what-type-of-item-is-it',
   YOUR_PHOTOS: 'your-photos'
 }
