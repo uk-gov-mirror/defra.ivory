@@ -16,6 +16,63 @@ const Options = {
   I_DONT_KNOW: 'I don’t know'
 }
 
+const AgeExemptionReasons = {
+  STAMP_OR_SERIAL:
+    'It has a stamp, serial number or signature to prove its age',
+  DATED_RECEIPT:
+    'I have a dated receipt showing when it was bought or repaired',
+  DATED_PUBLICATION:
+    'I have a dated publication that shows or describes the item',
+  BEEN_IN_FAMILY_1975: 'It’s been in the family since before 1975',
+  BEEN_IN_FAMILY_1947: 'It’s been in the family since before 3 March 1947',
+  BEEN_IN_FAMILY_1918: 'It’s been in the family since before 1918',
+  EXPERT_VERIFICATION: 'I have written verification from a relevant expert',
+  PROFESSIONAL_OPINION: 'I am an expert, and it’s my professional opinion',
+  CARBON_DATED: 'It’s been carbon-dated',
+  OTHER_REASON: 'Other reason'
+}
+
+const DataVerseFieldName = {
+  SECTION_2_CASE_ID: 'cre2c_ivorysection2caseid',
+  SECTION_10_CASE_ID: 'cre2c_ivorysection10caseid',
+  TARGET_COMPLETION_DATE: 'cre2c_targetcompletiondate',
+  NAME: 'cre2c_name',
+  EXEMPTION_CATEGORY: 'cre2c_exemptioncategory',
+  WHERE_IT_WAS_MADE: 'cre2c_whereitwasmade',
+  WHEN_IT_WAS_MADE: 'cre2c_whenitwasmade',
+  WHY_OUTSTANDINLY_VALUABLE: 'cre2c_whyoutstandinglyvaluable',
+  SUBMISSION_REFERENCE: 'cre2c_submissionreference',
+  EXEMPTION_TYPE: 'cre2c_exemptiontype',
+  WHY_IVORY_EXEMPT: 'cre2c_whyivoryexempt',
+  WHY_IVORY_EXEMPT_OTHER_REASON: 'cre2c_whyivoryexemptotherreason',
+  WHY_IVORY_INTEGRAL: 'cre2c_whyivoryintegral',
+  DATE_STATUS_APPLIED: 'cre2c_datestatusapplied',
+  STATUS: 'cre2c_status',
+  SUBMISSION_REFERENCE_DATE: 'cre2c_submissiondate',
+  PAYMENT_REFERENCE: 'cre2c_paymentreference',
+  WHY_AGE_EXEMPT: 'cre2c_whyageexempt',
+  WHY_AGE_EXEMPT_OTHER_REASON: 'cre2c_whyageexemptotherreason',
+  WHERE_IS_THE_IVORY: 'cre2c_wherestheivory',
+  ITEM_SUMMARY: 'cre2c_itemsummary',
+  UNIQUE_FEATURES: 'cre2c_uniquefeatures',
+  INTENTION: 'cre2c_intention',
+  OWNER_NAME: 'cre2c_ownername',
+  OWNER_EMAIL: 'cre2c_owneremail',
+  OWNER_ADDRESS: 'cre2c_owneraddress',
+  APPLICANT_NAME: 'cre2c_applicantname',
+  APPLICANT_EMAIL: 'cre2c_applicantemail',
+  APPLICANT_ADDRESS: 'cre2c_applicantaddress',
+  PHOTO_1: 'cre2c_photo1',
+  SUPPORTING_EVIDENCE_1: 'cre2c_supportingevidence1',
+  SUPPORTING_EVIDENCE_1_NAME: 'cre2c_supportingevidence1_name'
+}
+
+const Intention = {
+  SELL: 'Sell it',
+  HIRE: 'Hire it out',
+  NOT_SURE_YET: "I'm not sure yet"
+}
+
 const ItemType = {
   MUSICAL: 'Musical instrument made before 1975 with less than 20% ivory',
   TEN_PERCENT: 'Item made before 3 March 1947 with less than 10% ivory',
@@ -26,10 +83,19 @@ const ItemType = {
     'Item made before 1918 that has outstandingly high artistic, cultural or historical value'
 }
 
-const SaleIntention = {
-  SELL: 'Sell it',
-  HIRE: 'Hire it out',
-  NOT_SURE_YET: "I'm not sure yet"
+const IvoryIntegralReasons = {
+  ESSENTIAL_TO_DESIGN_OR_FUNCTION:
+    'The ivory is essential to the design or function of the item',
+  CANNOT_EASILY_REMOVE:
+    'You cannot remove the ivory easily or without damaging the item',
+  BOTH_OF_ABOVE: 'Both of the above'
+}
+
+const IvoryVolumeReasons = {
+  CLEAR_FROM_LOOKING_AT_IT: 'It’s clear from looking at it',
+  MEASURED_IT: 'I measured it',
+  WRITTEN_VERIFICATION: 'I have written verification from a relevant expert',
+  OTHER_REASON: 'Other reason'
 }
 
 const Urls = {
@@ -82,6 +148,7 @@ const Paths = {
   PROBLEM_WITH_SERVICE: '/errors/problem-with-service',
   REMOVE_PHOTO: '/remove-photo',
   RMI_AND_PRE_1918: '/eligibility-checker/rmi-and-pre-1918',
+  SAVE_RECORD: '/save-record',
   SELLING_TO_MUSEUM: '/eligibility-checker/selling-to-museum',
   SERVICE_COMPLETE: '/service-complete',
   SERVICE_STATUS: '/service-status',
@@ -165,7 +232,9 @@ const RedisKeys = {
   OWNER_NAME: 'owner.name',
   PAYMENT_AMOUNT: 'payment-amount',
   PAYMENT_ID: 'payment-id',
-  PAYMENT_REFERENCE: 'payment-reference',
+  SUBMISSION_DATE: 'submission-date',
+  SUBMISSION_REFERENCE: 'submission-reference',
+  TARGET_COMPLETION_DATE: 'target-completion-date',
   UPLOAD_PHOTOS: 'upload-photos',
   UPLOAD_PHOTOS_ERROR: 'upload-photos.error',
   USED_CHECKER: 'used-checker',
@@ -175,6 +244,8 @@ const RedisKeys = {
 }
 
 const StatusCodes = {
+  CREATED: 201,
+  NO_CONTENT: 204,
   UNAUTHORIZED: 401,
   PAGE_NOT_FOUND: 404,
   REQUEST_TIMEOUT: 408,
@@ -185,14 +256,18 @@ const StatusCodes = {
 
 module.exports = Object.freeze({
   AddressType,
+  AgeExemptionReasons,
   CharacterLimits,
-  Options,
+  DataVerseFieldName,
+  DEFRA_IVORY_SESSION_KEY: 'DefraIvorySession',
+  Intention,
   ItemType,
+  IvoryIntegralReasons,
+  IvoryVolumeReasons,
+  Options,
   Paths,
-  Views,
   RedisKeys,
-  SaleIntention,
   StatusCodes,
   Urls,
-  DEFRA_IVORY_SESSION_KEY: 'DefraIvorySession'
+  Views
 })

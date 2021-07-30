@@ -1,13 +1,13 @@
 'use strict'
 
 const RedisService = require('../services/redis.service')
-const { Paths, RedisKeys, SaleIntention, Views } = require('../utils/constants')
+const { Paths, RedisKeys, Intention, Views } = require('../utils/constants')
 const { buildErrorSummary, Validators } = require('../utils/validation')
 
 const handlers = {
   get: (request, h) => {
     return h.view(Views.INTENTION_FOR_ITEM, {
-      ..._getContext(request)
+      ..._getContext()
     })
   },
 
@@ -18,7 +18,7 @@ const handlers = {
     if (errors.length) {
       return h
         .view(Views.INTENTION_FOR_ITEM, {
-          ..._getContext(request),
+          ..._getContext(),
           ...buildErrorSummary(errors)
         })
         .code(400)
@@ -37,21 +37,17 @@ const handlers = {
 const _getContext = () => {
   return {
     pageTitle: 'What do you intend to do with the item?',
-    items: [
-      {
-        value: SaleIntention.SELL,
-        text: SaleIntention.SELL
-      },
-      {
-        value: SaleIntention.HIRE,
-        text: SaleIntention.HIRE
-      },
-      {
-        value: SaleIntention.NOT_SURE_YET,
-        text: SaleIntention.NOT_SURE_YET
-      }
-    ]
+    items: _getOptions()
   }
+}
+
+const _getOptions = () => {
+  return Object.values(Intention).map(intention => {
+    return {
+      value: intention,
+      text: intention
+    }
+  })
 }
 
 const _validateForm = payload => {

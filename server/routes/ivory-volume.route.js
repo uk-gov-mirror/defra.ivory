@@ -3,6 +3,7 @@
 const {
   CharacterLimits,
   ItemType,
+  IvoryVolumeReasons,
   Paths,
   RedisKeys,
   Views
@@ -11,7 +12,9 @@ const { formatNumberWithCommas } = require('../utils/general')
 const RedisService = require('../services/redis.service')
 const { buildErrorSummary, Validators } = require('../utils/validation')
 
-const other = 'Other reason'
+const MUSICAL_PERCENTAGE = 20
+const NON_MUSICAL_PERCENTAGE = 10
+const otherReason = 'Other reason'
 
 const handlers = {
   get: async (request, h) => {
@@ -28,8 +31,6 @@ const handlers = {
       return h
         .view(Views.IVORY_VOLUME, {
           ...(await _getContext(request)),
-          otherChecked: payload.ivoryVolume === other,
-          otherText: payload.otherDetail ? payload.otherDetail : '',
           ...buildErrorSummary(errors)
         })
         .code(400)
@@ -38,9 +39,7 @@ const handlers = {
     await RedisService.set(
       request,
       RedisKeys.IVORY_VOLUME,
-      payload.ivoryVolume === other
-        ? `${payload.ivoryVolume}: ${payload.otherDetail}`
-        : payload.ivoryVolume
+      JSON.stringify(payload)
     )
 
     return h.redirect(Paths.IVORY_AGE)
@@ -52,11 +51,38 @@ const _getItemType = async request => {
 }
 
 const _getContext = async request => {
-  const itemType = await _getItemType(request)
-  const percentage = itemType === ItemType.MUSICAL ? 20 : 10
-  return {
-    pageTitle: `How do you know the item has less than ${percentage}% ivory by volume?`
+  let payload
+  if (request.payload) {
+    payload = request.payload
+  } else {
+    payload = JSON.parse(
+      await RedisService.get(request, RedisKeys.IVORY_VOLUME)
+    )
   }
+
+  const ivoryVolume = payload ? payload.ivoryVolume : null
+
+  const itemType = await _getItemType(request)
+  const percentage =
+    itemType === ItemType.MUSICAL ? MUSICAL_PERCENTAGE : NON_MUSICAL_PERCENTAGE
+
+  return {
+    pageTitle: `How do you know the item has less than ${percentage}% ivory by volume?`,
+    options: _getOptions(ivoryVolume),
+    otherReason:
+      payload && payload.ivoryVolume === IvoryVolumeReasons.OTHER_REASON
+        ? payload.otherReason
+        : null
+  }
+}
+
+const _getOptions = ivoryVolume => {
+  return Object.values(IvoryVolumeReasons).map(reason => {
+    return {
+      label: reason,
+      checked: ivoryVolume && ivoryVolume === reason
+    }
+  })
 }
 
 const _validateForm = payload => {
@@ -70,17 +96,17 @@ const _validateForm = payload => {
     })
   }
 
-  if (payload.ivoryVolume === other) {
-    if (Validators.empty(payload.otherDetail)) {
+  if (payload.ivoryVolume === otherReason) {
+    if (Validators.empty(payload.otherReason)) {
       errors.push({
-        name: 'otherDetail',
+        name: 'otherReason',
         text: errorMessage
       })
     }
 
-    if (Validators.maxLength(payload.otherDetail, CharacterLimits.Input)) {
+    if (Validators.maxLength(payload.otherReason, CharacterLimits.Input)) {
       errors.push({
-        name: 'otherDetail',
+        name: 'otherReason',
         text: `Enter no more than ${formatNumberWithCommas(
           CharacterLimits.Input
         )} characters`

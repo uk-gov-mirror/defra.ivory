@@ -22,7 +22,7 @@ describe('/ivory-volume route', () => {
     ivoryVolume2: 'ivoryVolume-2',
     ivoryVolume3: 'ivoryVolume-3',
     ivoryVolume4: 'ivoryVolume-4',
-    otherDetail: 'otherDetail',
+    otherReason: 'otherReason',
     continue: 'continue'
   }
 
@@ -52,6 +52,11 @@ describe('/ivory-volume route', () => {
 
     describe('GET: Not a musical item', () => {
       beforeEach(async () => {
+        RedisService.get = jest
+          .fn()
+          .mockResolvedValueOnce(JSON.stringify({}))
+          .mockResolvedValueOnce(ItemType.MINIATURE)
+
         document = await TestHelper.submitGetRequest(server, getOptions)
       })
 
@@ -110,7 +115,7 @@ describe('/ivory-volume route', () => {
       it('should have the other detail form field', () => {
         TestHelper.checkFormField(
           document,
-          elementIds.otherDetail,
+          elementIds.otherReason,
           'Give details'
         )
       })
@@ -118,7 +123,10 @@ describe('/ivory-volume route', () => {
 
     describe('GET: Has correct heading for a musical item', () => {
       beforeEach(async () => {
-        RedisService.get = jest.fn().mockResolvedValue(ItemType.MUSICAL)
+        RedisService.get = jest
+          .fn()
+          .mockResolvedValueOnce(JSON.stringify({}))
+          .mockResolvedValueOnce(ItemType.MUSICAL)
 
         document = await TestHelper.submitGetRequest(server, getOptions)
       })
@@ -145,6 +153,13 @@ describe('/ivory-volume route', () => {
     })
 
     describe('Success', () => {
+      beforeEach(async () => {
+        RedisService.get = jest
+          .fn()
+          .mockResolvedValueOnce(JSON.stringify({}))
+          .mockResolvedValueOnce(ItemType.MINIATURE)
+      })
+
       it('should store the value in Redis and progress to the next route when the first option has been selected', async () => {
         await _checkSelectedRadioAction(
           postOptions,
@@ -173,7 +188,7 @@ describe('/ivory-volume route', () => {
       })
 
       it('should store the value in Redis and progress to the next route when the fourth option has been selected & Other text added', async () => {
-        postOptions.payload.otherDetail = 'some text'
+        postOptions.payload.otherReason = 'some text'
         await _checkSelectedRadioAction(
           postOptions,
           server,
@@ -185,6 +200,13 @@ describe('/ivory-volume route', () => {
     })
 
     describe('Failure', () => {
+      beforeEach(async () => {
+        RedisService.get = jest
+          .fn()
+          .mockResolvedValueOnce(JSON.stringify({}))
+          .mockResolvedValueOnce(ItemType.MINIATURE)
+      })
+
       it('should display a validation error message if the user does not select an item', async () => {
         postOptions.payload.ivoryVolume = ''
         const response = await TestHelper.submitPostRequest(
@@ -209,8 +231,8 @@ describe('/ivory-volume route', () => {
         )
         await TestHelper.checkValidationError(
           response,
-          'otherDetail',
-          'otherDetail-error',
+          'otherReason',
+          'otherReason-error',
           'You must tell us how you know the item’s ivory volume'
         )
       })
@@ -218,7 +240,7 @@ describe('/ivory-volume route', () => {
       it('should display a validation error message if the other text area > 4000 chars', async () => {
         postOptions.payload = {
           ivoryVolume: other,
-          otherDetail: `${CharacterLimits.fourThousandCharacters}X`
+          otherReason: `${CharacterLimits.fourThousandCharacters}X`
         }
         const response = await TestHelper.submitPostRequest(
           server,
@@ -227,8 +249,8 @@ describe('/ivory-volume route', () => {
         )
         await TestHelper.checkValidationError(
           response,
-          'otherDetail',
-          'otherDetail-error',
+          'otherReason',
+          'otherReason-error',
           'Enter no more than 4,000 characters'
         )
       })
@@ -245,7 +267,7 @@ const _checkSelectedRadioAction = async (
   server,
   selectedOption,
   nextUrl,
-  otherText = ''
+  otherReason = ''
 ) => {
   const redisKey = 'ivory-volume'
   postOptions.payload.ivoryVolume = selectedOption
@@ -254,11 +276,17 @@ const _checkSelectedRadioAction = async (
 
   const response = await TestHelper.submitPostRequest(server, postOptions)
 
+  const expectedRedisValue = {}
+  if (otherReason) {
+    expectedRedisValue.otherReason = otherReason
+  }
+  expectedRedisValue.ivoryVolume = selectedOption
+
   expect(RedisService.set).toBeCalledTimes(1)
   expect(RedisService.set).toBeCalledWith(
     expect.any(Object),
     redisKey,
-    otherText === '' ? selectedOption : `${selectedOption}: ${otherText}`
+    JSON.stringify(expectedRedisValue)
   )
 
   expect(response.headers.location).toEqual(nextUrl)
