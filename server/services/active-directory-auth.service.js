@@ -5,7 +5,7 @@ const AdalNode = require('adal-node')
 const config = require('../utils/config')
 
 module.exports = class ActiveDirectoryAuthService {
-  getToken () {
+  static async getToken () {
     return new Promise((resolve, reject) => {
       const authorityHostUrl = config.dataverseAuthorityHostUrl
       const tenant = config.dataverseTenant

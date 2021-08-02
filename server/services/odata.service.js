@@ -6,7 +6,6 @@ const config = require('../utils/config')
 const { DataVerseFieldName, StatusCodes } = require('../utils/constants')
 
 const ActiveDirectoryAuthService = require('../services/active-directory-auth.service')
-const authService = new ActiveDirectoryAuthService()
 
 const SECTION_2_ENDPOINT = 'cre2c_ivorysection2cases'
 const SECTION_10_ENDPOINT = 'cre2c_ivorysection10cases'
@@ -19,7 +18,7 @@ const headers = {
 
 module.exports = class ODataService {
   static async createRecord (body, isSection2) {
-    const token = await authService.getToken()
+    const token = await ActiveDirectoryAuthService.getToken()
 
     headers.Authorization = `Bearer ${token}`
     headers.Prefer = 'return=representation'
@@ -59,7 +58,7 @@ module.exports = class ODataService {
   }
 
   static async updateRecord (id, body, isSection2) {
-    const token = await authService.getToken()
+    const token = await ActiveDirectoryAuthService.getToken()
 
     headers.Authorization = `Bearer ${token}`
     delete headers.Prefer

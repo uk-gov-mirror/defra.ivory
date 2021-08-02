@@ -48,7 +48,7 @@ const DataVerseFieldName = {
   WHY_IVORY_INTEGRAL: 'cre2c_whyivoryintegral',
   DATE_STATUS_APPLIED: 'cre2c_datestatusapplied',
   STATUS: 'cre2c_status',
-  SUBMISSION_REFERENCE_DATE: 'cre2c_submissiondate',
+  SUBMISSION_DATE: 'cre2c_submissiondate',
   PAYMENT_REFERENCE: 'cre2c_paymentreference',
   WHY_AGE_EXEMPT: 'cre2c_whyageexempt',
   WHY_AGE_EXEMPT_OTHER_REASON: 'cre2c_whyageexemptotherreason',
