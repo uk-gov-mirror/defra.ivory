@@ -98,6 +98,8 @@ const IvoryVolumeReasons = {
   OTHER_REASON: 'Other reason'
 }
 
+const HOME_URL = '/'
+
 const Urls = {
   GOV_UK_HOME: 'https://www.gov.uk/'
 }
@@ -153,6 +155,7 @@ const Paths = {
   SERVICE_COMPLETE: '/service-complete',
   SERVICE_STATUS: '/service-status',
   SERVICE_UNAVAILABLE: '/errors/service-unavailable',
+  SESSION_TIMED_OUT: '/errors/session-timed-out',
   TAKEN_FROM_ELEPHANT: '/eligibility-checker/taken-from-elephant',
   UPLOAD_PHOTOS: '/upload-photos',
   UPLOAD_TIMEOUT: '/errors/upload-timeout',
@@ -203,6 +206,7 @@ const Views = {
   SERVICE_COMPLETE: 'service-complete',
   SERVICE_STATUS: 'service-status',
   SERVICE_UNAVAILABLE: 'errors/service-unavailable',
+  SESSION_TIMED_OUT: 'errors/session-timed-out',
   TAKEN_FROM_ELEPHANT: 'eligibility-checker/taken-from-elephant',
   UPLOAD_PHOTOS: 'upload-photos',
   UPLOAD_TIMEOUT: 'errors/upload-timeout',
@@ -260,6 +264,7 @@ module.exports = Object.freeze({
   CharacterLimits,
   DataVerseFieldName,
   DEFRA_IVORY_SESSION_KEY: 'DefraIvorySession',
+  HOME_URL,
   Intention,
   ItemType,
   IvoryIntegralReasons,
