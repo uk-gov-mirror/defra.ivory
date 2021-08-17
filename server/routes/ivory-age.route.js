@@ -35,10 +35,10 @@ const handlers = {
 
     await _storeRedisValues(request)
 
-    if ((await _getItemType(request)) === ItemType.TEN_PERCENT) {
-      return h.redirect(Paths.IVORY_INTEGRAL)
+    if ((await _getItemType(request)) === ItemType.HIGH_VALUE) {
+      return h.redirect(Paths.UPLOAD_DOCUMENT)
     } else {
-      return h.redirect(Paths.UPLOAD_PHOTOS)
+      return h.redirect(Paths.WHO_OWNS_ITEM)
     }
   }
 }
@@ -53,9 +53,8 @@ const _storeRedisValues = request => {
   return RedisService.set(request, RedisKeys.IVORY_AGE, JSON.stringify(payload))
 }
 
-const _getItemType = async request => {
-  return RedisService.get(request, RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT)
-}
+const _getItemType = async request =>
+  RedisService.get(request, RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT)
 
 const _getContext = async request => {
   let payload

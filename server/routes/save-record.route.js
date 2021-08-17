@@ -1,6 +1,11 @@
 'use strict'
 
-const { Paths, RedisKeys, ItemType, PaymentResult } = require('../utils/constants')
+const {
+  Paths,
+  RedisKeys,
+  ItemType,
+  PaymentResult
+} = require('../utils/constants')
 const { DataVerseFieldName } = require('../utils/constants')
 const {
   AgeExemptionReasonLookup,
@@ -31,6 +36,10 @@ const handlers = {
       const entity = await _createRecord(request, itemType, isSection2)
 
       await _updateRecord(request, entity, isSection2)
+
+      if (isSection2) {
+        await _updateRecordAttachments(request, entity)
+      }
     }
     return h.redirect(Paths.SERVICE_COMPLETE)
   }
@@ -57,6 +66,19 @@ const _updateRecord = async (request, entity, isSection2) => {
   return ODataService.updateRecord(id, updateBody, isSection2)
 }
 
+const _updateRecordAttachments = async (request, entity) => {
+  const supportingInformation = JSON.parse(
+    await RedisService.get(request, RedisKeys.UPLOAD_DOCUMENT)
+  )
+
+  if (supportingInformation) {
+    ODataService.updateRecordAttachments(
+      entity[DataVerseFieldName.SECTION_2_CASE_ID],
+      supportingInformation
+    )
+  }
+}
+
 module.exports = [
   {
     method: 'GET',
@@ -66,7 +88,7 @@ module.exports = [
 ]
 
 const _createSection2Body = async (request, itemType, itemDescription) => {
-  const body = {
+  return {
     ...(await _getCommonFields(request, itemDescription)),
     [DataVerseFieldName.TARGET_COMPLETION_DATE]: await RedisService.get(
       request,
@@ -84,11 +106,8 @@ const _createSection2Body = async (request, itemType, itemDescription) => {
     [DataVerseFieldName.WHY_OUTSTANDINLY_VALUABLE]: await RedisService.get(
       request,
       RedisKeys.WHY_IS_ITEM_RMI
-    ),
-    ...(await _addSupportingInformation(request))
+    )
   }
-
-  return body
 }
 
 const _createSection10Body = async (request, itemType, itemDescription) => {
@@ -101,7 +120,7 @@ const _createSection10Body = async (request, itemType, itemDescription) => {
     ? JSON.parse(ivoryVolumeStringified)
     : null
 
-  const body = {
+  return {
     ...(await _getCommonFields(request, itemDescription)),
     [DataVerseFieldName.SUBMISSION_REFERENCE]: await RedisService.get(
       request,
@@ -121,8 +140,6 @@ const _createSection10Body = async (request, itemType, itemDescription) => {
           )
         : null
   }
-
-  return body
 }
 
 const _getCommonFields = async (request, itemDescription) => {
@@ -163,7 +180,7 @@ const _getCommonFields = async (request, itemDescription) => {
   return commonFields
 }
 
-const _addOwnerAndApplicantDetails = async (request, body) => {
+const _addOwnerAndApplicantDetails = async request => {
   return {
     [DataVerseFieldName.OWNER_NAME]: await RedisService.get(
       request,
@@ -194,7 +211,7 @@ const _addOwnerAndApplicantDetails = async (request, body) => {
 
 const _addInitialPhoto = async request => {
   const photos = JSON.parse(
-    await RedisService.get(request, RedisKeys.UPLOAD_PHOTOS)
+    await RedisService.get(request, RedisKeys.UPLOAD_PHOTO)
   )
 
   return {
@@ -205,7 +222,7 @@ const _addInitialPhoto = async request => {
 
 const _addAdditionalPhotos = async request => {
   const photos = JSON.parse(
-    await RedisService.get(request, RedisKeys.UPLOAD_PHOTOS)
+    await RedisService.get(request, RedisKeys.UPLOAD_PHOTO)
   )
 
   const additionalPhotos = {}
@@ -216,18 +233,6 @@ const _addAdditionalPhotos = async request => {
   }
 
   return additionalPhotos
-}
-
-// TODO - IVORY-367 - These fields will be added
-const _addSupportingInformation = async request => {
-  // const supportingInformation = JSON.parse(
-  //   await RedisService.get(request, RedisKeys.SUPPORTING_INFORMATION)
-  // )
-
-  return {
-    [DataVerseFieldName.SUPPORTING_EVIDENCE_1]: null,
-    [DataVerseFieldName.SUPPORTING_EVIDENCE_1_NAME]: null
-  }
 }
 
 const _getExemptionCategoryCode = itemType => {
@@ -245,14 +250,10 @@ const _getAgeExemptionReasonCodes = ivoryAgeReasons => {
   return ageExemptionReasonCodes
 }
 
-const _getIntentionCategoryCode = intention => {
-  return IntentionLookup[intention]
-}
+const _getIntentionCategoryCode = intention => IntentionLookup[intention]
 
-const _getIvoryVolumeReasonCode = ivoryVolumeReason => {
-  return IvoryVolumeLookup[ivoryVolumeReason]
-}
+const _getIvoryVolumeReasonCode = ivoryVolumeReason =>
+  IvoryVolumeLookup[ivoryVolumeReason]
 
-const _getIvoryIntegralReasonCode = ivoryIntegralReason => {
-  return IvoryIntegralLookup[ivoryIntegralReason]
-}
+const _getIvoryIntegralReasonCode = ivoryIntegralReason =>
+  IvoryIntegralLookup[ivoryIntegralReason]

@@ -12,16 +12,16 @@ const CookieService = require('../../server/services/cookie.service')
 jest.mock('../../server/services/redis.service')
 const RedisService = require('../../server/services/redis.service')
 
-describe('/your-photos route', () => {
+describe('/your-documents route', () => {
   let server
-  const url = '/your-photos'
-  const nextUrl = '/describe-the-item'
-  const nextUrlUploadPhoto = '/upload-photo'
+  const url = '/your-documents'
+  const nextUrl = '/who-owns-the-item'
+  const nextUrlUploadDocument = '/upload-document'
 
   const elementIds = {
     pageTitle: 'pageTitle',
     helpText: 'helpText',
-    addAnotherPhoto: 'addAnotherPhoto',
+    addAnotherDocument: 'addAnotherDocument',
     continue: 'continue'
   }
 
@@ -49,7 +49,7 @@ describe('/your-photos route', () => {
       url
     }
 
-    describe('GET: 0 photos', () => {
+    describe('GET: 0 documents', () => {
       beforeEach(async () => {
         RedisService.get = jest
           .fn()
@@ -64,11 +64,11 @@ describe('/your-photos route', () => {
           false
         )
 
-        expect(response.headers.location).toEqual(nextUrlUploadPhoto)
+        expect(response.headers.location).toEqual(nextUrlUploadDocument)
       })
     })
 
-    describe('GET: 6 or less photos', () => {
+    describe('GET: 6 or less documents', () => {
       beforeEach(async () => {
         RedisService.get = jest.fn().mockResolvedValue(JSON.stringify(mockData))
 
@@ -86,20 +86,26 @@ describe('/your-photos route', () => {
       it('should have the correct page heading', () => {
         const element = document.querySelector(`#${elementIds.pageTitle}`)
         expect(element).toBeTruthy()
-        expect(TestHelper.getTextContent(element)).toEqual('Your photos')
+        expect(TestHelper.getTextContent(element)).toEqual('Your documents')
       })
 
       it('should have the correct help text', () => {
         const element = document.querySelector(`#${elementIds.helpText}`)
         expect(element).toBeTruthy()
         expect(TestHelper.getTextContent(element)).toEqual(
-          'You can add up to 6 photos.'
+          'You can add up to 6 documents.'
         )
       })
 
-      it('should have the "Add another photo" link', () => {
-        const element = document.querySelector(`#${elementIds.addAnotherPhoto}`)
-        TestHelper.checkLink(element, 'Add another photo', '/upload-photo')
+      it('should have the "Add another document" link', () => {
+        const element = document.querySelector(
+          `#${elementIds.addAnotherDocument}`
+        )
+        TestHelper.checkLink(
+          element,
+          'Add another document',
+          '/upload-document'
+        )
       })
 
       it('should have the correct Call to Action button', () => {
@@ -109,17 +115,19 @@ describe('/your-photos route', () => {
       })
     })
 
-    describe('GET: 6 photos', () => {
+    describe('GET: 6 documents', () => {
       beforeEach(async () => {
         RedisService.get = jest
           .fn()
-          .mockResolvedValue(JSON.stringify(mockDataSixPhotos))
+          .mockResolvedValue(JSON.stringify(mockDataSixDocuments))
 
         document = await TestHelper.submitGetRequest(server, getOptions)
       })
 
-      it('should not have the "Add another photo" link', () => {
-        const element = document.querySelector(`#${elementIds.addAnotherPhoto}`)
+      it('should not have the "Add another document" link', () => {
+        const element = document.querySelector(
+          `#${elementIds.addAnotherDocument}`
+        )
         expect(element).toBeFalsy()
       })
     })
@@ -151,46 +159,26 @@ describe('/your-photos route', () => {
 const mockNoData = {
   files: [],
   fileData: [],
-  fileSizes: [],
-  thumbnails: [],
-  thumbnailData: []
+  fileSizes: []
 }
 
 const mockData = {
-  files: ['1.png'],
+  files: ['1.pdf'],
   fileData: ['file-data'],
-  fileSizes: [100],
-  thumbnails: ['1-thumbnail.png'],
-  thumbnailData: ['thumbnail-data']
+  fileSizes: [100]
 }
 
-const mockDataSixPhotos = {
-  files: ['1.png', '2.jpeg', '3.png', '4.jpeg', '5.png', '6.png'],
+const mockDataSixDocuments = {
+  files: ['1.pdf', '2.pdf', '3.pdf', '4.pdf', '5.pdf', '6.pdf'],
   fileData: [
-    'file-data',
-    'file-data',
-    'file-data',
-    'file-data',
-    'file-data',
-    'file-data'
+    'file-data-1',
+    'file-data-2',
+    'file-data-3',
+    'file-data-4',
+    'file-data-5',
+    'file-data-6'
   ],
-  fileSizes: [100, 200, 300, 400, 500, 600],
-  thumbnails: [
-    '1-thumbnail.png',
-    '2-thumbnail.jpeg',
-    '3-thumbnail.png',
-    '4-thumbnail.jpeg',
-    '5-thumbnail.png',
-    '6-thumbnail.jpeg'
-  ],
-  thumbnailData: [
-    'thumbnail-data',
-    'thumbnail-data',
-    'thumbnail-data',
-    'thumbnail-data',
-    'thumbnail-data',
-    'thumbnail-data'
-  ]
+  fileSizes: [100, 200, 300, 400, 500, 600]
 }
 
 const _createMocks = () => {

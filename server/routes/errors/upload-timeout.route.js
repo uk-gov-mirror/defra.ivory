@@ -8,9 +8,8 @@ const handlers = {
       ..._getContext()
     })
   },
-  post: (request, h) => {
-    return h.redirect(Paths.UPLOAD_PHOTOS)
-  }
+
+  post: (request, h) => h.redirect(Paths.UPLOAD_PHOTO)
 }
 
 const _getContext = () => {

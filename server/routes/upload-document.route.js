@@ -3,22 +3,37 @@
 const fs = require('fs')
 
 const path = require('path')
-const sharp = require('sharp')
 
 const config = require('../utils/config')
 const RedisService = require('../services/redis.service')
 const { Paths, RedisKeys, Views } = require('../utils/constants')
 const { buildErrorSummary } = require('../utils/validation')
+const { checkForDuplicates, checkForFileSizeError } = require('../utils/upload')
 
-const MAX_FILES = 1
-const THUMBNAIL_WIDTH = 1000
-const ALLOWED_EXTENSIONS = ['.JPG', '.JPEG', '.PNG']
+const MAX_DOCUMENTS = 6
+const MAX_FILES_IN_REQUEST_PAYLOAD = 1
+const ALLOWED_EXTENSIONS = ['.DOC', '.DOCX', '.PDF']
 
 const handlers = {
   get: async (request, h) => {
-    const errors = await _checkForFileSizeError(request)
+    const uploadData = JSON.parse(
+      await RedisService.get(request, RedisKeys.UPLOAD_DOCUMENT)
+    )
 
-    return h.view(Views.UPLOAD_PHOTOS, {
+    if (
+      uploadData &&
+      uploadData.files &&
+      uploadData.files.length >= MAX_DOCUMENTS
+    ) {
+      return h.redirect(Paths.YOUR_DOCUMENTS)
+    }
+
+    const errors = await checkForFileSizeError(
+      request,
+      RedisKeys.UPLOAD_DOCUMENT_ERROR
+    )
+
+    return h.view(Views.UPLOAD_DOCUMENT, {
       ...(await _getContext(request)),
       ...buildErrorSummary(errors)
     })
@@ -31,11 +46,11 @@ const handlers = {
 
     const uploadData = context.uploadData
 
-    const errors = _validateForm(payload, uploadData)
+    let errors = _validateForm(payload, uploadData)
 
     if (errors.length) {
       return h
-        .view(Views.UPLOAD_PHOTOS, {
+        .view(Views.UPLOAD_DOCUMENT, {
           ...context,
           ...buildErrorSummary(errors)
         })
@@ -44,44 +59,23 @@ const handlers = {
 
     try {
       const filename = payload.files.filename
-      const extension = path.extname(filename)
 
       const file = await fs.promises.readFile(payload.files.path)
 
-      const filenameNoExtension = filename.substring(
-        0,
-        filename.length - extension.length
-      )
-      const thumbnailFilename = `${filenameNoExtension}-thumbnail${extension}`
-
       uploadData.files.push(filename)
       uploadData.fileSizes.push(payload.files.bytes)
-      uploadData.thumbnails.push(thumbnailFilename)
 
       const buffer = Buffer.from(file)
       const base64 = buffer.toString('base64')
       uploadData.fileData.push(base64)
 
-      const thumbnailBuffer = await sharp(buffer)
-        .resize(THUMBNAIL_WIDTH, null, {
-          withoutEnlargement: true
-        })
-        .toBuffer()
-
-      uploadData.thumbnailData.push(thumbnailBuffer.toString('base64'))
-
       RedisService.set(
         request,
-        RedisKeys.UPLOAD_PHOTOS,
+        RedisKeys.UPLOAD_DOCUMENT,
         JSON.stringify(uploadData)
       )
-
-      return h.redirect(Paths.YOUR_PHOTOS)
     } catch (error) {
-      if (error.message === 'Input buffer contains unsupported image format') {
-        error.message = 'Unrecognised image file format'
-      }
-      const errors = []
+      errors = []
       errors.push({
         name: 'files',
         text: error.message
@@ -89,35 +83,37 @@ const handlers = {
 
       if (errors.length) {
         return h
-          .view(Views.UPLOAD_PHOTOS, {
+          .view(Views.UPLOAD_DOCUMENT, {
             ...(await _getContext(request)),
             ...buildErrorSummary(errors)
           })
           .code(400)
       }
     }
+
+    return h.redirect(Paths.YOUR_DOCUMENTS)
   }
 }
 
 const _getContext = async request => {
   const uploadData = JSON.parse(
-    await RedisService.get(request, RedisKeys.UPLOAD_PHOTOS)
+    await RedisService.get(request, RedisKeys.UPLOAD_DOCUMENT)
   ) || {
     files: [],
     fileData: [],
-    fileSizes: [],
-    thumbnails: [],
-    thumbnailData: []
+    fileSizes: []
   }
 
   const hideHelpText = uploadData.files.length
 
   return {
-    pageTitle: !hideHelpText ? 'Add a photo of your item' : 'Add another photo',
     hideHelpText,
-    accept: ALLOWED_EXTENSIONS.join(','),
     uploadData,
-    yourPhotosUrl: Paths.YOUR_PHOTOS,
+    pageTitle: !hideHelpText
+      ? 'Add a document to support your case'
+      : 'Add another document',
+    accept: ALLOWED_EXTENSIONS.join(','),
+    fileListUrl: Paths.YOUR_DOCUMENTS,
     maximumFileSize: config.maximumFileSize
   }
 }
@@ -128,7 +124,7 @@ const _validateForm = (payload, uploadData) => {
   if (
     payload.files &&
     Array.isArray(payload.files) &&
-    payload.files.length > MAX_FILES
+    payload.files.length > MAX_FILES_IN_REQUEST_PAYLOAD
   ) {
     // Note that this error should never happen because in the HTML we have not specified the attributes of:
     // - multiple: true
@@ -154,51 +150,17 @@ const _validateForm = (payload, uploadData) => {
     )
   ) {
     // Note that this error should never happen because in the HTML we have specified attributes of:
-    // - accept: ".jpg,.jpeg,.png"
+    // - accept: ".pdf,.doc,.docx"
     errors.push({
       name: 'files',
-      text: 'The file must be a JPG or PNG'
+      text: 'The file must be a PDF or Microsoft Word document (.DOC or .DOCX)'
     })
-  } else if (_checkForDuplicates(payload, uploadData)) {
+  } else if (checkForDuplicates(payload, uploadData)) {
     errors.push({
       name: 'files',
-      text: "You've already uploaded that image. Choose a different one"
+      text: "You've already uploaded that document. Choose a different one"
     })
   }
-
-  return errors
-}
-
-const _checkForDuplicates = (payload, uploadData) => {
-  let duplicateFound
-
-  if (uploadData.files && uploadData.fileSizes) {
-    for (let i = 0; i < uploadData.files.length; i++) {
-      if (
-        uploadData.files[i] === payload.files.filename &&
-        uploadData.fileSizes[i] === payload.files.bytes
-      ) {
-        duplicateFound = true
-        break
-      }
-    }
-  }
-
-  return duplicateFound
-}
-
-const _checkForFileSizeError = async request => {
-  const errors = []
-  if (
-    (await RedisService.get(request, RedisKeys.UPLOAD_PHOTOS_ERROR)) === 'true'
-  ) {
-    errors.push({
-      name: 'files',
-      text: `The file must be smaller than ${config.maximumFileSize}mb`
-    })
-  }
-
-  await RedisService.set(request, RedisKeys.UPLOAD_PHOTOS_ERROR, false)
 
   return errors
 }
@@ -206,12 +168,12 @@ const _checkForFileSizeError = async request => {
 module.exports = [
   {
     method: 'GET',
-    path: `${Paths.UPLOAD_PHOTOS}`,
+    path: `${Paths.UPLOAD_DOCUMENT}`,
     handler: handlers.get
   },
   {
     method: 'POST',
-    path: `${Paths.UPLOAD_PHOTOS}`,
+    path: `${Paths.UPLOAD_DOCUMENT}`,
     handler: handlers.post,
     config: {
       payload: {

@@ -157,6 +157,7 @@ const Paths = {
   PAGE_NOT_FOUND: '/errors/page-not-found',
   PRIVACY_NOTICE: '/privacy-notice',
   PROBLEM_WITH_SERVICE: '/errors/problem-with-service',
+  REMOVE_DOCUMENT: '/remove-document',
   REMOVE_PHOTO: '/remove-photo',
   RMI_AND_PRE_1918: '/eligibility-checker/rmi-and-pre-1918',
   SAVE_RECORD: '/save-record',
@@ -166,11 +167,14 @@ const Paths = {
   SERVICE_UNAVAILABLE: '/errors/service-unavailable',
   SESSION_TIMED_OUT: '/errors/session-timed-out',
   TAKEN_FROM_ELEPHANT: '/eligibility-checker/taken-from-elephant',
-  UPLOAD_PHOTOS: '/upload-photos',
+  UPLOAD_DOCUMENT: '/upload-document',
+  UPLOAD_PHOTO: '/upload-photo',
   UPLOAD_TIMEOUT: '/errors/upload-timeout',
+  WANT_TO_ADD_DOCUMENTS: '/want-to-add-documents',
   WHAT_TYPE_OF_ITEM_IS_IT: '/what-type-of-item-is-it',
   WHO_OWNS_ITEM: '/who-owns-the-item',
   WHY_IS_ITEM_RMI: '/why-is-item-rmi',
+  YOUR_DOCUMENTS: '/your-documents',
   YOUR_PHOTOS: '/your-photos'
 }
 
@@ -217,11 +221,14 @@ const Views = {
   SERVICE_UNAVAILABLE: 'errors/service-unavailable',
   SESSION_TIMED_OUT: 'errors/session-timed-out',
   TAKEN_FROM_ELEPHANT: 'eligibility-checker/taken-from-elephant',
-  UPLOAD_PHOTOS: 'upload-photos',
+  UPLOAD_DOCUMENT: 'upload-document',
+  UPLOAD_PHOTO: 'upload-photo',
   UPLOAD_TIMEOUT: 'errors/upload-timeout',
+  WANT_TO_ADD_DOCUMENTS: 'want-to-add-documents',
   WHAT_TYPE_OF_ITEM_IS_IT: 'what-type-of-item-is-it',
   WHO_OWNS_ITEM: 'who-owns-the-item',
   WHY_IS_ITEM_RMI: 'why-is-item-rmi',
+  YOUR_DOCUMENTS: 'your-documents',
   YOUR_PHOTOS: 'your-photos'
 }
 
@@ -248,11 +255,14 @@ const RedisKeys = {
   SUBMISSION_DATE: 'submission-date',
   SUBMISSION_REFERENCE: 'submission-reference',
   TARGET_COMPLETION_DATE: 'target-completion-date',
-  UPLOAD_PHOTOS: 'upload-photos',
-  UPLOAD_PHOTOS_ERROR: 'upload-photos.error',
+  UPLOAD_DOCUMENT: 'upload-document',
+  UPLOAD_DOCUMENT_ERROR: 'upload-document.error',
+  UPLOAD_PHOTO: 'upload-photo',
+  UPLOAD_PHOTO_ERROR: 'upload-photo.error',
   USED_CHECKER: 'used-checker',
   WHAT_TYPE_OF_ITEM_IS_IT: 'what-type-of-item-is-it',
   WHY_IS_ITEM_RMI: 'why-is-item-rmi',
+  YOUR_DOCUMENTS: 'your-documents',
   YOUR_PHOTOS: 'your-photos'
 }
 
@@ -273,7 +283,6 @@ module.exports = Object.freeze({
   AgeExemptionReasons,
   CharacterLimits,
   DataVerseFieldName,
-  DEFRA_IVORY_SESSION_KEY: 'DefraIvorySession',
   HOME_URL,
   Intention,
   ItemType,
@@ -285,5 +294,6 @@ module.exports = Object.freeze({
   RedisKeys,
   StatusCodes,
   Urls,
-  Views
+  Views,
+  DEFRA_IVORY_SESSION_KEY: 'DefraIvorySession'
 })
