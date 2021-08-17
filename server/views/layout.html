@@ -1,4 +1,5 @@
 {% extends "govuk/template.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% block head %}
   <!--[if !IE 8]><!-->
@@ -19,10 +20,10 @@
 
 {% block header %}
   {{ govukHeader({
-    homepageUrl: "#",
+    homepageUrl: "/",
     containerClasses: "govuk-width-container",
     serviceName: serviceName,
-    serviceUrl: "#"
+    serviceUrl: "/"
   }) }}
 {% endblock %}
 
@@ -30,8 +31,59 @@
   {{ pageTitle }}
 {% endblock %}
 
+{% block beforeContent %}
+  <div class="govuk-phase-banner">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag govuk-phase-banner-alt">
+        <A href="#">GIVE FEEDBACK</a>
+      </strong>
+      <span class="govuk-phase-banner-alt__text">
+        This is a new service – <a class="govuk-link" href="#">help us to improve it</a>
+      </span>
+    </p>
+  </div>
+
+  <!-- Hide the back link if Javascript is not available -->
+  <noscript>
+    <style>#back-link {display: none} </style>
+  </noscript>
+
+  {% if (not hideBackLink) %}
+    {{ govukBackLink({
+        text: "Back",
+        href: "#",
+        attributes: {
+            id: "back-link",
+            onclick: "window.history.go(-1); return false;"
+        }
+    }) }}
+  {% endif %}
+
+{% endblock %}
+
 {% block content %}
-  <h1 class="govuk-heading-xl">Default page template</h1>
+  <h1 id="pageTitle" class="govuk-heading-xl">Default page template</h1>
+{% endblock %}
+
+{% block footer %}
+  {{ govukFooter({
+    meta: {
+      items: [
+        {
+          href: "/privacy-notice",
+          text: "Privacy notice"
+        },
+        {
+          href: "#2",
+          text: "Cookies"
+        },
+        {
+          href: "/accessibility-statement",
+          text: "Accessibility statement"
+        }
+      ]
+    }
+  }) }}
 {% endblock %}
 
 {% block bodyEnd %}

@@ -1,0 +1,28 @@
+{% extends 'form-layout.html' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block formContent %}
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-two-thirds">
+      <h1 id="pageTitle" class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      {% for address in addressLines %}
+        <p id="address-{{ loop.index }}" class="govuk-body govuk-!-margin-bottom-1">{{ address }}</p>
+      {% endfor %}
+
+      <p class="govuk-body govuk-!-margin-top-4">
+        <a id="editTheAddress" href="{{ editAddressUrl }}" class="govuk-link">Edit the address</a>
+      </p>
+
+      {{ govukButton({
+          attributes: {
+            id: "confirmAndContinue"
+          },
+          text:  "Confirm and continue"
+      }) }}
+
+    </div>
+  </div>
+{% endblock %}

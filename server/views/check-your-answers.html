@@ -1,0 +1,305 @@
+{% extends 'form-layout.html' %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+
+{% block formContent %}
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 id="pageTitle" class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      {{ govukSummaryList({
+        classes: 'govuk-!-margin-bottom-9',
+        rows: [
+          {
+            key: {
+              text: "What is your ivory item?" 
+            },
+            value: {
+              text: whatTypeOfItemIsIt
+            },
+            actions: {
+              items: [
+                {
+                  href: "what-type-of-item-is-it",
+                  text: "Change",
+                  visuallyHiddenText: "what type of ivory item is it"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "What is the item?" 
+            },
+            value: {
+              text: whatIsItem
+            },
+            actions: {
+              items: [
+                {
+                  href: "describe-the-item",
+                  text: "Change",
+                  visuallyHiddenText: "What is the item?"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Why is your item of outstandingly high artistic, cultural or historical value?" 
+            },
+            value: {
+              text: whyRmi
+            },
+            actions: {
+              items: [
+                {
+                  href: "why-is-item-rmi",
+                  text: "Change",
+                  visuallyHiddenText: "Why is your item of outstandingly high artistic, cultural or historical value?"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Describe any unique, identifying features?" 
+            },
+            value: {
+              text: uniqueFeatures
+            },
+            actions: {
+              items: [
+                {
+                  href: "describe-the-item",
+                  text: "Change",
+                  visuallyHiddenText: "Describe any unique, identifying features?"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Where was it made?" 
+            },
+            value: {
+              text: whereMade
+            },
+            actions: {
+              items: [
+                {
+                  href: "describe-the-item",
+                  text: "Change",
+                  visuallyHiddenText: "Where was it made?"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "When was it made?" 
+            },
+            value: {
+              text: whenMade
+            },
+            actions: {
+              items: [
+                {
+                  href: "describe-the-item",
+                  text: "Change",
+                  visuallyHiddenText: "When was it made?"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "How do you know the item has less than... ivory by volume?"
+            },
+            value: {
+              text: ivoryVolume
+            },
+            actions: {
+              items: [
+                {
+                  href: "ivory-volume",
+                  text: "Change",
+                  visuallyHiddenText: "how do you know the items volume of ivory"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "How do you know the item was made before...?"
+            },
+            value: {
+              text: ivoryAge
+            },
+            actions: {
+              items: [
+                {
+                  href: "ivory-age",
+                  text: "Change",
+                  visuallyHiddenText: "how do you know when it was made"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Is ivory integral?"
+            },
+            value: {
+              text: ivoryIntegral
+            },
+            actions: {
+              items: [
+                {
+                  href: "ivory-integral",
+                  text: "Change",
+                  visuallyHiddenText: "if the ivory is integral to the item"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Owner details"
+            },
+            value: {
+              text: ownerDetails
+            },
+            actions: {
+              items: [
+                {
+                  href: "who-owns-the-item",
+                  text: "Change",
+                  visuallyHiddenText: "who owns the item"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Owner address"
+            },
+            value: {
+              text: ownerAddress
+            },
+            actions: {
+              items: [
+                {
+                  href: "who-owns-the-item",
+                  text: "Change",
+                  visuallyHiddenText: "owner address"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Applicant details"
+            },
+            value: {
+              text: applicantDetails
+            },
+            actions: {
+              items: [
+                {
+                  href: "who-owns-the-item",
+                  text: "Change",
+                  visuallyHiddenText: "who is applying"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Applicant address"
+            },
+            value: {
+              text: applicantAddress
+            },
+            actions: {
+              items: [
+                {
+                  href: "who-owns-the-item",
+                  text: "Change",
+                  visuallyHiddenText: "applicant address"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "What do you intend to do with the item?"
+            },
+            value: {
+              text: intentionForItem
+            },
+            actions: {
+              items: [
+                {
+                  href: "intention-for-item",
+                  text: "Change",
+                  visuallyHiddenText: "What do you intend to do with the item?"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Cost"
+            },
+            value: {
+              text: "£" + cost
+            },
+            actions: {
+              items: [
+                {
+                  href: "what-type-of-item-is-it",
+                  text: "Change",
+                  visuallyHiddenText: "application cost"
+                }
+              ]
+            }
+          }
+        ]
+      }) }}
+
+      <h2 class="govuk-heading-m">Legal declaration</h2>
+
+      <p class="govuk-body">Before you continue, you must agree to the following:</p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>the information you’ve provided is complete and correct</li>
+      </ul>
+
+      {{ govukCheckboxes({
+        idPrefix: "agree",
+        name: "agree",
+        errorMessage: fieldErrors['agree'],
+        items: [
+          {
+            value: "agree",
+            text: "I agree"
+          }
+        ]
+      }) }}
+
+      {{ govukButton({
+          attributes: {
+            id: "agree-and-submit"
+          },
+          text: "Agree and submit"
+        })
+      }}
+    </div>
+  </div>
+{% endblock %}

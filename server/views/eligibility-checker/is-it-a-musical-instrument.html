@@ -1,0 +1,41 @@
+{% extends 'form-layout.html' %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block formContent %}
+
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 id="pageTitle" class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <p id="helpText">{{ helpText }}</p>
+
+      <p id="helpText2">{{ helpText2 }}</p>
+
+      <ul id="helpTextList" class="govuk-list govuk-list--bullet">
+        <li>items shaped like musical instruments that are not designed to be played</li>
+        <li>items used to create music or rhythm that were not made originally for that purpose</li>
+        <li>parts of musical instruments, like individual piano keys</li>
+      </ul>
+
+      {{ govukRadios({
+        idPrefix: "isItAMusicalInstrument",
+        name: "isItAMusicalInstrument",
+        errorMessage: fieldErrors['isItAMusicalInstrument'],
+        items: items
+      }) }}
+
+      {{ govukButton({
+          attributes: {
+            id: "continue"
+          },
+          text: "Continue"
+        })
+      }}
+
+    </div>
+  </div>
+{% endblock %}

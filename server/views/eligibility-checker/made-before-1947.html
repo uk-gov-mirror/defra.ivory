@@ -1,0 +1,41 @@
+{% extends 'form-layout.html' %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block formContent %}
+
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 id="pageTitle" class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <p id="helpText">{{ helpText }}</p>
+
+      <ul id="helpTextList" class="govuk-list govuk-list--bullet">
+        <li>a stamp, serial number or signature on the item to prove its age</li>
+        <li>a dated receipt showing when the item was bought or repaired</li>
+        <li>a dated publication that shows or describes the item</li>
+        <li>personal knowledge or evidence that the item has been in the family since before 3 March 1947</li>
+        <li>written verification from a relevant expert</li>
+      </ul>
+
+      {{ govukRadios({
+        idPrefix: "madeBefore1947",
+        name: "madeBefore1947",
+        errorMessage: fieldErrors['madeBefore1947'],
+        items: items
+      }) }}
+
+      {{ govukButton({
+          attributes: {
+            id: "continue"
+          },
+          text: "Continue"
+        })
+      }}
+
+    </div>
+  </div>
+{% endblock %}

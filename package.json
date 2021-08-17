@@ -1,16 +1,18 @@
 {
   "name": "ivory",
-  "version": "0.0.1",
+  "version": "0.6.2",
   "description": "Digital service to support the Ivory Act",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "build:css": "bin/build-css",
     "build": "bin/build",
+    "debug": "nodemon --inspect index.js",
+    "docker": "npm run docker:build && npm run docker:run",
     "docker:build": "docker build --no-cache -t ivory/ivory .",
     "docker:run": "docker run -p \"3000:3000\" ivory/ivory",
     "lint": "standard",
-    "unit-test": "lab -c -r console -o stdout -r lcov -o lcov.info",
+    "unit-test": "npx jest --detectOpenHandles --forceExit --verbose",
     "test": "npm run lint && npm run unit-test",
     "postinstall": "npm run build"
   },
@@ -28,23 +30,48 @@
     "node": "14.x"
   },
   "dependencies": {
-    "@hapi/boom": "^9.1.1",
-    "@hapi/hapi": "^20.1.0",
+    "@hapi/basic": "^6.0.0",
+    "@hapi/boom": "^9.1.3",
+    "@hapi/hapi": "^20.1.5",
     "@hapi/inert": "^6.0.3",
-    "@hapi/vision": "^6.0.1",
+    "@hapi/vision": "^6.1.0",
+    "adal-node": "^0.2.2",
+    "bcrypt": "^5.0.1",
     "blipp": "^4.0.2",
-    "dotenv": "^8.2.0",
-    "govuk-frontend": "^3.11.0",
+    "disinfect": "^1.1.0",
+    "dotenv": "^10.0.0",
+    "govuk-frontend": "^3.13.0",
     "hapi-pino": "8.3.0",
     "hapi-redis2": "^3.0.1",
-    "joi": "^17.4.0",
-    "node-sass": "^5.0.0",
-    "nunjucks": "3.2.3"
+    "hapi-robots": "^3.2.2",
+    "hapi-sanitize-payload": "^2.0.0",
+    "joi": "^17.4.2",
+    "moment": "^2.29.1",
+    "node-fetch": "^2.6.1",
+    "node-sass": "^6.0.1",
+    "nunjucks": "3.2.3",
+    "postcode-validator": "^3.5.3",
+    "randomstring": "^1.2.1",
+    "sharp": "^0.28.3",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@hapi/code": "^8.0.2",
-    "@hapi/lab": "^24.1.1",
-    "codeclimate-test-reporter": "^0.5.1",
+    "jest": "^27.0.6",
+    "jest-junit": "^12.2.0",
+    "jsdom": "^16.7.0",
+    "nock": "^13.1.1",
     "standard": "^16.0.3"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "beforeEach",
+      "expect",
+      "it",
+      "afterEach",
+      "jest",
+      "beforeAll",
+      "afterAll"
+    ]
   }
 }

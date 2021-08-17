@@ -1,0 +1,35 @@
+{% extends 'form-layout.html' %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+
+{% block formContent %}
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-two-thirds">
+
+      {{ govukRadios({
+        idPrefix: "ivoryIsIntegral",
+        name: "ivoryIsIntegral",
+        fieldset: {
+          legend: {
+            text: "How is the ivory integral to the item?",
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--l"
+          }
+        },
+        errorMessage: fieldErrors['ivoryIsIntegral'],
+        items: options
+      }) }}
+
+      {{ govukButton({
+          attributes: {
+            id: "continue"
+          },
+          text: "Continue"
+        })
+      }}
+    </div>
+  </div>
+{% endblock %}

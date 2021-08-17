@@ -1,0 +1,73 @@
+{% extends 'form-layout.html' %}
+
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block formContent %}
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-two-thirds">
+
+      {% set otherHtml %}
+        {{ govukTextarea({
+          name: "otherReason",
+          id: "otherReason",
+          label: {
+            text: "Give details"
+          },
+          value: otherReason,
+          rows: 2,
+          errorMessage: fieldErrors['otherReason']
+        }) }}
+      {% endset -%}
+
+      {{ govukRadios({
+        idPrefix: "ivoryVolume",
+        name: "ivoryVolume",
+        fieldset: {
+          legend: {
+            text: pageTitle,
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--l"
+          }
+        },
+        errorMessage: fieldErrors['ivoryVolume'],
+        items: [
+          {
+            value: options[0].label,
+            text: options[0].label,
+            checked: options[0].checked
+          },
+          {
+            value: options[1].label,
+            text: options[1].label,
+            checked: options[1].checked
+          },
+          {
+            value: options[2].label,
+            text: options[2].label,
+            checked: options[2].checked
+          },
+          {
+            value: options[3].label,
+            text: options[3].label,
+            checked: options[3].checked,
+            conditional: {
+              html: otherHtml
+            }
+          }
+        ]
+      }) }}
+
+      {{ govukButton({
+          attributes: {
+            id: "continue"
+          },
+          text: "Continue"
+        })
+      }}
+
+    </div>
+  </div>
+{% endblock %}
