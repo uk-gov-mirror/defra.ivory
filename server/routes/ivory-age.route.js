@@ -67,9 +67,22 @@ const _getContext = async request => {
   const itemType = await _getItemType(request)
   const madeBeforeDate = _getMadeBeforeDate(itemType)
 
+  const options = await _getCheckboxes(payload, itemType)
+  const otherCheckbox = options.pop()
+
+  const items = options.map(option => {
+    return {
+      value: option.label,
+      text: option.label,
+      checked: option.checked
+    }
+  })
+
   return {
+    items,
+    otherCheckbox,
     pageTitle: `How do you know the item was made before ${madeBeforeDate}?`,
-    options: await _getCheckboxes(payload, itemType),
+    helpText: _getHelpText(itemType),
     otherReason:
       payload &&
       payload.ivoryAge &&
@@ -84,20 +97,22 @@ const _getCheckboxes = async (payload, itemType) => {
   const madeBeforeOption = _getMadeBeforeOption(itemType)
   const ivoryAge = payload ? payload.ivoryAge : null
 
-  return [
+  const checkboxes = [
     _getCheckbox(ivoryAge, AgeExemptionReasons.STAMP_OR_SERIAL),
     _getCheckbox(ivoryAge, AgeExemptionReasons.DATED_RECEIPT),
     _getCheckbox(ivoryAge, AgeExemptionReasons.DATED_PUBLICATION),
     _getCheckbox(ivoryAge, madeBeforeOption),
     _getCheckbox(ivoryAge, AgeExemptionReasons.EXPERT_VERIFICATION),
-    _getCheckbox(ivoryAge, AgeExemptionReasons.PROFESSIONAL_OPINION),
-    _getCheckbox(
-      ivoryAge,
-      itemType === ItemType.HIGH_VALUE
-        ? AgeExemptionReasons.CARBON_DATED
-        : AgeExemptionReasons.OTHER_REASON
-    )
+    _getCheckbox(ivoryAge, AgeExemptionReasons.PROFESSIONAL_OPINION)
   ]
+
+  if (itemType === ItemType.HIGH_VALUE) {
+    checkboxes.push(_getCheckbox(ivoryAge, AgeExemptionReasons.CARBON_DATED))
+  }
+
+  checkboxes.push(_getCheckbox(ivoryAge, AgeExemptionReasons.OTHER_REASON))
+
+  return checkboxes
 }
 
 const _getCheckbox = (ivoryAge, reason) => {
@@ -106,6 +121,13 @@ const _getCheckbox = (ivoryAge, reason) => {
     checked: ivoryAge && ivoryAge.includes(reason)
   }
 }
+
+const _getHelpText = itemType =>
+  `You must keep any physical evidence that supports your answer. We may ask for it at a later date, ${
+    itemType === ItemType.HIGH_VALUE
+      ? 'when we check your application'
+      : 'if we decide to check your self-assessment'
+  }.`
 
 const _getMadeBeforeDate = itemType => {
   if (itemType === ItemType.MUSICAL) {
@@ -130,16 +152,18 @@ const _getMadeBeforeOption = itemType => {
 const _validateForm = payload => {
   const errors = []
 
+  const errorMessage = 'You must tell us how you know the item’s age'
+
   if (Validators.empty(payload.ivoryAge)) {
     errors.push({
       name: 'ivoryAge',
-      text: 'You just tell us how you know the item’s age'
+      text: errorMessage
     })
   } else if (payload.ivoryAge.includes(AgeExemptionReasons.OTHER_REASON)) {
     if (Validators.empty(payload.otherReason)) {
       errors.push({
         name: 'otherReason',
-        text: 'You just tell us how you know the item’s age'
+        text: errorMessage
       })
     }
 
