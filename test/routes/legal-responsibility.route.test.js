@@ -14,7 +14,7 @@ const RedisService = require('../../server/services/redis.service')
 describe('/legal-responsibility route', () => {
   let server
   const url = '/legal-responsibility'
-  const nextUrlDescribeTheItem = '/describe-the-item'
+  const nextUrl = '/upload-photo'
 
   const elementIds = {
     pageTitle: 'pageTitle',
@@ -99,15 +99,6 @@ describe('/legal-responsibility route', () => {
         expect(element).toBeTruthy()
         expect(TestHelper.getTextContent(element)).toEqual('Continue')
       })
-
-      it('should have the correct "Cancel" link', () => {
-        const element = document.querySelector(`#${elementIds.cancelLink}`)
-        TestHelper.checkLink(
-          element,
-          'Cancel',
-          'https://www.gov.uk/government/consultations/uk-ivory-ban-implementing-the-ivory-act-2018'
-        )
-      })
     })
 
     describe('GET: Has the correct details when it IS a S2 (high value) item', () => {
@@ -165,7 +156,7 @@ describe('/legal-responsibility route', () => {
     describe('Success', () => {
       it('should redirect', async () => {
         const response = await TestHelper.submitPostRequest(server, postOptions)
-        expect(response.headers.location).toEqual(nextUrlDescribeTheItem)
+        expect(response.headers.location).toEqual(nextUrl)
       })
     })
   })

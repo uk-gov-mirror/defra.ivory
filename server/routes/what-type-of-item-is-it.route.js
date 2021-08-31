@@ -37,7 +37,8 @@ const handlers = {
 const _getContext = async request => {
   return {
     pageTitle: 'What is your ivory item?',
-    items: await _getOptions(request)
+    items: await _getOptions(request),
+    linkUrl: Paths.CONTAIN_ELEPHANT_IVORY
   }
 }
 
@@ -62,11 +63,11 @@ const _getOptions = async request => {
 
 const _addHints = async options => {
   const hints = [
-    'Any replacement ivory must have been taken from an elephant before 1 January 1975.',
-    'The ivory must be integral to the item. Any replacement ivory must have been taken from an elephant before 1 January 1975.',
-    'Any replacement ivory must have been taken from an elephant before 1 January 1975.',
+    '',
+    'The ivory must be integral to the item.',
+    '',
     'This cannot be raw (‘unworked’) ivory. You don’t need to tell us if you are a qualifying museum that’s selling or hiring out an ivory item to another qualifying museum.',
-    'Any replacement ivory must have been taken from an elephant before 1 January 1975.'
+    ''
   ]
 
   for (let index = 0; index < options.length; index++) {

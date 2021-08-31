@@ -10,20 +10,18 @@ const CookieService = require('../../server/services/cookie.service')
 jest.mock('../../server/services/redis.service')
 const RedisService = require('../../server/services/redis.service')
 
-describe('/upload-photos route', () => {
+describe('/upload-document route', () => {
   let server
-  const url = '/upload-photos'
-  const nextUrl = '/your-photos'
+  const url = '/upload-document'
+  const nextUrl = '/your-documents'
 
   const elementIds = {
     pageTitle: 'pageTitle',
     files: 'files',
+    insetHelpText: 'insetHelpText',
     helpText1: 'helpText1',
     helpText2: 'helpText2',
     helpText3: 'helpText3',
-    helpText4: 'helpText4',
-    helpText5: 'helpText5',
-    helpText6: 'helpText6',
     helpTextSubHeading: 'helpTextSubHeading',
     continue: 'continue',
     cancel: 'cancel'
@@ -55,7 +53,7 @@ describe('/upload-photos route', () => {
       url
     }
 
-    describe('GET: No photos', () => {
+    describe('GET: No documents', () => {
       beforeEach(async () => {
         document = await TestHelper.submitGetRequest(server, getOptions)
       })
@@ -72,7 +70,7 @@ describe('/upload-photos route', () => {
         const element = document.querySelector(`#${elementIds.pageTitle}`)
         expect(element).toBeTruthy()
         expect(TestHelper.getTextContent(element)).toEqual(
-          'Add a photo of your item'
+          'Add a document to support your case'
         )
       })
 
@@ -80,53 +78,49 @@ describe('/upload-photos route', () => {
         let element = document.querySelector(`#${elementIds.helpText1}`)
         expect(element).toBeTruthy()
         expect(TestHelper.getTextContent(element)).toEqual(
-          'You must add photos one at a time, up to a total of 6.'
+          'You must add files one at a time, up to a total of 6.'
+        )
+
+        element = document.querySelector(`#${elementIds.insetHelpText}`)
+        expect(element).toBeTruthy()
+        expect(TestHelper.getTextContent(element)).toEqual(
+          'Be careful not to upload too much material, as this could affect how long it takes an assessor to review it.'
         )
 
         element = document.querySelector(`#${elementIds.helpText2}`)
         expect(element).toBeTruthy()
         expect(TestHelper.getTextContent(element)).toEqual(
-          'These must be clear, well-lit and high-resolution images.'
-        )
-
-        element = document.querySelector(`#${elementIds.helpText3}`)
-        expect(element).toBeTruthy()
-        expect(TestHelper.getTextContent(element)).toEqual(
-          'You must include a photo of:'
+          'The document must be:'
         )
 
         element = document.querySelector(
-          `#${elementIds.helpText4} > li:nth-child(1)`
-        )
-        expect(element).toBeTruthy()
-        expect(TestHelper.getTextContent(element)).toEqual('the whole item')
-
-        element = document.querySelector(
-          `#${elementIds.helpText4} > li:nth-child(2)`
+          `#${elementIds.helpText3} > li:nth-child(1)`
         )
         expect(element).toBeTruthy()
         expect(TestHelper.getTextContent(element)).toEqual(
-          'any distinguishing features, including where the ivory is'
+          'a PDF or Microsoft Word document'
         )
 
         element = document.querySelector(`#${elementIds.helpTextSubHeading}`)
         expect(element).toBeTruthy()
-        expect(TestHelper.getTextContent(element)).toEqual('Upload photo')
+        expect(TestHelper.getTextContent(element)).toEqual('Upload file')
 
-        element = document.querySelector(`#${elementIds.helpText5}`)
+        element = document.querySelector(`#${elementIds.helpText2}`)
         expect(element).toBeTruthy()
-        expect(TestHelper.getTextContent(element)).toEqual('The photo must be:')
+        expect(TestHelper.getTextContent(element)).toEqual(
+          'The document must be:'
+        )
 
         element = document.querySelector(
-          `#${elementIds.helpText6} > li:nth-child(1)`
+          `#${elementIds.helpText3} > li:nth-child(1)`
         )
         expect(element).toBeTruthy()
         expect(TestHelper.getTextContent(element)).toEqual(
-          'in JPG or PNG format'
+          'a PDF or Microsoft Word document'
         )
 
         element = document.querySelector(
-          `#${elementIds.helpText6} > li:nth-child(2)`
+          `#${elementIds.helpText3} > li:nth-child(2)`
         )
         expect(element).toBeTruthy()
         expect(TestHelper.getTextContent(element)).toEqual('smaller than 30mb')
@@ -149,14 +143,12 @@ describe('/upload-photos route', () => {
       })
     })
 
-    describe('GET: Existing photos', () => {
+    describe('GET: Existing documents', () => {
       beforeEach(async () => {
         const mockData = {
-          files: ['lamp.png', 'chair.jpeg'],
+          files: ['document1.pdf', 'document2.doc'],
           fileData: [],
-          fileSizes: [100, 200],
-          thumbnails: ['lamp-thumbnail.png', 'chair-thumbnail.jpeg'],
-          thumbnailData: []
+          fileSizes: [100, 200]
         }
         RedisService.get = jest.fn().mockResolvedValue(JSON.stringify(mockData))
 
@@ -174,23 +166,27 @@ describe('/upload-photos route', () => {
       it('should have the correct page heading', () => {
         const element = document.querySelector(`#${elementIds.pageTitle}`)
         expect(element).toBeTruthy()
-        expect(TestHelper.getTextContent(element)).toEqual('Add another photo')
+        expect(TestHelper.getTextContent(element)).toEqual(
+          'Add another document'
+        )
       })
 
       it('should have the correct help text', () => {
         TestHelper.checkElementsDoNotExist(document, [
           `#${elementIds.helpText1}`,
-          `#${elementIds.helpText2}`,
-          `#${elementIds.helpText3}`,
-          `#${elementIds.helpText4} > li:nth-child(1)`,
-          `#${elementIds.helpText4} > li:nth-child(2)`,
-          `#${elementIds.helpTextSubHeading}`
+          `#${elementIds.insetHelpText}`
         ])
 
+        const element = document.querySelector(
+          `#${elementIds.helpTextSubHeading}`
+        )
+        expect(element).toBeTruthy()
+        expect(TestHelper.getTextContent(element)).toEqual('Upload file')
+
         TestHelper.checkElementsExist(document, [
-          `#${elementIds.helpText5}`,
-          `#${elementIds.helpText6} > li:nth-child(1)`,
-          `#${elementIds.helpText6} > li:nth-child(2)`
+          `#${elementIds.helpText2}`,
+          `#${elementIds.helpText3} > li:nth-child(1)`,
+          `#${elementIds.helpText3} > li:nth-child(2)`
         ])
       })
 
@@ -207,7 +203,11 @@ describe('/upload-photos route', () => {
 
       it('should have the Cancel link', () => {
         const element = document.querySelector(`#${elementIds.cancel}`)
-        TestHelper.checkLink(element, 'Cancel', '/your-photos')
+        TestHelper.checkLink(
+          element,
+          'Cancel and return to ‘Your documents‘',
+          '/your-documents'
+        )
       })
     })
   })
@@ -335,18 +335,18 @@ describe('/upload-photos route', () => {
         const payloadFile = {
           path: tempFolder,
           bytes: 5000,
-          filename: 'document1.doc',
+          filename: 'image1.png',
           headers: {
             'content-disposition':
-              'form-data; name="files"; filename="document1.doc"',
-            'content-type': 'application/msword'
+              'form-data; name="files"; filename="image1.png"',
+            'content-type': 'image/png'
           }
         }
         await _checkValidation(
           server,
           postOptions,
           payloadFile,
-          'The file must be a JPG or PNG'
+          'The file must be a PDF or Microsoft Word document (.DOC or .DOCX)'
         )
       })
     })
@@ -364,22 +364,20 @@ describe('/upload-photos route', () => {
           files: {
             path: tempFolder,
             bytes: 100,
-            filename: 'lamp.png',
+            filename: 'document1.pdf',
             headers: {
               'content-disposition':
-                'form-data; name="files"; filename="lamp.png"',
-              'content-type': 'image/png'
+                'form-data; name="files"; filename="document1.pdf"',
+              'content-type': 'application/pdf'
             }
           }
         }
       }
 
       const mockData = {
-        files: ['lamp.png'],
+        files: ['document1.pdf'],
         fileData: [],
-        fileSizes: [100],
-        thumbnails: ['lamp-thumbnail.png'],
-        thumbnailData: []
+        fileSizes: [100]
       }
       RedisService.get = jest.fn().mockReturnValue(JSON.stringify(mockData))
 
@@ -391,7 +389,8 @@ describe('/upload-photos route', () => {
         path: tempFolder,
         bytes: 100,
         headers: {
-          'content-disposition': 'form-data; name="files"; filename="lamp.png"',
+          'content-disposition':
+            'form-data; name="files"; filename="document1.pdf"',
           'content-type': 'application/octet-stream'
         }
       }
@@ -402,7 +401,7 @@ describe('/upload-photos route', () => {
         response,
         'files',
         'files-error',
-        "You've already uploaded that image. Choose a different one"
+        "You've already uploaded that document. Choose a different one"
       )
     })
   })
@@ -422,6 +421,7 @@ const _createMocks = () => {
   }
   RedisService.get = jest
     .fn()
+    .mockResolvedValueOnce(JSON.stringify(mockData))
     .mockResolvedValueOnce('false')
     .mockResolvedValueOnce(JSON.stringify(mockData))
 

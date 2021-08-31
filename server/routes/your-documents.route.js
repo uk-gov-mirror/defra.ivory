@@ -1,8 +1,5 @@
 'use strict'
 
-const os = require('os')
-const { writeFileSync } = require('fs')
-
 const RedisService = require('../services/redis.service')
 const { Paths, Views, RedisKeys } = require('../utils/constants')
 
@@ -13,46 +10,39 @@ const handlers = {
     const context = await _getContext(request)
 
     if (!context.uploadData || !context.uploadData.files.length) {
-      return h.redirect(Paths.UPLOAD_PHOTO)
+      return h.redirect(Paths.UPLOAD_DOCUMENT)
     }
 
-    return h.view(Views.YOUR_PHOTOS, {
+    return h.view(Views.YOUR_DOCUMENTS, {
       ...context
     })
   },
 
-  post: async (request, h) => h.redirect(Paths.DESCRIBE_THE_ITEM)
+  post: async (request, h) => h.redirect(Paths.WHO_OWNS_ITEM)
 }
 
 const _getContext = async request => {
   const uploadData = JSON.parse(
-    await RedisService.get(request, RedisKeys.UPLOAD_PHOTO)
+    await RedisService.get(request, RedisKeys.UPLOAD_DOCUMENT)
   ) || {
     files: [],
     fileData: [],
-    fileSizes: [],
-    thumbnails: [],
-    thumbnailData: []
+    fileSizes: []
   }
 
-  for (const [index, thumbnailFilename] of uploadData.thumbnails.entries()) {
-    const buffer = Buffer.from(uploadData.thumbnailData[index], 'base64')
-    await writeFileSync(`${os.tmpdir()}/${thumbnailFilename}`, buffer)
-  }
-
-  const rows = uploadData.thumbnails.map((imageThumbnailFile, index) => {
+  const rows = uploadData.files.map((file, index) => {
     return {
       key: {
-        text: `Photo ${index + 1}`
+        text: `Document ${index + 1}`
       },
       classes: 'ivory-summary-list',
       value: {
-        html: `<img src="assets\\${imageThumbnailFile}" alt="Photo of item ${index}" width="200">`
+        html: `<p id="filename-${index}">${file}</p>`
       },
       actions: {
         items: [
           {
-            href: `/remove-photo/${index + 1}`,
+            href: `/remove-document/${index + 1}`,
             text: 'Remove',
             visuallyHiddenText: 'name'
           }
@@ -62,10 +52,10 @@ const _getContext = async request => {
   })
 
   return {
-    rows,
     uploadData,
-    pageTitle: 'Your photos',
-    addPhotoUrl: Paths.UPLOAD_PHOTO,
+    rows,
+    pageTitle: 'Your documents',
+    addPhotoUrl: Paths.UPLOAD_DOCUMENT,
     maxPhotos: MAX_PHOTOS,
     allowMorePhotos: uploadData.files.length < MAX_PHOTOS
   }
@@ -74,12 +64,12 @@ const _getContext = async request => {
 module.exports = [
   {
     method: 'GET',
-    path: `${Paths.YOUR_PHOTOS}`,
+    path: `${Paths.YOUR_DOCUMENTS}`,
     handler: handlers.get
   },
   {
     method: 'POST',
-    path: `${Paths.YOUR_PHOTOS}`,
+    path: `${Paths.YOUR_DOCUMENTS}`,
     handler: handlers.post
   }
 ]

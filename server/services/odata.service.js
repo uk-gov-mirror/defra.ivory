@@ -10,18 +10,25 @@ const ActiveDirectoryAuthService = require('../services/active-directory-auth.se
 const SECTION_2_ENDPOINT = 'cre2c_ivorysection2cases'
 const SECTION_10_ENDPOINT = 'cre2c_ivorysection10cases'
 
-const headers = {
-  'OData-Version': '4.0',
-  'OData-MaxVersion': '4.0',
-  'Content-Type': 'application/json'
+const ContentTypes = {
+  APPLICATION_JSON: 'application/json',
+  APPLICATION_OCTET_STREAM: 'application/octet-stream'
 }
+
+const oDataVersion = '4.0'
+const PREFER_REPRESENTATION = 'return=representation'
 
 module.exports = class ODataService {
   static async createRecord (body, isSection2) {
     const token = await ActiveDirectoryAuthService.getToken()
 
-    headers.Authorization = `Bearer ${token}`
-    headers.Prefer = 'return=representation'
+    const headers = {
+      'OData-Version': oDataVersion,
+      'OData-MaxVersion': oDataVersion,
+      'Content-Type': ContentTypes.APPLICATION_JSON,
+      Authorization: `Bearer ${token}`,
+      Prefer: PREFER_REPRESENTATION
+    }
 
     const idColumnName = isSection2
       ? DataVerseFieldName.SECTION_2_CASE_ID
@@ -62,8 +69,13 @@ module.exports = class ODataService {
   static async getRecord (id, isSection2) {
     const token = await ActiveDirectoryAuthService.getToken()
 
-    headers.Authorization = `Bearer ${token}`
-    headers.Prefer = 'return=representation'
+    const headers = {
+      'OData-Version': oDataVersion,
+      'OData-MaxVersion': oDataVersion,
+      'Content-Type': ContentTypes.APPLICATION_JSON,
+      Authorization: `Bearer ${token}`,
+      Prefer: PREFER_REPRESENTATION
+    }
 
     const apiEndpoint = `${config.dataverseResource}/${config.dataverseApiEndpoint}`
 
@@ -94,8 +106,12 @@ module.exports = class ODataService {
   static async updateRecord (id, body, isSection2) {
     const token = await ActiveDirectoryAuthService.getToken()
 
-    headers.Authorization = `Bearer ${token}`
-    delete headers.Prefer
+    const headers = {
+      'OData-Version': oDataVersion,
+      'OData-MaxVersion': oDataVersion,
+      'Content-Type': ContentTypes.APPLICATION_JSON,
+      Authorization: `Bearer ${token}`
+    }
 
     const apiEndpoint = `${config.dataverseResource}/${config.dataverseApiEndpoint}`
 
@@ -105,7 +121,7 @@ module.exports = class ODataService {
 
     _setContentLength(headers, body)
 
-    console.log(`Fetching URL: [${url}]`)
+    console.log(`Patching URL: [${url}]`)
 
     const response = await fetch(url, {
       method: 'PATCH',
@@ -119,6 +135,36 @@ module.exports = class ODataService {
           isSection2 ? '2' : '10'
         } case ID: ${id}`
       )
+    }
+  }
+
+  static async updateRecordAttachments (id, supportingInformation) {
+    const token = await ActiveDirectoryAuthService.getToken()
+
+    const apiEndpoint = `${config.dataverseResource}/${config.dataverseApiEndpoint}`
+
+    for (let i = 0; i < supportingInformation.files.length; i++) {
+      const fieldName = `cre2c_supportingevidence${i + 1}`
+      const url = `${apiEndpoint}/${SECTION_2_ENDPOINT}(${id})/${fieldName}`
+
+      const headers = {
+        'OData-Version': oDataVersion,
+        'OData-MaxVersion': oDataVersion,
+        Authorization: `Bearer ${token}`,
+        Prefer: PREFER_REPRESENTATION,
+        'Content-Type': ContentTypes.APPLICATION_OCTET_STREAM,
+        'x-ms-file-name': supportingInformation.files[i]
+      }
+
+      const body = Buffer.from(supportingInformation.fileData[i], 'base64')
+
+      console.log(`Patching URL: [${url}]`)
+
+      await fetch(url, {
+        method: 'PATCH',
+        headers,
+        body
+      })
     }
   }
 }

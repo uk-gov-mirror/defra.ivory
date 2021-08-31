@@ -8,7 +8,7 @@ const { Paths, RedisKeys } = require('../utils/constants')
 const handlers = {
   get: async (request, h) => {
     const uploadData = JSON.parse(
-      await RedisService.get(request, RedisKeys.UPLOAD_PHOTO)
+      await RedisService.get(request, RedisKeys.UPLOAD_DOCUMENT)
     )
 
     for (const array in uploadData) {
@@ -20,20 +20,20 @@ const handlers = {
 
     await RedisService.set(
       request,
-      RedisKeys.UPLOAD_PHOTO,
+      RedisKeys.UPLOAD_DOCUMENT,
       JSON.stringify(uploadData)
     )
 
     return uploadData.files.length
-      ? h.redirect(Paths.YOUR_PHOTOS)
-      : h.redirect(Paths.UPLOAD_PHOTO)
+      ? h.redirect(Paths.YOUR_DOCUMENTS)
+      : h.redirect(Paths.UPLOAD_DOCUMENT)
   }
 }
 
 module.exports = [
   {
     method: 'GET',
-    path: `${Paths.REMOVE_PHOTO}/{index}`,
+    path: `${Paths.REMOVE_DOCUMENT}/{index}`,
     handler: handlers.get
   }
 ]
