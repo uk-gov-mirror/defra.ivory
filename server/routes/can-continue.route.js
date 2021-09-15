@@ -7,7 +7,8 @@ const {
   Paths,
   RedisKeys,
   Views,
-  Urls
+  Urls,
+  Analytics
 } = require('../utils/constants')
 
 const handlers = {
@@ -24,6 +25,18 @@ const handlers = {
         : config.paymentAmountBandB
 
     await RedisService.set(request, RedisKeys.PAYMENT_AMOUNT, cost)
+
+    await request.ga.event({
+      category: Analytics.Category.EXEMPTION_TYPE,
+      action: await _getItemType(request),
+      label: `Eligibility Checker Used: ${await _usedChecker(request)}`
+    })
+
+    await request.ga.event({
+      category: Analytics.Category.MAIN_QUESTIONS,
+      action: Analytics.Action.CONTINUE,
+      label: (await _getContext(request)).pageTitle
+    })
 
     return h.redirect(Paths.LEGAL_REPONSIBILITY)
   }

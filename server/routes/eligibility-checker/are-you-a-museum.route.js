@@ -5,7 +5,8 @@ const {
   Paths,
   RedisKeys,
   Views,
-  Options
+  Options,
+  Analytics
 } = require('../../utils/constants')
 const RedisService = require('../../services/redis.service')
 const { buildErrorSummary, Validators } = require('../../utils/validation')
@@ -23,6 +24,12 @@ const handlers = {
     const errors = _validateForm(payload)
 
     if (errors.length) {
+      await request.ga.event({
+        category: Analytics.Category.ERROR,
+        action: JSON.stringify(errors),
+        label: _getContext().pageTitle
+      })
+
       return h
         .view(Views.ARE_YOU_A_MUSEUM, {
           ..._getContext(),
@@ -36,6 +43,12 @@ const handlers = {
       RedisKeys.ARE_YOU_A_MUSEUM,
       payload.areYouAMuseum === Options.YES
     )
+
+    await request.ga.event({
+      category: Analytics.Category.ELIGIBILITY_CHECKER,
+      action: `${Analytics.Action.SELECTED} ${payload.areYouAMuseum}`,
+      label: _getContext().pageTitle
+    })
 
     switch (payload.areYouAMuseum) {
       case Options.YES:

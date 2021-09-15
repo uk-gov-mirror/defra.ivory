@@ -1,7 +1,7 @@
 'use strict'
 
 const RedisService = require('../../services/redis.service')
-const { Paths, Views, RedisKeys } = require('../../utils/constants')
+const { Paths, Views, RedisKeys, Analytics } = require('../../utils/constants')
 const { buildErrorSummary, Validators } = require('../../utils/validation')
 
 const completelyCertain = 'Completely'
@@ -17,6 +17,12 @@ const handlers = {
     const errors = _validateForm(payload)
 
     if (errors.length) {
+      await request.ga.event({
+        category: Analytics.Category.ERROR,
+        action: JSON.stringify(errors),
+        label: _getContext().pageTitle
+      })
+
       return h
         .view(Views.HOW_CERTAIN, {
           ..._getContext(),
@@ -30,10 +36,11 @@ const handlers = {
       RedisKeys.USED_CHECKER,
       payload.howCertain !== completelyCertain
     )
+
     await request.ga.event({
-      category: 'Main Questions',
-      action: `Selected: ${payload.howCertain}`,
-      label: 'How certain are you that your item is exempt?'
+      category: Analytics.Category.ELIGIBILITY_CHECKER,
+      action: `${Analytics.Action.SELECTED} ${payload.howCertain}`,
+      label: _getContext().pageTitle
     })
 
     return h.redirect(

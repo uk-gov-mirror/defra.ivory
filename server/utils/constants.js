@@ -5,6 +5,26 @@ const AddressType = {
   APPLICANT: 'applicant'
 }
 
+const Analytics = {
+  Category: {
+    ELIGIBILITY_CHECKER: 'Eligibilty Checker',
+    ERROR: 'Page validation error',
+    ERROR_PAGE: 'Error page',
+    EXEMPTION_TYPE: 'Exemption Type',
+    MAIN_QUESTIONS: 'Main Questions',
+    SERVICE_COMPLETE: 'Service Complete'
+  },
+  Action: {
+    CONFIRM: 'Confirm and continue',
+    CONTINUE: 'Continue',
+    DROPOUT: 'Dropout',
+    ENTERED: 'Details entered',
+    REDIRECT: 'Redirected to:',
+    REFERRED: 'Referred by:',
+    SELECTED: 'Selected:'
+  }
+}
+
 const CharacterLimits = {
   Input: 4000,
   Textarea: 100000
@@ -280,6 +300,7 @@ const StatusCodes = {
 module.exports = Object.freeze({
   AddressType,
   AgeExemptionReasons,
+  Analytics,
   CharacterLimits,
   DataVerseFieldName,
   HOME_URL,
