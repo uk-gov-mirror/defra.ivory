@@ -1,9 +1,5 @@
 'use strict'
 
-const createServer = require('../../../server')
-
-jest.mock('../../../server/services/cookie.service')
-
 const TestHelper = require('../../utils/test-helper')
 
 describe('/eligibility-checker/cannot-trade route', () => {
@@ -26,7 +22,7 @@ describe('/eligibility-checker/cannot-trade route', () => {
   let document
 
   beforeAll(async () => {
-    server = await createServer()
+    server = await TestHelper.createServer()
   })
 
   afterAll(async () => {

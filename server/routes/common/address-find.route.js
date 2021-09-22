@@ -1,5 +1,9 @@
 'use strict'
 
+const AnalyticsService = require('../../services/analytics.service')
+const AddressService = require('../../services/address.service')
+const RedisService = require('../../services/redis.service')
+
 const {
   AddressType,
   CharacterLimits,
@@ -9,11 +13,9 @@ const {
   Options,
   Analytics
 } = require('../../utils/constants')
-const { formatNumberWithCommas } = require('../../utils/general')
-const AddressService = require('../../services/address.service')
-const RedisService = require('../../services/redis.service')
 const { buildErrorSummary, Validators } = require('../../utils/validation')
 const { addPayloadToContext } = require('../../utils/general')
+const { formatNumberWithCommas } = require('../../utils/general')
 
 const getAddressType = request =>
   request.route.path === Paths.OWNER_ADDRESS_FIND
@@ -27,8 +29,14 @@ const handlers = {
       RedisKeys.OWNED_BY_APPLICANT
     )
 
+    const context = await _getContext(
+      request,
+      getAddressType(request),
+      ownedByApplicant
+    )
+
     return h.view(Views.ADDRESS_FIND, {
-      ...(await _getContext(request, getAddressType(request), ownedByApplicant))
+      ...context
     })
   },
 
@@ -39,19 +47,20 @@ const handlers = {
     )
 
     const addressType = getAddressType(request)
+    const context = await _getContext(request, addressType, ownedByApplicant)
     const payload = request.payload
     const errors = _validateForm(payload, addressType, ownedByApplicant)
 
     if (errors.length) {
-      await request.ga.event({
+      AnalyticsService.sendEvent(request, {
         category: Analytics.Category.ERROR,
         action: JSON.stringify(errors),
-        label: (await _getContext(request, addressType, ownedByApplicant)).pageTitle
+        label: context.pageTitle
       })
 
       return h
         .view(Views.ADDRESS_FIND, {
-          ...(await _getContext(request, addressType, ownedByApplicant)),
+          ...context,
           ...buildErrorSummary(errors)
         })
         .code(400)
@@ -62,10 +71,12 @@ const handlers = {
       payload.postcode
     )
 
-    await request.ga.event({
+    AnalyticsService.sendEvent(request, {
       category: Analytics.Category.MAIN_QUESTIONS,
-      action: `${payload.nameOrNumber ? 'Property name or number' : 'Postcode only'} entered`,
-      label: (await _getContext(request, addressType, ownedByApplicant)).pageTitle
+      action: `${
+        payload.nameOrNumber ? 'Property name or number' : 'Postcode only'
+      } entered`,
+      label: context.pageTitle
     })
 
     await RedisService.set(

@@ -1,7 +1,5 @@
 'use strict'
 
-const createServer = require('../../../server')
-
 const TestHelper = require('../../utils/test-helper')
 
 describe('/errors/problem-with-service (500) route', () => {
@@ -17,11 +15,19 @@ describe('/errors/problem-with-service (500) route', () => {
   let document
 
   beforeAll(async () => {
-    server = await createServer()
+    server = await TestHelper.createServer()
   })
 
   afterAll(async () => {
     await server.stop()
+  })
+
+  beforeEach(() => {
+    _createMocks()
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 
   describe('GET', () => {
@@ -57,3 +63,7 @@ describe('/errors/problem-with-service (500) route', () => {
     })
   })
 })
+
+const _createMocks = () => {
+  TestHelper.createMocks()
+}

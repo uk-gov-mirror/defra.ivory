@@ -1,5 +1,8 @@
 'use strict'
 
+const AnalyticsService = require('../../services/analytics.service')
+const RedisService = require('../../services/redis.service')
+
 const {
   AddressType,
   Options,
@@ -8,7 +11,7 @@ const {
   Views,
   Analytics
 } = require('../../utils/constants')
-const RedisService = require('../../services/redis.service')
+
 const { buildErrorSummary, Validators } = require('../../utils/validation')
 
 const getAddressType = request =>
@@ -19,18 +22,21 @@ const getAddressType = request =>
 const handlers = {
   get: async (request, h) => {
     const addressType = getAddressType(request)
+    const context = await _getContext(request, addressType)
+
     return h.view(Views.ADDRESS_CHOOSE, {
-      ...(await _getContext(request, addressType))
+      ...context
     })
   },
 
   post: async (request, h) => {
     const addressType = getAddressType(request)
+    const context = await _getContext(request, addressType)
     const payload = request.payload
     const errors = _validateForm(payload)
 
     if (errors.length) {
-      await request.ga.event({
+      AnalyticsService.sendEvent(request, {
         category: Analytics.Category.ERROR,
         action: JSON.stringify(errors),
         label: `Address choose - ${addressType}`
@@ -38,18 +44,13 @@ const handlers = {
 
       return h
         .view(Views.ADDRESS_CHOOSE, {
-          ...(await _getContext(request, addressType)),
+          ...context,
           ...buildErrorSummary(errors)
         })
         .code(400)
     }
 
-    const ownedByApplicant = await RedisService.get(
-      request,
-      RedisKeys.OWNED_BY_APPLICANT
-    )
-
-    await request.ga.event({
+    AnalyticsService.sendEvent(request, {
       category: Analytics.Category.MAIN_QUESTIONS,
       action: `${Analytics.Action.SELECTED} address`,
       label: `Address choose - ${addressType}`
@@ -63,7 +64,7 @@ const handlers = {
       payload.address
     )
 
-    if (ownedByApplicant === Options.YES) {
+    if (context.ownedByApplicant === Options.YES) {
       await RedisService.set(
         request,
         RedisKeys.APPLICANT_ADDRESS,
@@ -74,7 +75,7 @@ const handlers = {
     let route
     if (addressType === AddressType.OWNER) {
       route =
-        ownedByApplicant === Options.YES
+        context.ownedByApplicant === Options.YES
           ? Paths.INTENTION_FOR_ITEM
           : Paths.APPLICANT_CONTACT_DETAILS
     } else {
@@ -111,6 +112,7 @@ const _getContext = async (request, addressType) => {
   }
 
   context.addresses = items
+  context.ownedByApplicant = ownedByApplicant
 
   await _addBuildingNameOrNumberAndPostcodeToContext(request, context)
 

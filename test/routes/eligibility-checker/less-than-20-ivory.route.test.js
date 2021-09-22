@@ -1,13 +1,9 @@
 'use strict'
 
-const createServer = require('../../../server')
-
-const TestHelper = require('../../utils/test-helper')
-
-jest.mock('../../../server/services/cookie.service')
-
 jest.mock('../../../server/services/redis.service')
 const RedisService = require('../../../server/services/redis.service')
+
+const TestHelper = require('../../utils/test-helper')
 
 describe('/eligibility-checker/less-than-20-ivory route', () => {
   let server
@@ -30,7 +26,7 @@ describe('/eligibility-checker/less-than-20-ivory route', () => {
   let document
 
   beforeAll(async () => {
-    server = await createServer()
+    server = await TestHelper.createServer()
   })
 
   afterAll(async () => {

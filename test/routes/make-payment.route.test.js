@@ -1,13 +1,9 @@
 'use strict'
 
-const createServer = require('../../server')
-
 const TestHelper = require('../utils/test-helper')
 
 jest.mock('randomstring')
 const RandomString = require('randomstring')
-
-jest.mock('../../server/services/cookie.service')
 
 jest.mock('../../server/services/redis.service')
 const RedisService = require('../../server/services/redis.service')
@@ -24,7 +20,7 @@ describe('/make-payment route', () => {
   const nextUrl = 'THE_NEXT_URL'
 
   beforeAll(async () => {
-    server = await createServer()
+    server = await TestHelper.createServer()
   })
 
   afterAll(async () => {

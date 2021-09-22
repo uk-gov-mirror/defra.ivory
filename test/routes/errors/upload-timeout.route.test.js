@@ -1,7 +1,5 @@
 'use strict'
 
-const createServer = require('../../../server')
-
 const TestHelper = require('../../utils/test-helper')
 
 describe('/errors/upload-timeout route', () => {
@@ -18,11 +16,19 @@ describe('/errors/upload-timeout route', () => {
   let document
 
   beforeAll(async () => {
-    server = await createServer()
+    server = await TestHelper.createServer()
   })
 
   afterAll(async () => {
     await server.stop()
+  })
+
+  beforeEach(() => {
+    _createMocks()
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 
   describe('GET', () => {
@@ -86,3 +92,7 @@ describe('/errors/upload-timeout route', () => {
     })
   })
 })
+
+const _createMocks = () => {
+  TestHelper.createMocks()
+}

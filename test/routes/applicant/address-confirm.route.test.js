@@ -1,16 +1,9 @@
 'use strict'
 
-const createServer = require('../../../server')
-
 const TestHelper = require('../../utils/test-helper')
-
-jest.mock('../../../server/services/cookie.service')
-
+const AddressService = require('../../../server/services/address.service')
 jest.mock('../../../server/services/redis.service')
 const RedisService = require('../../../server/services/redis.service')
-
-jest.mock('../../../server/services/address.service')
-const AddressService = require('../../../server/services/address.service')
 
 const { singleAddress } = require('../../mock-data/addresses')
 
@@ -32,7 +25,7 @@ describe('/user-details/applicant/address-confirm route', () => {
   let document
 
   beforeAll(async () => {
-    server = await createServer()
+    server = await TestHelper.createServer()
   })
 
   afterAll(async () => {

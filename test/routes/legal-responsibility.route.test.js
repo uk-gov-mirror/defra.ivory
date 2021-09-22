@@ -1,13 +1,10 @@
 'use strict'
 
-const createServer = require('../../server')
+jest.mock('../../server/services/redis.service')
+const RedisService = require('../../server/services/redis.service')
 
 const TestHelper = require('../utils/test-helper')
 const { ItemType } = require('../../server/utils/constants')
-
-jest.mock('../../server/services/cookie.service')
-jest.mock('../../server/services/redis.service')
-const RedisService = require('../../server/services/redis.service')
 
 describe('/legal-responsibility route', () => {
   let server
@@ -27,7 +24,7 @@ describe('/legal-responsibility route', () => {
   let document
 
   beforeAll(async () => {
-    server = await createServer()
+    server = await TestHelper.createServer()
   })
 
   afterAll(async () => {

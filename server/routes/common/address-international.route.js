@@ -1,6 +1,8 @@
 'use strict'
 
+const AnalyticsService = require('../../services/analytics.service')
 const RedisService = require('../../services/redis.service')
+
 const {
   AddressType,
   CharacterLimits,
@@ -26,27 +28,29 @@ const getAddressType = request =>
 const handlers = {
   get: async (request, h) => {
     const addressType = getAddressType(request)
+    const context = await _getContext(request, addressType)
 
     return h.view(Views.ADDRESS_INTERNATIONAL, {
-      ...(await _getContext(request, addressType))
+      ...context
     })
   },
 
   post: async (request, h) => {
     const addressType = getAddressType(request)
+    const context = await _getContext(request, addressType)
     const payload = request.payload
     const errors = _validateForm(payload)
 
     if (errors.length) {
-      await request.ga.event({
+      AnalyticsService.sendEvent(request, {
         category: Analytics.Category.ERROR,
         action: JSON.stringify(errors),
-        label: (await _getContext(request, addressType)).pageTitle
+        label: context.pageTitle
       })
 
       return h
         .view(Views.ADDRESS_INTERNATIONAL, {
-          ...(await _getContext(request, addressType)),
+          ...context,
           ...buildErrorSummary(errors)
         })
         .code(400)
@@ -60,10 +64,10 @@ const handlers = {
       payload.internationalAddress
     )
 
-    await request.ga.event({
+    AnalyticsService.sendEvent(request, {
       category: Analytics.Category.MAIN_QUESTIONS,
       action: Analytics.Action.ENTERED,
-      label: (await _getContext(request, addressType)).pageTitle
+      label: context.pageTitle
     })
 
     await RedisService.set(

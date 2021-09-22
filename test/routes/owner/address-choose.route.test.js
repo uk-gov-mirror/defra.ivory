@@ -1,16 +1,11 @@
 'use strict'
 
-const createServer = require('../../../server')
-
 const TestHelper = require('../../utils/test-helper')
-
-jest.mock('../../../server/services/cookie.service')
-
+const AddressService = require('../../../server/services/address.service')
 jest.mock('../../../server/services/redis.service')
 const RedisService = require('../../../server/services/redis.service')
 
-jest.mock('../../../server/services/address.service')
-const AddressService = require('../../../server/services/address.service')
+const { RedisKeys } = require('../../../server/utils/constants')
 
 const {
   singleAddress,
@@ -47,7 +42,7 @@ describe('/user-details/owner/address-choose route', () => {
   }
 
   beforeAll(async () => {
-    server = await createServer()
+    server = await TestHelper.createServer()
   })
 
   afterAll(async () => {
@@ -65,12 +60,16 @@ describe('/user-details/owner/address-choose route', () => {
   describe('GET', () => {
     describe('GET: Owned by applicant', () => {
       beforeEach(async () => {
-        RedisService.get = jest
-          .fn()
-          .mockResolvedValueOnce('Yes')
-          .mockResolvedValueOnce(JSON.stringify(multipleAddresses))
-          .mockResolvedValueOnce(nameOrNumber)
-          .mockResolvedValueOnce(postcode)
+        const mockData = {
+          [RedisKeys.OWNED_BY_APPLICANT]: 'Yes',
+          [RedisKeys.ADDRESS_FIND_RESULTS]: JSON.stringify(multipleAddresses),
+          [RedisKeys.ADDRESS_FIND_NAME_OR_NUMBER]: nameOrNumber,
+          [RedisKeys.ADDRESS_FIND_POSTCODE]: postcode
+        }
+
+        RedisService.get = jest.fn((request, redisKey) => {
+          return mockData[redisKey]
+        })
 
         document = await TestHelper.submitGetRequest(server, getOptions)
       })
@@ -148,12 +147,16 @@ describe('/user-details/owner/address-choose route', () => {
       beforeEach(async () => {
         const nameOrNumber = undefined
 
-        RedisService.get = jest
-          .fn()
-          .mockResolvedValueOnce('Yes')
-          .mockResolvedValueOnce(JSON.stringify(multipleAddresses))
-          .mockResolvedValueOnce(nameOrNumber)
-          .mockResolvedValueOnce(postcode)
+        const mockData = {
+          [RedisKeys.OWNED_BY_APPLICANT]: 'Yes',
+          [RedisKeys.ADDRESS_FIND_RESULTS]: JSON.stringify(multipleAddresses),
+          [RedisKeys.ADDRESS_FIND_NAME_OR_NUMBER]: nameOrNumber,
+          [RedisKeys.ADDRESS_FIND_POSTCODE]: postcode
+        }
+
+        RedisService.get = jest.fn((request, redisKey) => {
+          return mockData[redisKey]
+        })
 
         document = await TestHelper.submitGetRequest(server, getOptions)
       })
@@ -169,12 +172,16 @@ describe('/user-details/owner/address-choose route', () => {
 
     describe('GET: Not owned by applicant', () => {
       beforeEach(async () => {
-        RedisService.get = jest
-          .fn()
-          .mockResolvedValueOnce('No')
-          .mockResolvedValueOnce(JSON.stringify(multipleAddresses))
-          .mockResolvedValueOnce(nameOrNumber)
-          .mockResolvedValueOnce(postcode)
+        const mockData = {
+          [RedisKeys.OWNED_BY_APPLICANT]: 'No',
+          [RedisKeys.ADDRESS_FIND_RESULTS]: JSON.stringify(multipleAddresses),
+          [RedisKeys.ADDRESS_FIND_NAME_OR_NUMBER]: nameOrNumber,
+          [RedisKeys.ADDRESS_FIND_POSTCODE]: postcode
+        }
+
+        RedisService.get = jest.fn((request, redisKey) => {
+          return mockData[redisKey]
+        })
 
         document = await TestHelper.submitGetRequest(server, getOptions)
       })
@@ -252,12 +259,16 @@ describe('/user-details/owner/address-choose route', () => {
       beforeEach(async () => {
         const nameOrNumber = undefined
 
-        RedisService.get = jest
-          .fn()
-          .mockResolvedValueOnce('No')
-          .mockResolvedValueOnce(JSON.stringify(multipleAddresses))
-          .mockResolvedValueOnce(nameOrNumber)
-          .mockResolvedValueOnce(postcode)
+        const mockData = {
+          [RedisKeys.OWNED_BY_APPLICANT]: 'No',
+          [RedisKeys.ADDRESS_FIND_RESULTS]: JSON.stringify(multipleAddresses),
+          [RedisKeys.ADDRESS_FIND_NAME_OR_NUMBER]: nameOrNumber,
+          [RedisKeys.ADDRESS_FIND_POSTCODE]: postcode
+        }
+
+        RedisService.get = jest.fn((request, redisKey) => {
+          return mockData[redisKey]
+        })
 
         document = await TestHelper.submitGetRequest(server, getOptions)
       })
@@ -287,11 +298,19 @@ describe('/user-details/owner/address-choose route', () => {
 
     describe('Success: Owned by applicant', () => {
       beforeEach(() => {
-        RedisService.get = jest.fn().mockResolvedValue('Yes')
+        const mockData = {
+          [RedisKeys.OWNED_BY_APPLICANT]: 'Yes',
+          [RedisKeys.ADDRESS_FIND_RESULTS]: JSON.stringify(multipleAddresses)
+        }
+
+        RedisService.get = jest.fn((request, redisKey) => {
+          return mockData[redisKey]
+        })
       })
 
       it('should store the selected address in Redis and progress to the next route when the user selects an address', async () => {
         AddressService.addressSearch = jest.fn().mockReturnValue(singleAddress)
+
         postOptions.payload = {
           address: singleAddress[0].Address.AddressLine
         }
