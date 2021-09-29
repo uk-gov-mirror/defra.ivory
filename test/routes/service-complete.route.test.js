@@ -301,7 +301,7 @@ describe('/service-complete route', () => {
           _createSection10RedisMock(Options.NO)
         })
 
-        it.only('should send 2 confirmation emails', async () => {
+        it('should send 2 confirmation emails', async () => {
           expect(NotificationService.sendEmail).toBeCalledTimes(0)
           document = await TestHelper.submitGetRequest(server, getOptions)
           expect(NotificationService.sendEmail).toBeCalledTimes(2)
