@@ -212,6 +212,8 @@ this.exemptionTypeOnChange = executionContext => {
 }
 
 this.ivoryVolumeOnChange = executionContext => {
+  'use strict';
+
   const formContext = executionContext.getFormContext();
 
   const selectedIvoryVolumeReason = formContext.getAttribute(DataVerseFieldName.WHY_IVORY_EXEMPT).getValue();
@@ -224,6 +226,8 @@ this.ivoryVolumeOnChange = executionContext => {
 }
 
 this.ivoryAgeOnChange = executionContext => {
+  'use strict';
+
   const formContext = executionContext.getFormContext();
 
   const selectedIvoryAgeReasons = formContext.getAttribute(DataVerseFieldName.WHY_AGE_EXEMPT).getValue();
@@ -237,6 +241,8 @@ this.ivoryAgeOnChange = executionContext => {
 }
 
 this.setAgeExemptionReasons = (formContext, isSection2) => {
+  'use strict';
+
   const fieldName = isSection2 ? DataVerseFieldName.EXEMPTION_CATEGORY : DataVerseFieldName.EXEMPTION_TYPE;
   const selectedExemptionType = formContext.getAttribute(fieldName).getValue();
 
@@ -287,6 +293,8 @@ this.generateSubmissionReference = () => {
 
 // Used when necessary for debugging purposes
 this.showAlert = () => {
+  'use strict';
+
   const currentUserName = Xrm.Utility.getGlobalContext().userSettings.userName
   const message = 'Hello ' + currentUserName;
   Xrm.Navigation.openAlertDialog({ text: message});
