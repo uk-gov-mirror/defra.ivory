@@ -159,6 +159,8 @@ this.initialiseRecord = (executionContext, isSection2) => {
 }
 
 this._setCertificateKey = formContext => {
+  'use strict';
+
   const certificateKey = formContext.getAttribute(DataVerseFieldName.CERTIFICATE_KEY).getValue();
   if (!certificateKey) {
     formContext.getAttribute(DataVerseFieldName.CERTIFICATE_KEY).setValue(this.generateCertificateKey());
@@ -166,6 +168,8 @@ this._setCertificateKey = formContext => {
 }
 
 this._setCertificateLink = async formContext => {
+  'use strict';
+
   const frontEndUrl = await this.getEnvironmentVariableValue('cre2c_FRONT_END_URL');
   const id = formContext.data.entity.getId().toLowerCase().replace('{', '').replace('}', '');
 
@@ -354,25 +358,27 @@ this.showAlert = message => {
 }
 
 this.getEnvironmentVariableValue = async schemaName => {
-    const response = await Xrm.WebApi.retrieveMultipleRecords(
-        'environmentvariabledefinition',
-        [
-            "?$select=defaultvalue",
-            "&$filter=schemaname eq '", schemaName, "'",
-            "&$expand=environmentvariabledefinition_environmentvariablevalue($select=value)"
-        ].join('')
-    );
+  'use strict';
 
-    var value = null;
+  const response = await Xrm.WebApi.retrieveMultipleRecords(
+      'environmentvariabledefinition',
+      [
+          "?$select=defaultvalue",
+          "&$filter=schemaname eq '", schemaName, "'",
+          "&$expand=environmentvariabledefinition_environmentvariablevalue($select=value)"
+      ].join('')
+  );
 
-    if (response.entities.length == 1) {
-        if (response.entities[0].environmentvariabledefinition_environmentvariablevalue.length == 1) {
-            value = response.entities[0].environmentvariabledefinition_environmentvariablevalue[0].value;
-        }
-        else {
-            value = response.entities[0].defaultvalue;
-        }
-    }
+  let value = null;
 
-    return value;
+  if (response.entities.length === 1) {
+      if (response.entities[0].environmentvariabledefinition_environmentvariablevalue.length === 1) {
+          value = response.entities[0].environmentvariabledefinition_environmentvariablevalue[0].value;
+      }
+      else {
+          value = response.entities[0].defaultvalue;
+      }
+  }
+
+  return value;
 }
