@@ -1,7 +1,7 @@
 'use strict'
 
 const os = require('os')
-const { writeFileSync } = require('fs')
+const fs = require('fs')
 
 const AnalyticsService = require('../services/analytics.service')
 const RedisService = require('../services/redis.service')
@@ -57,7 +57,7 @@ const _getContext = async request => {
 
   for (const [index, thumbnailFilename] of uploadData.thumbnails.entries()) {
     const buffer = Buffer.from(uploadData.thumbnailData[index], 'base64')
-    await writeFileSync(`${os.tmpdir()}/${thumbnailFilename}`, buffer)
+    await fs.promises.writeFile(`${os.tmpdir()}/${thumbnailFilename}`, buffer)
   }
 
   const rows = uploadData.thumbnails.map((imageThumbnailFile, index) => {
