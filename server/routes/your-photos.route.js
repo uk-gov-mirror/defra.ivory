@@ -62,8 +62,8 @@ const _getContext = async request => {
     await fs.promises.writeFile(`${os.tmpdir()}/${thumbnails[i]}`, buffer)
   }
 
-  // Wait 5 seconds to address asynchronous file writing issue in Azure
-  await new Promise(resolve => setTimeout(resolve, 5000))
+  // Wait 20 seconds to address asynchronous file writing issue in Azure
+  await new Promise(resolve => setTimeout(resolve, 20000))
 
   const rows = uploadData.thumbnails.map((imageThumbnailFile, index) => {
     return {
