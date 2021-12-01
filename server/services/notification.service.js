@@ -36,7 +36,7 @@ class NotificationService {
 
       return true
     } catch (error) {
-      console.log(`Error sending message [${reference}]`, error)
+      console.error(`Error sending message [${reference}]`, error)
     }
 
     return false
