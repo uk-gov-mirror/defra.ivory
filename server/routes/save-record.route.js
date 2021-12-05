@@ -143,10 +143,13 @@ const _createSection10Body = async (request, itemType, itemDescription) => {
     ...(await _getCommonFields(request, itemDescription)),
     [DataVerseFieldName.SUBMISSION_REFERENCE]: submissionReference,
     [DataVerseFieldName.EXEMPTION_TYPE]: _getExemptionCategoryCode(itemType),
-    [DataVerseFieldName.WHY_IVORY_EXEMPT]: ivoryVolume.ivoryVolume
-      ? _getIvoryVolumeReasonCode(ivoryVolume.ivoryVolume)
+    [DataVerseFieldName.WHY_IVORY_EXEMPT]:
+      ivoryVolume && ivoryVolume.ivoryVolume
+        ? _getIvoryVolumeReasonCode(ivoryVolume.ivoryVolume)
+        : null,
+    [DataVerseFieldName.WHY_IVORY_EXEMPT_OTHER_REASON]: ivoryVolume
+      ? ivoryVolume.otherReason
       : null,
-    [DataVerseFieldName.WHY_IVORY_EXEMPT_OTHER_REASON]: ivoryVolume.otherReason,
     [DataVerseFieldName.WHY_IVORY_INTEGRAL]:
       itemType === ItemType.TEN_PERCENT
         ? _getIvoryIntegralReasonCode(ivoryIntegral)
