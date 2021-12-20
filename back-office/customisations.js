@@ -1,6 +1,7 @@
 const NOTIFICATION_TIMEOUT = 5000;
-const LOGGED_STATUS = 881990000;
 const TARGET_COMPLETION_DATE_DAYS = 49;
+const CERTIFICATE_LINK_EXPIRY_DATE_DAYS = 0;
+const PI_LINK_EXPIRY_DATE_DAYS = 35;
 
 const DataVerseFieldName = {
   ALREADY_HAS_CERTIFICATE: 'cre2c_alreadyhascertificate',
@@ -17,6 +18,7 @@ const DataVerseFieldName = {
   CERTIFICATE_LINK_EXPIRY: 'cre2c_certificatelinkexpiry',
   CERTIFICATE_NUMBER: 'cre2c_certificatenumber',
   DATE_STATUS_APPLIED: 'cre2c_datestatusapplied',
+  DATE_SENT_TO_PI: 'cre2c_datedetailssenttopi',
   EXEMPTION_CATEGORY: 'cre2c_exemptioncategory',
   EXEMPTION_TYPE: 'cre2c_exemptiontype',
   INTENTION: 'cre2c_intention',
@@ -79,14 +81,14 @@ const ExemptionTypeLookup = {
   MINIATURE: 881990002,
   MUSEUM: 881990003,
   HIGH_VALUE: 881990004
-}
+};
 
 const IvoryVolumeLookup = {
   CLEAR_FROM_LOOKING_AT_IT: 881990000,
   MEASURED_IT: 881990001,
   WRITTEN_VERIFICATION: 881990002,
   OTHER_REASON: 881990003
-}
+};
 
 const AgeExemptionReasonLookup = {
   STAMP_OR_SERIAL: 881990000,
@@ -99,13 +101,55 @@ const AgeExemptionReasonLookup = {
   PROFESSIONAL_OPINION: 881990007,
   CARBON_DATED: 881990008,
   OTHER_REASON: 881990009
-}
+};
 
 const AlreadyCertifiedLookup = {
   YES: 881990000,
   NO: 881990001,
   USED_TO: 881990002
-}
+};
+
+const Statuses = {
+  LOGGED: 881990000,
+  GRANTED: 881990005,
+  REFUSED: 881990006,
+  REVISED_CERTIFICATE_ISSUED: 881990007,
+  REPLACEMENT_CERTIFICATE_ISSUED: 881990008,
+  AWAITING_FURTHER_INFORMATION_APPLICANT: 881990009,
+  AWAITING_ADVICE_OTHERS: 881990010,
+  REFERRED_TO_PI: 881990011,
+  RE_REFERRED_TO_PI: 881990012,
+  IN_APPEAL: 881990013,
+  APPEAL_UNOPPOSED: 881990014,
+  APPEAL_UPHELD: 881990015,
+  APPEAL_UNSUCCESSFUL: 881990016,
+  CHECK_COMPLETE_COMPLIANT: 881990018,
+  CHECK_COMPLETE_NON_COMPLIANT: 881990019,
+  UNDERGOING_CHECKS: 881990017,
+  ISSUED: 881990020
+};
+
+const Section2OnlyStatuses = [
+  Statuses.GRANTED,
+  Statuses.REFUSED,
+  Statuses.REVISED_CERTIFICATE_ISSUED,
+  Statuses.REPLACEMENT_CERTIFICATE_ISSUED,
+  Statuses.AWAITING_FURTHER_INFORMATION_APPLICANT,
+  Statuses.AWAITING_ADVICE_OTHERS,
+  Statuses.REFERRED_TO_PI,
+  Statuses.RE_REFERRED_TO_PI,
+  Statuses.IN_APPEAL,
+  Statuses.APPEAL_UNOPPOSED,
+  Statuses.APPEAL_UPHELD,
+  Statuses.APPEAL_UNSUCCESSFUL,
+  Statuses.ISSUED
+];
+
+const Section10OnlyStatuses = [
+  Statuses.UNDERGOING_CHECKS,
+  Statuses.CHECK_COMPLETE_COMPLIANT,
+  Statuses.CHECK_COMPLETE_NON_COMPLIANT
+];
 
 const frontEndCertificateDownloadRoute = 'download-certificate'
 const frontEndPIDownloadRoute = 'pass-data-to-pi/application-details'
@@ -133,6 +177,8 @@ this.formOnLoad = async (executionContext, section) => {
     this.exemptionTypeOnChange(executionContext);
     this.ivoryVolumeOnChange(executionContext);
   }
+
+  this.setStatuses(formContext, isSection2);
 
   this.setAgeExemptionReasons(formContext, isSection2);
 
@@ -181,9 +227,11 @@ this.initialiseRecord = (executionContext, isSection2) => {
 
     formContext.getAttribute(DataVerseFieldName.SUBMISSION_DATE).setValue(currentDate);
 
-    formContext.getAttribute(DataVerseFieldName.STATUS).setValue(LOGGED_STATUS);
+    formContext.getAttribute(DataVerseFieldName.STATUS).setValue(Statuses.LOGGED);
 
-    this.submissionStatusOnChange(executionContext);
+    isSection2 ? 
+      this.submissionStatusSection2OnChange(executionContext) :
+      this.submissionStatusSection10OnChange(executionContext);
 
     formContext.getControl(DataVerseFieldName.PAYMENT_REFERENCE).setDisabled(false);
 
@@ -193,9 +241,7 @@ this.initialiseRecord = (executionContext, isSection2) => {
         currentDate.getDate() + TARGET_COMPLETION_DATE_DAYS
       );
 
-      formContext
-        .getAttribute(DataVerseFieldName.TARGET_COMPLETION_DATE)
-        .setValue(targetCompletionDate);
+      formContext.getAttribute(DataVerseFieldName.TARGET_COMPLETION_DATE).setValue(targetCompletionDate);
     }
   }
 }
@@ -233,11 +279,69 @@ this._setPILink = async formContext => {
   formContext.getAttribute(DataVerseFieldName.PI_LINK).setValue(link);
 }
 
-this.submissionStatusOnChange = executionContext => {
+this.submissionStatusSection2OnChange = executionContext => {
+  'use strict';
+
+  const currentDate = new Date();
+
+  const formContext = executionContext.getFormContext();
+  
+  formContext.getAttribute(DataVerseFieldName.DATE_STATUS_APPLIED).setValue(new Date());
+
+  const status = formContext.getAttribute(DataVerseFieldName.STATUS).getValue();
+  
+  if (status === Statuses.REFERRED_TO_PI || status === Statuses.RE_REFERRED_TO_PI) {
+    const dateSentToPiAttribute = formContext.getAttribute(DataVerseFieldName.DATE_SENT_TO_PI)
+    dateSentToPiAttribute.setValue(currentDate);
+    dateSentToPiAttribute.fireOnChange();
+
+    const piLinkExpiryDate = new Date(currentDate.getTime());
+    piLinkExpiryDate.setDate(
+      currentDate.getDate() + PI_LINK_EXPIRY_DATE_DAYS
+    );
+
+    formContext.getAttribute(DataVerseFieldName.PI_LINK_EXPIRY).setValue(piLinkExpiryDate);
+  }
+  
+  const certificateNumber = formContext.getAttribute(DataVerseFieldName.CERTIFICATE_NUMBER).getValue();
+  if (status === Statuses.ISSUED && certificateNumber === null) {
+    formContext.getAttribute(DataVerseFieldName.CERTIFICATE_ISSUE_DATE).setValue(currentDate);
+    formContext.getAttribute(DataVerseFieldName.CERTIFICATE_NUMBER).setValue(this.generateSubmissionReference());
+
+    this.certificateDetailsOnChange(executionContext);
+
+    const certificateLinkExpiryDate = new Date(currentDate.getTime());
+    certificateLinkExpiryDate.setDate(
+      currentDate.getDate() + CERTIFICATE_LINK_EXPIRY_DATE_DAYS
+    );
+
+    formContext.getAttribute(DataVerseFieldName.CERTIFICATE_LINK_EXPIRY).setValue(certificateLinkExpiryDate);
+  }
+}
+
+this.submissionStatusSection10OnChange = executionContext => {
   'use strict';
 
   const formContext = executionContext.getFormContext();
   formContext.getAttribute(DataVerseFieldName.DATE_STATUS_APPLIED).setValue(new Date());
+}
+
+this.applicationSentToPiOnChange = executionContext => {
+  'use strict';
+
+  const formContext = executionContext.getFormContext();
+
+  const dateSentToPi = formContext.getAttribute(DataVerseFieldName.DATE_SENT_TO_PI).getValue();
+
+  if (dateSentToPi) {
+    const piLinkExpiryDate = dateSentToPi;
+
+    piLinkExpiryDate.setDate(
+      piLinkExpiryDate.getDate() + PI_LINK_EXPIRY_DATE_DAYS
+    );
+    
+    formContext.getAttribute(DataVerseFieldName.PI_LINK_EXPIRY).setValue(piLinkExpiryDate);
+  }
 }
 
 // This handler is only called from the back office for Section 10 records
@@ -397,6 +501,17 @@ this.appliedBeforeOnChange = executionContext => {
   formContext.getControl(fieldName).setVisible(hasAppliedBefore);
   if (!hasAppliedBefore) {
     formContext.getAttribute(fieldName).setValue(null);
+  }
+}
+
+this.setStatuses = (formContext, isSection2) => {
+  'use strict';
+
+  const statusControl = formContext.getControl(DataVerseFieldName.STATUS);
+  if (isSection2) {
+    Section10OnlyStatuses.forEach(status => statusControl.removeOption(status));
+  } else {
+    Section2OnlyStatuses.forEach(status => statusControl.removeOption(status));
   }
 }
 
