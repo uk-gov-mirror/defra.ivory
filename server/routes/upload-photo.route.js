@@ -236,6 +236,11 @@ module.exports = [
     path: `${Paths.UPLOAD_PHOTO}`,
     handler: handlers.post,
     config: {
+      plugins: {
+        // Disinfect disabled on this route as caused an issue with the payload code below.
+        // Note that while the payload isn't being sanitised no text boxes allowing user input should be used on this page.
+        disinfect: false
+      },
       payload: {
         maxBytes: 1024 * 1024 * config.maximumFileSize,
         multipart: {
