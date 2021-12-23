@@ -22,6 +22,8 @@ const ALLOWED_EXTENSIONS = ['.JPG', '.JPEG', '.PNG']
 
 const handlers = {
   get: async (request, h) => {
+    console.log('Using request timeout: ', config.requestTimeout)
+
     const context = await _getContext(request)
 
     const uploadData = await RedisService.get(request, RedisKeys.UPLOAD_PHOTO)
