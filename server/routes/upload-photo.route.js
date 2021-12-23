@@ -22,8 +22,6 @@ const ALLOWED_EXTENSIONS = ['.JPG', '.JPEG', '.PNG']
 
 const handlers = {
   get: async (request, h) => {
-    console.log('Using request timeout: ', config.requestTimeout)
-
     const context = await _getContext(request)
 
     const uploadData = await RedisService.get(request, RedisKeys.UPLOAD_PHOTO)
@@ -237,31 +235,20 @@ module.exports = [
     method: 'POST',
     path: `${Paths.UPLOAD_PHOTO}`,
     handler: handlers.post,
-    options: {
+    config: {
+      plugins: {
+        // Disinfect disabled on this route as caused an issue with the payload code below.
+        // Note that while the payload isn't being sanitised no text boxes allowing user input should be used on this page.
+        disinfect: false
+      },
       payload: {
-        timeout: config.requestTimeout,
         maxBytes: 1024 * 1024 * config.maximumFileSize,
         multipart: {
           output: 'file'
         },
-        parse: true
+        parse: true,
+        timeout: config.requestTimeout
       }
     }
-    // config: {
-    //   plugins: {
-    //     // Disinfect disabled on this route as caused an issue with the payload code below.
-    //     // Note that while the payload isn't being sanitised no text boxes allowing user input should be used on this page.
-    //     disinfect: false
-    //   },
-    //   payload: {
-    //     maxBytes: 1024 * 1024 * config.maximumFileSize,
-    //     multipart: {
-    //       output: 'file'
-    //     },
-    //     parse: true
-    //     // timeout: '10x'
-    //   }
-    //   // timeout: { socket: 10 }
-    // }
   }
 ]
