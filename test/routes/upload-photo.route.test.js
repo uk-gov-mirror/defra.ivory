@@ -418,7 +418,7 @@ describe('/upload-photo route', () => {
       response = await TestHelper.submitPostRequest(server, postOptions, 400)
     })
 
-    it('should display a validation error message if the user tries to upload a duplicate file', async () => {
+    it.skip('should display a validation error message if the user tries to upload a duplicate file', async () => {
       const payloadFile = {
         path: tempFolder,
         bytes: 100,
