@@ -96,9 +96,7 @@ const _getPdf = async entity => {
     _addWatermark(pdfDoc, certificateNumber)
   }
 
-  const pdfBytes = await pdfDoc.save()
-
-  return pdfBytes
+  return pdfDoc.save()
 }
 
 const _formatField = (entity, fieldName, blankValue = '') =>

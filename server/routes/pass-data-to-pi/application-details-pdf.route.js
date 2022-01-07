@@ -69,9 +69,8 @@ const handlers = {
   }
 }
 
-const _getRecord = (id, key) => {
-  return ODataService.getRecord(id, key, DownloadReason.SEND_DATA_TO_PI, true)
-}
+const _getRecord = (id, key) =>
+  ODataService.getRecord(id, key, DownloadReason.SEND_DATA_TO_PI, true)
 
 const _getPdf = async entity => {
   const pdfDoc = await PDFDocument.load(formPdfBytes)
@@ -173,9 +172,7 @@ const _getPdf = async entity => {
   // Prevents the form fields from being editable
   form.flatten()
 
-  const pdfBytes = await pdfDoc.save()
-
-  return pdfBytes
+  return pdfDoc.save()
 }
 
 const _formatField = (entity, fieldName, blankValue = '') =>
