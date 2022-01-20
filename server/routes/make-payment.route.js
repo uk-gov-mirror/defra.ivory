@@ -64,6 +64,8 @@ const handlers = {
 
     await RedisService.set(request, RedisKeys.PAYMENT_ID, response.payment_id)
 
+    console.log(response)
+
     return h.redirect(response._links.next_url.href)
   }
 }
