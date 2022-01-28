@@ -219,7 +219,9 @@ this.formOnLoad = async (executionContext, section) => {
   this._setFieldVisibilityBasedOnCurrentUserRoles(formContext);
 }
 
-this.prescribedInstituteFormOnLoad = executionContext => { 
+this.prescribedInstituteFormOnLoad = executionContext => {
+  'use strict';
+   
   const formContext = executionContext.getFormContext();
 
   const currentUserRoles = Xrm.Utility.getGlobalContext().userSettings.roles
@@ -674,6 +676,8 @@ this.getEnvironmentVariableValue = async schemaName => {
 }
 
 this._setFieldVisibilityBasedOnCurrentUserRoles = async (formContext) => {
+  'use strict';
+
   const currentUserRoles = Xrm.Utility.getGlobalContext().userSettings.roles
     .getAll()
     .map(role => role.name);
@@ -690,6 +694,8 @@ this._setFieldVisibilityBasedOnCurrentUserRoles = async (formContext) => {
 }
 
 this._setAllFieldsToReadOnly = async (formContext) => {
+  'use strict';
+
   const formControls = formContext.getControl();
 
   const alwaysEditableControls = [
@@ -722,6 +728,8 @@ this._setAllFieldsToReadOnly = async (formContext) => {
 }
 
 this._setAllPiFieldsToReadOnly = formContext => {
+  'use strict';
+
   const formControls = formContext.getControl();
 
   formControls.forEach(control => {
