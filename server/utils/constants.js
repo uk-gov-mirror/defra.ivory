@@ -12,13 +12,18 @@ const Analytics = {
     ERROR_PAGE: 'Error page',
     EXEMPTION_TYPE: 'Exemption Type',
     MAIN_QUESTIONS: 'Main Questions',
+    PAYMENT: 'Payment',
     SERVICE_COMPLETE: 'Service Complete'
   },
   Action: {
     CONFIRM: 'Confirm and continue',
     CONTINUE: 'Continue',
+    DOCUMENT_REMOVED: 'Document Removed',
     DROPOUT: 'Dropout',
     ENTERED: 'Details entered',
+    PAYMENT_FAILED: 'PAYMENT FAILED',
+    PAYMENT_SUCCESS: 'Payment successful, data saved',
+    PHOTO_REMOVED: 'Photo Removed',
     REDIRECT: 'Redirected to:',
     REFERRED: 'Referred by:',
     SELECTED: 'Selected:'
