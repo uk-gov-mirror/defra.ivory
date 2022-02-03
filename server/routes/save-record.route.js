@@ -1,7 +1,6 @@
 'use strict'
 
-// TODO IVORY-557
-// const AnalyticsService = require('../services/analytics.service')
+const AnalyticsService = require('../services/analytics.service')
 const ODataService = require('../services/odata.service')
 const RedisService = require('../services/redis.service')
 const PaymentService = require('../services/payment.service')
@@ -12,7 +11,8 @@ const {
   Options,
   Paths,
   PaymentResult,
-  RedisKeys
+  RedisKeys,
+  Analytics
 } = require('../utils/constants')
 const { DataVerseFieldName } = require('../utils/constants')
 const {
@@ -39,6 +39,11 @@ const handlers = {
     const isAlreadyCertified = await RedisHelper.isAlreadyCertified(request)
 
     if (payment.state.status === PaymentResult.SUCCESS) {
+      AnalyticsService.sendEvent(request, {
+        category: Analytics.Category.PAYMENT,
+        action: Analytics.Action.PAYMENT_SUCCESS
+      })
+
       if (isAlreadyCertified) {
         _resellRecord(request)
       } else {
@@ -50,6 +55,11 @@ const handlers = {
           await _updateRecordAttachments(request, entity)
         }
       }
+    } else {
+      AnalyticsService.sendEvent(request, {
+        category: Analytics.Category.PAYMENT,
+        action: Analytics.Action.PAYMENT_FAILED
+      })
     }
 
     return h.redirect(Paths.SERVICE_COMPLETE)
@@ -112,13 +122,17 @@ module.exports = [
 ]
 
 const _createSection2Body = async (request, itemType, itemDescription) => {
-  const [targetCompletionDate, submissionReference, whyRmi] = await Promise.all(
-    [
-      RedisService.get(request, RedisKeys.TARGET_COMPLETION_DATE),
-      RedisService.get(request, RedisKeys.SUBMISSION_REFERENCE),
-      RedisService.get(request, RedisKeys.WHY_IS_ITEM_RMI)
-    ]
-  )
+  const [
+    targetCompletionDate,
+    submissionReference,
+    whyRmi,
+    consentToShareInformation
+  ] = await Promise.all([
+    RedisService.get(request, RedisKeys.TARGET_COMPLETION_DATE),
+    RedisService.get(request, RedisKeys.SUBMISSION_REFERENCE),
+    RedisService.get(request, RedisKeys.WHY_IS_ITEM_RMI),
+    RedisService.get(request, RedisKeys.SHARE_DETAILS_OF_ITEM)
+  ])
 
   return {
     ...(await _getCommonFields(request, itemDescription)),
@@ -130,6 +144,8 @@ const _createSection2Body = async (request, itemType, itemDescription) => {
     [DataVerseFieldName.WHERE_IT_WAS_MADE]: itemDescription.whereMade,
     [DataVerseFieldName.WHEN_IT_WAS_MADE]: itemDescription.whenMade,
     [DataVerseFieldName.WHY_OUTSTANDINLY_VALUABLE]: whyRmi,
+    [DataVerseFieldName.CONSENT_TO_SHARE_INFORMATION]:
+      consentToShareInformation === Options.YES,
     ...(await _getPreviousSubmission(request))
   }
 }
@@ -194,7 +210,8 @@ const _getCommonFields = async (request, itemDescription) => {
       itemDescription.distinguishingFeatures,
     [DataVerseFieldName.INTENTION]: _getIntentionCategoryCode(intentionForItem),
     ...(await _getInitialPhoto(request)),
-    ...(await _getOwnerAndApplicantDetails(request))
+    ...(await _getOwnerAndApplicantDetails(request)),
+    [DataVerseFieldName.MANUALLY_CREATED]: false
   }
 }
 

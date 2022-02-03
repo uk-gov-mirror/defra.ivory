@@ -12,13 +12,18 @@ const Analytics = {
     ERROR_PAGE: 'Error page',
     EXEMPTION_TYPE: 'Exemption Type',
     MAIN_QUESTIONS: 'Main Questions',
+    PAYMENT: 'Payment',
     SERVICE_COMPLETE: 'Service Complete'
   },
   Action: {
     CONFIRM: 'Confirm and continue',
     CONTINUE: 'Continue',
+    DOCUMENT_REMOVED: 'Document Removed',
     DROPOUT: 'Dropout',
     ENTERED: 'Details entered',
+    PAYMENT_FAILED: 'PAYMENT FAILED',
+    PAYMENT_SUCCESS: 'Payment successful, data saved',
+    PHOTO_REMOVED: 'Photo Removed',
     REDIRECT: 'Redirected to:',
     REFERRED: 'Referred by:',
     SELECTED: 'Selected:'
@@ -92,6 +97,7 @@ const DataVerseFieldName = {
   CERTIFICATE_LINK: 'cre2c_certificatelink',
   CERTIFICATE_LINK_EXPIRY: 'cre2c_certificatelinkexpiry',
   CERTIFICATE_NUMBER: 'cre2c_certificatenumber',
+  CONSENT_TO_SHARE_INFORMATION: 'cre2c_consenttoshareinformation',
   DATE_STATUS_APPLIED: 'cre2c_datestatusapplied',
   DISTINGUISHING_FEATURES: 'cre2c_uniquefeatures',
   EXEMPTION_CATEGORY: 'cre2c_exemptioncategory',
@@ -99,6 +105,7 @@ const DataVerseFieldName = {
   INTENTION: 'cre2c_intention',
   HAS_DISTINGUISHING_FEATURES: 'cre2c_hasuniquefeatures',
   ITEM_SUMMARY: 'cre2c_itemsummary',
+  MANUALLY_CREATED: 'cre2c_manuallycreated',
   NAME: 'cre2c_name',
   OWNED_BY_APPLICANT: 'cre2c_ownedbyapplicant',
   OWNER_ADDRESS: 'cre2c_owneraddress',
@@ -198,7 +205,6 @@ const IvoryIntegralReasons = {
 const IvoryVolumeReasons = {
   CLEAR_FROM_LOOKING_AT_IT: 'It’s clear from looking at it',
   MEASURED_IT: 'I measured it',
-  WRITTEN_VERIFICATION: 'I have written verification from a relevant expert',
   OTHER_REASON: 'Other reason'
 }
 
@@ -281,6 +287,7 @@ const Paths = {
   SERVICE_STATUS: '/service-status',
   SERVICE_UNAVAILABLE: '/errors/service-unavailable',
   SESSION_TIMED_OUT: '/errors/session-timed-out',
+  SHARE_DETAILS_OF_ITEM: '/share-details-of-item',
   TAKEN_FROM_ELEPHANT: '/eligibility-checker/taken-from-elephant',
   UPLOAD_DOCUMENT: '/upload-document',
   UPLOAD_PHOTO: '/upload-photo',
@@ -345,6 +352,7 @@ const Views = {
   SERVICE_STATUS: 'service-status',
   SERVICE_UNAVAILABLE: 'errors/service-unavailable',
   SESSION_TIMED_OUT: 'errors/session-timed-out',
+  SHARE_DETAILS_OF_ITEM: 'share-details-of-item',
   TAKEN_FROM_ELEPHANT: 'eligibility-checker/taken-from-elephant',
   UPLOAD_DOCUMENT: 'upload-document',
   UPLOAD_PHOTO: 'upload-photo',
@@ -385,6 +393,7 @@ const RedisKeys = {
   PREVIOUS_APPLICATION_NUMBER: 'previous-application-number',
   REVOKED_CERTIFICATE: 'revoked-certificate',
   SELLING_ON_BEHALF_OF: 'selling-on-behalf-of',
+  SHARE_DETAILS_OF_ITEM: 'share-details-of-item',
   SUBMISSION_DATE: 'submission-date',
   SUBMISSION_REFERENCE: 'submission-reference',
   TARGET_COMPLETION_DATE: 'target-completion-date',
