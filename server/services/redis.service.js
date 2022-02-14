@@ -1,7 +1,12 @@
 'use strict'
 
-const { DEFRA_IVORY_SESSION_KEY } = require('../utils/constants')
 const REDIS_TTL_IN_SECONDS = 86400
+const {
+  DEFRA_IVORY_SESSION_KEY,
+  RedisKeys,
+  UploadPhoto,
+  UploadDocument
+} = require('../utils/constants')
 
 module.exports = class RedisService {
   static async get (request, key) {
@@ -33,10 +38,64 @@ module.exports = class RedisService {
     const keyWithSessionId = `${request.state[DEFRA_IVORY_SESSION_KEY]}.${key}`
     client.del(keyWithSessionId)
   }
+
+  static async deleteSessionData (request) {
+    const client = request.redis.client
+
+    const totalPossibleKeys =
+      Object.keys(RedisKeys).length +
+      UploadPhoto.MAX_PHOTOS +
+      UploadDocument.MAX_DOCUMENTS
+
+    const keys = await _getMatchingRedisKeys(request)
+
+    if (keys.length > totalPossibleKeys) {
+      // Mitigates against a malicious attack using this wildcard search to remove all Redis keys
+      console.error(
+        `Request to clear ${keys.length} Redis keys failed as exceeded the max allowed of ${totalPossibleKeys}`
+      )
+    } else {
+      for (const key of keys) {
+        client.del(key)
+      }
+    }
+  }
 }
 
+/**
+ * Checks a string value to see if it looks like a Json object i.e. begins and ends with curly brackets
+ * @param {*} value The string value to be chekced
+ * @returns True if the string looks like a Json object, otherwise false
+ */
 const _isJsonString = value =>
   value &&
   value.length &&
   ((value.startsWith('{') && value.endsWith('}')) ||
     (value.startsWith('[') && value.endsWith(']')))
+
+/**
+ * Scans the Redis cache for all keys matching the session key held in the session.
+ * The Redis scan function returns a cursor and a set of results. The scan function
+ * needs to be called repeatedly unti the cursor is back to 0.
+ * @param {*} request The request containing the Redis cache
+ * @returns An array of Redis keys that are prefixed with the session key
+ */
+const _getMatchingRedisKeys = async request => {
+  const client = request.redis.client
+  const sessionKey = request.state[DEFRA_IVORY_SESSION_KEY]
+
+  const keys = []
+
+  let scanResult = await client.scan('0', 'MATCH', `${sessionKey}.*`)
+  let cursor = scanResult[0]
+
+  keys.push(...scanResult[1])
+
+  while (cursor !== '0') {
+    scanResult = await client.scan(cursor, 'MATCH', `${sessionKey}.*`)
+    cursor = scanResult[0]
+    keys.push(...scanResult[1])
+  }
+
+  return keys
+}
