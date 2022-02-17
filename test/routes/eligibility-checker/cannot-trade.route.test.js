@@ -5,7 +5,8 @@ const TestHelper = require('../../utils/test-helper')
 describe('/eligibility-checker/cannot-trade route', () => {
   let server
   const url = '/eligibility-checker/cannot-trade'
-  const nextUrl = 'https://www.gov.uk/'
+  const nextUrl =
+    'https://www.gov.uk/guidance/dealing-in-items-containing-ivory-or-made-of-ivory'
 
   const elementIds = {
     pageTitle: 'pageTitle',
@@ -174,7 +175,7 @@ describe('/eligibility-checker/cannot-trade route', () => {
     })
 
     describe('Success', () => {
-      it('should redirect', async () => {
+      it('should progress to the next route', async () => {
         await _checkPostAction(postOptions, server, nextUrl)
       })
     })

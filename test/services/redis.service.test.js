@@ -12,13 +12,137 @@ describe('Redis service', () => {
   })
 
   describe('get method', () => {
-    it('should get a value from Redis', async () => {
-      _createMocks(mockRedisValue)
+    it('should get a string value from Redis', async () => {
+      const mockValue = 'THIS IS A STRING VALUE'
+      _createMocks(mockValue)
 
       expect(mockRequest.redis.client.get).toBeCalledTimes(0)
 
       const redisValue = await RedisService.get(mockRequest, redisKey)
-      expect(redisValue).toEqual(mockRedisValue)
+      expect(redisValue).toEqual(mockValue)
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(1)
+      expect(mockRequest.redis.client.get).toBeCalledWith(
+        `${sessionId}.${redisKey}`
+      )
+    })
+
+    it('should get a numeric value from Redis', async () => {
+      const mockValue = 12345
+      _createMocks(mockValue)
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(0)
+
+      const redisValue = await RedisService.get(mockRequest, redisKey)
+      expect(redisValue).toEqual(mockValue)
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(1)
+      expect(mockRequest.redis.client.get).toBeCalledWith(
+        `${sessionId}.${redisKey}`
+      )
+    })
+
+    it('should get a numeral-only string value from Redis', async () => {
+      const mockValue = '12345'
+      _createMocks(mockValue)
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(0)
+
+      const redisValue = await RedisService.get(mockRequest, redisKey)
+      expect(redisValue).toEqual(mockValue)
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(1)
+      expect(mockRequest.redis.client.get).toBeCalledWith(
+        `${sessionId}.${redisKey}`
+      )
+    })
+
+    it('should get a bolean true value from Redis', async () => {
+      const mockValue = 'true'
+      _createMocks(mockValue)
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(0)
+
+      const redisValue = await RedisService.get(mockRequest, redisKey)
+      expect(redisValue).toEqual(true)
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(1)
+      expect(mockRequest.redis.client.get).toBeCalledWith(
+        `${sessionId}.${redisKey}`
+      )
+    })
+
+    it('should get a bolean false value from Redis', async () => {
+      const mockValue = 'false'
+      _createMocks(mockValue)
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(0)
+
+      const redisValue = await RedisService.get(mockRequest, redisKey)
+      expect(redisValue).toEqual(false)
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(1)
+      expect(mockRequest.redis.client.get).toBeCalledWith(
+        `${sessionId}.${redisKey}`
+      )
+    })
+
+    it('should get a JSON-encoded object from Redis', async () => {
+      const mockValue = {
+        key1: 'VALUE 1',
+        key2: 'VALUE 2'
+      }
+
+      _createMocks(JSON.stringify(mockValue))
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(0)
+
+      const redisValue = await RedisService.get(mockRequest, redisKey)
+
+      expect(redisValue).toEqual(mockValue)
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(1)
+      expect(mockRequest.redis.client.get).toBeCalledWith(
+        `${sessionId}.${redisKey}`
+      )
+    })
+
+    it('should get a string from Redis when it looks like a JSON object but it cannot be parsed', async () => {
+      const mockValue = '{invalid-json-object}'
+
+      _createMocks(mockValue)
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(0)
+
+      const redisValue = await RedisService.get(mockRequest, redisKey)
+
+      expect(redisValue).toEqual(mockValue)
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(1)
+      expect(mockRequest.redis.client.get).toBeCalledWith(
+        `${sessionId}.${redisKey}`
+      )
+    })
+
+    it('should get a JSON-encoded array object from Redis', async () => {
+      const mockValue = [
+        {
+          key1: 'VALUE 1',
+          key2: 'VALUE 2'
+        },
+        {
+          key1: 'VALUE 3',
+          key2: 'VALUE 4'
+        }
+      ]
+
+      _createMocks(JSON.stringify(mockValue))
+
+      expect(mockRequest.redis.client.get).toBeCalledTimes(0)
+
+      const redisValue = await RedisService.get(mockRequest, redisKey)
+
+      expect(redisValue).toEqual(mockValue)
 
       expect(mockRequest.redis.client.get).toBeCalledTimes(1)
       expect(mockRequest.redis.client.get).toBeCalledWith(
@@ -79,6 +203,22 @@ describe('Redis service', () => {
       )
     })
   })
+
+  describe('deleteSessionData method', () => {
+    beforeEach(() => {
+      _createMocks(mockRedisValue)
+    })
+
+    it('should delete values from Redis', async () => {
+      expect(mockRequest.redis.client.scan).toBeCalledTimes(0)
+      expect(mockRequest.redis.client.del).toBeCalledTimes(0)
+
+      await RedisService.deleteSessionData(mockRequest)
+
+      expect(mockRequest.redis.client.scan).toBeCalledTimes(2)
+      expect(mockRequest.redis.client.del).toBeCalledTimes(6)
+    })
+  })
 })
 
 const mockRedisValue = 'MOCK REDIS VALUE'
@@ -92,7 +232,17 @@ const _createMocks = mockValue => {
     client: {
       del: jest.fn(),
       get: jest.fn(() => mockValue),
-      setex: jest.fn()
+      setex: jest.fn(),
+      scan: jest
+        .fn()
+        .mockReturnValueOnce([
+          '33',
+          ['redis_key_1', 'redis_key_2', 'redis_key_3']
+        ])
+        .mockReturnValueOnce([
+          '0',
+          ['redis_key_4', 'redis_key_5', 'redis_key_n']
+        ])
     }
   }
 }

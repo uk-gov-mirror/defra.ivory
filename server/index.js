@@ -1,22 +1,30 @@
 'use strict'
 
+const applicationinsights = require('applicationinsights')
 const hapi = require('@hapi/hapi')
 const Bcrypt = require('bcrypt')
 
 const config = require('./utils/config')
 const { options } = require('./utils/cookie-config')
-const { DEFRA_IVORY_SESSION_KEY, Paths } = require('./utils/constants')
+const {
+  APPINSIGHTS_CLOUDROLE,
+  DEFRA_IVORY_SESSION_KEY,
+  HOME_URL,
+  Paths
+} = require('./utils/constants')
 
 const CookieService = require('./services/cookie.service')
 
 const users = {
   defra: {
-    username: 'defra',
-    password: '$2a$04$R/Iqfgw5oXbBd.ozznzZ9OThrl2E12B8zcPWsOKy/7s35D5cS.V/S'
+    username: config.defraUsername,
+    password: config.defraPassword
   }
 }
 
 const createServer = async () => {
+  _initialiseAppInsights()
+
   const server = hapi.server({
     port: config.servicePort,
     routes: {
@@ -52,6 +60,16 @@ const validate = async (request, username, password) => {
   return { isValid, credentials }
 }
 
+const _initialiseAppInsights = () => {
+  if (config.appInsightsInstrumentationKey) {
+    applicationinsights.setup(config.appInsightsInstrumentationKey).start()
+    const cloudRoleTag = applicationinsights.defaultClient.context.keys.cloudRole
+    applicationinsights.defaultClient.context.tags[cloudRoleTag] = APPINSIGHTS_CLOUDROLE
+  } else {
+    console.error('Application Insights is disabled')
+  }
+}
+
 const _registerPlugins = async server => {
   if (config.useBasicAuth) {
     await server.register(require('@hapi/basic'))
@@ -74,7 +92,8 @@ const _registerPlugins = async server => {
 const _checkSessionCookie = (request, h) => {
   const pathname = request.url.pathname
   const excludeCookieCheckUrls = [
-    '/',
+    HOME_URL,
+    Paths.USE_CHECKER,
     Paths.SERVICE_STATUS,
     Paths.SESSION_TIMED_OUT
   ]
@@ -88,7 +107,7 @@ const _checkSessionCookie = (request, h) => {
   ) {
     return h.continue
   } else {
-    if (!CookieService.checkSessionCookie(request)) {
+    if (!CookieService.getSessionCookie(request)) {
       return h.redirect(Paths.SESSION_TIMED_OUT).takeover()
     } else {
       return h.continue

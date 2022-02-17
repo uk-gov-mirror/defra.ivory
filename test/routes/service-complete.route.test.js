@@ -151,12 +151,6 @@ describe('/service-complete route', () => {
           )
         })
 
-        it('should have the correct Call to Action button', () => {
-          const element = document.querySelector(`#${elementIds.finish}`)
-          expect(element).toBeTruthy()
-          expect(TestHelper.getTextContent(element)).toEqual('Finish')
-        })
-
         it('should have the correct feedback link', () => {
           const element = document.querySelector(`#${elementIds.feedbackLink}`)
           TestHelper.checkLink(
@@ -259,7 +253,7 @@ describe('/service-complete route', () => {
           )
           expect(element).toBeTruthy()
           expect(TestHelper.getTextContent(element)).toEqual(
-            `If you have not heard from us within ${SLA} working days, you can contact us at ivory@apha.gov.uk. Make sure you have your submission reference number, so we can find your details.`
+            `If you have not heard from us within ${SLA} working days, you can contact us at IvoryAct@apha.gov.uk. Make sure you have your submission reference number, so we can find your details.`
           )
         })
 

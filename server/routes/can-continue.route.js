@@ -15,6 +15,8 @@ const {
 
 const SLA = 35
 
+const sessionTimeoutInHours = config.cookieTimeout / 1000 / 3600
+
 const handlers = {
   get: async (request, h) => {
     const context = await _getContext(request)
@@ -52,13 +54,14 @@ const _getContext = async request => {
   )
 
   const context = {
+    sessionTimeoutInHours,
     itemType,
     isSection2: await RedisHelper.isSection2(request),
     hasUsedChecker: await RedisHelper.hasUsedChecker(request),
     isRevoked: await RedisHelper.isRevoked(request),
     hasAppliedBefore: await RedisHelper.hasAppliedBefore(request),
     isAlreadyCertified: await RedisHelper.isAlreadyCertified(request),
-    cancelLink: Urls.GOV_UK_HOME,
+    cancelLink: Urls.GOV_UK_TOP_OF_MAIN,
     sla: SLA
   }
 

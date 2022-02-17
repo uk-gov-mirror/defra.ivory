@@ -42,7 +42,7 @@ const schema = joi.object().keys({
   addressLookupUrl: joi.string().default(defaultUrl),
   addressLookupPassphrase: joi.string(),
   addressLookupPfxCert: joi.string(),
-  cookieTimeout: joi.number(),
+  cookieTimeout: joi.number().default(86400000),
   cookieValidationPassword: joi
     .string()
     .default('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'),
@@ -60,11 +60,15 @@ const schema = joi.object().keys({
   googleAnalyticsId: joi.string().default('UA-YYYYYY-YY'),
   airbrakeHost: joi.string(),
   airbrakeProjectKey: joi.string(),
+  appInsightsInstrumentationKey: joi.string(),
   clamscanBinaries: joi.string().default('/usr/bin/'),
   clamscanPreference: joi.string().default('clamdscan'),
   clamscanDebug: joi.bool(),
   disableAntimalware: joi.bool(),
-  useBasicAuth: joi.bool().valid(true, false)
+  useBasicAuth: joi.bool().valid(true, false),
+  defraUsername: joi.string(),
+  defraPassword: joi.string(),
+  performanceTestMode: joi.bool()
 })
 
 // Build config
@@ -112,11 +116,15 @@ const config = {
   googleAnalyticsId: process.env.GOOGLE_ANALYTICS_ID,
   airbrakeHost: process.env.AIRBRAKE_HOST,
   airbrakeProjectKey: process.env.AIRBRAKE_PROJECT_KEY,
+  appInsightsInstrumentationKey: process.env.APPINSIGHTS_INSTRUMENTATIONKEY,
   clamscanBinaries: process.env.CLAMSCAN_BINARIES,
   clamscanPreference: process.env.CLAMSCAN_PREFERENCE,
   clamscanDebug: process.env.CLAMSCAN_DEBUG,
   disableAntimalware: process.env.DISABLE_ANTIMALWARE,
-  useBasicAuth: getBoolean(process.env.USE_BASIC_AUTH || false)
+  useBasicAuth: getBoolean(process.env.USE_BASIC_AUTH || false),
+  defraUsername: process.env.DEFRA_USERNAME,
+  defraPassword: process.env.DEFRA_PASSWORD,
+  performanceTestMode: process.env.PERFORMANCE_TEST_MODE
 }
 
 // Validate config

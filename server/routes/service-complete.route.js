@@ -19,7 +19,7 @@ const {
   Views
 } = require('../utils/constants')
 
-const APHA_EMAIL = 'ivory@apha.gov.uk'
+const APHA_EMAIL = 'IvoryAct@apha.gov.uk'
 const SLA = 35
 
 const handlers = {
@@ -48,6 +48,8 @@ const handlers = {
       action: context.pageTitle,
       label: context.pageTitle
     })
+
+    RedisService.deleteSessionData(request)
 
     return h
       .view(Views.SERVICE_COMPLETE, {
@@ -260,7 +262,9 @@ const _sendSection2OwnerEmailThirdParty = context => {
   const recipientEmail = context.ownerContactDetails.emailAddress
   const payload = {
     submissionReference: context.submissionReference,
-    fullName: context.ownerContactDetails.fullName
+    fullName:
+      context.ownerContactDetails.fullName ||
+      context.ownerContactDetails.businessName
   }
 
   _sendEmail(templateId, recipientEmail, payload)
@@ -295,7 +299,10 @@ const _sendSection10OwnerEmail = context => {
   const recipientEmail = context.ownerContactDetails.emailAddress
   const payload = {
     submissionReference: context.submissionReference,
-    fullName: context.ownerContactDetails.fullName,
+    fullName:
+      context.ownerContactDetails.fullName ||
+      context.ownerContactDetails.businessName,
+
     exemptionType: context.itemType
   }
 

@@ -1,18 +1,29 @@
 'use strict'
 
 const { v4: uuidv4 } = require('uuid')
+const CookieService = require('../services/cookie.service')
+const RedisService = require('../services/redis.service')
 
 const {
-  HOME_URL,
   DEFRA_IVORY_SESSION_KEY,
-  Paths
+  Paths,
+  HOME_URL
 } = require('../utils/constants')
 
 const handlers = {
   get: async (request, h) => {
+    const useChecker = request.query.useChecker
+
+    const sessionCookie = CookieService.getSessionCookie(request, false)
+
+    if (sessionCookie) {
+      RedisService.deleteSessionData(request)
+    }
     _setCookieSessionId(h)
 
-    return h.redirect(Paths.HOW_CERTAIN)
+    return useChecker
+      ? h.redirect(Paths.CONTAIN_ELEPHANT_IVORY)
+      : h.redirect(Paths.HOW_CERTAIN)
   }
 }
 
