@@ -1,11 +1,13 @@
 'use strict'
 
+const applicationinsights = require('applicationinsights')
 const hapi = require('@hapi/hapi')
 const Bcrypt = require('bcrypt')
 
 const config = require('./utils/config')
 const { options } = require('./utils/cookie-config')
 const {
+  APPINSIGHTS_CLOUDROLE,
   DEFRA_IVORY_SESSION_KEY,
   HOME_URL,
   Paths
@@ -21,6 +23,8 @@ const users = {
 }
 
 const createServer = async () => {
+  _initialiseAppInsights()
+
   const server = hapi.server({
     port: config.servicePort,
     routes: {
@@ -54,6 +58,16 @@ const validate = async (request, username, password) => {
   const credentials = { id: user.id, name: user.name }
 
   return { isValid, credentials }
+}
+
+const _initialiseAppInsights = () => {
+  if (config.appInsightsInstrumentationKey) {
+    applicationinsights.setup(config.appInsightsInstrumentationKey).start()
+    const cloudRoleTag = applicationinsights.defaultClient.context.keys.cloudRole
+    applicationinsights.defaultClient.context.tags[cloudRoleTag] = APPINSIGHTS_CLOUDROLE
+  } else {
+    console.error('Application Insights is disabled')
+  }
 }
 
 const _registerPlugins = async server => {
