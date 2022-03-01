@@ -544,8 +544,6 @@ this.alreadyHasCertificateOnChange = executionContext => {
       formContext.getControl(DataVerseFieldName.PREVIOUS_APPLICATION_NUMBER).setVisible(false);
 
       formContext.getAttribute(DataVerseFieldName.REVOKED_CERTIFICATE_NUMBER).setValue(null);
-
-      this.appliedBeforeOnChange(executionContext);
       break;
 
     case AlreadyCertifiedLookup.USED_TO:
@@ -566,22 +564,6 @@ this.alreadyHasCertificateOnChange = executionContext => {
       formContext.getAttribute(DataVerseFieldName.APPLIED_BEFORE).setValue(null);
       formContext.getAttribute(DataVerseFieldName.PREVIOUS_APPLICATION_NUMBER).setValue(null);
       break;
-  }
-}
-
-this.appliedBeforeOnChange = executionContext => {
-  'use strict';
-
-  const formContext = executionContext.getFormContext();
-
-  const appliedBefore = formContext.getControl(DataVerseFieldName.APPLIED_BEFORE);
-
-  const hasAppliedBefore = appliedBefore.getValue() === 'Yes';
-
-  const fieldName = DataVerseFieldName.PREVIOUS_APPLICATION_NUMBER
-  formContext.getControl(fieldName).setVisible(hasAppliedBefore);
-  if (!hasAppliedBefore) {
-    formContext.getAttribute(fieldName).setValue(null);
   }
 }
 
@@ -771,7 +753,6 @@ this.showAlert = message => {
 
 //  const currentUserName = Xrm.Utility.getGlobalContext().userSettings.userName
 //  const message = 'Hello ' + currentUserName;
-//  Xrm.Navigation.openAlertDialog({ text: message});
 
   Xrm.Navigation.openAlertDialog({ text: message });
 }
