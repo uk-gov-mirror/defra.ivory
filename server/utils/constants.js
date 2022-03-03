@@ -469,5 +469,6 @@ module.exports = Object.freeze({
   UploadPhoto,
   Urls,
   Views,
-  DEFRA_IVORY_SESSION_KEY: 'DefraIvorySession'
+  DEFRA_IVORY_SESSION_KEY: 'DefraIvorySession',
+  SERVICE_NAME: 'Declare ivory you intend to sell or hire out'
 })

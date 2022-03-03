@@ -23,7 +23,7 @@ describe('/eligibility-checker/how-certain route', () => {
     howCertain2: 'howCertain-2',
     continue: 'continue'
   }
-  const serviceName = 'Declare elephant ivory you intend to sell or hire out'
+  const serviceName = 'Declare ivory you intend to sell or hire out'
 
   let document
 
