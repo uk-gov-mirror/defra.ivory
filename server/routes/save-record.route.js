@@ -176,6 +176,7 @@ const _createSection10Body = async (request, itemType, itemDescription) => {
   ])
 
   return {
+    [DataVerseFieldName.GROUP_REGISTRATION]: false,
     ...(await _getCommonFields(request, itemDescription)),
     [DataVerseFieldName.SUBMISSION_REFERENCE]: submissionReference,
     [DataVerseFieldName.EXEMPTION_TYPE]: _getExemptionCategoryCode(itemType),
@@ -276,6 +277,8 @@ const _getOwnerAndApplicantDetails = async request => {
       ? _getPostcode(ownerAddress, ownerAddressInternational)
       : null,
     [DataVerseFieldName.APPLICANT_NAME]: applicantContactDetails.fullName,
+    [DataVerseFieldName.APPLICANT_BUSINESS_NAME]:
+      applicantContactDetails.businessName,
     [DataVerseFieldName.APPLICANT_EMAIL]: applicantContactDetails.emailAddress,
     [DataVerseFieldName.APPLICANT_ADDRESS]: _formatAddress(
       applicantAddress,
@@ -352,6 +355,9 @@ const _getNewOwnerDetails = async request => {
 
     [DataVerseFieldName.PREVIOUS_APPLICANT_NAME]:
       existingRecord[DataVerseFieldName.APPLICANT_NAME],
+
+    [DataVerseFieldName.PREVIOUS_APPLICANT_BUSINESS_NAME]:
+      existingRecord[DataVerseFieldName.APPLICANT_BUSINESS_NAME],
 
     [DataVerseFieldName.PREVIOUS_APPLICANT_EMAIL]:
       existingRecord[DataVerseFieldName.APPLICANT_EMAIL],
