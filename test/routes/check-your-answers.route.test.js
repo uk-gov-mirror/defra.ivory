@@ -4,6 +4,7 @@ const TestHelper = require('../utils/test-helper')
 const {
   AlreadyCertifiedOptions,
   BehalfOfBusinessOptions,
+  BusinessOrIndividual,
   ItemType,
   Options,
   Paths,
@@ -123,23 +124,35 @@ describe('/check-your-answers route', () => {
 
         _checkSummary(document, elementIds.summaries.item)
 
-        _checkSummaryKeys(
-          document,
-          elementIds.summaries.item,
-          'Type of exemption'
-        )
+        _checkSummaryKeys(document, elementIds.summaries.item, [
+          'Type of exemption',
+          'Already has a certificate',
+          'Revoked certificate number',
+          'Applied before'
+        ])
 
-        _checkSummaryValues(
-          document,
-          elementIds.summaries.item,
-          'Item made before 1918 that has outstandingly high artistic, cultural or historical value'
-        )
+        _checkSummaryValues(document, elementIds.summaries.item, [
+          'Item made before 1918 that has outstandingly high artistic, cultural or historical value',
+          'No',
+          '',
+          'No'
+        ])
 
         _checkSummaryChangeLinks(
           document,
           elementIds.summaries.item,
-          'Change type of exemption',
-          Paths.WHAT_TYPE_OF_ITEM_IS_IT
+          [
+            'Change type of exemption',
+            'Change whether the item has a certificate',
+            'Change revoked certificate number',
+            'Change whether an application has been made before'
+          ],
+          [
+            Paths.WHAT_TYPE_OF_ITEM_IS_IT,
+            Paths.ALREADY_CERTIFIED,
+            Paths.REVOKED_CERTIFICATE,
+            Paths.APPLIED_BEFORE
+          ]
         )
       })
 
@@ -555,8 +568,8 @@ describe('/check-your-answers route', () => {
 
         _checkSummaryKeys(document, elementIds.summaries.owner, [
           'Do you own the item?',
-          'Work for a business',
-          'Selling on behalf of',
+          'Completing the service',
+          'Who’s the owner?',
           'Your name',
           'Business name',
           'Your email',
@@ -565,7 +578,7 @@ describe('/check-your-answers route', () => {
 
         _checkSummaryValues(document, elementIds.summaries.owner, [
           Options.NO,
-          Options.YES,
+          BusinessOrIndividual.AS_A_BUSINESS,
           BehalfOfBusinessOptions.BUSINESS_I_WORK_FOR,
           mockApplicantContactDetails.fullName,
           mockApplicantContactDetails.businessName,
@@ -578,7 +591,7 @@ describe('/check-your-answers route', () => {
           elementIds.summaries.owner,
           [
             'Change who owns the item',
-            'Change if you work for a business',
+            'Change the capacity you’re completing the service',
             'Change who owns the item',
             'Change your name',
             'Change business name',
@@ -616,8 +629,8 @@ describe('/check-your-answers route', () => {
 
         _checkSummaryKeys(document, elementIds.summaries.owner, [
           'Do you own the item?',
-          'Work for a business',
-          'Selling on behalf of',
+          'Completing the service',
+          'Who’s the owner?',
           'Capacity you’re acting',
           'Your name',
           'Business name',
@@ -627,9 +640,9 @@ describe('/check-your-answers route', () => {
 
         _checkSummaryValues(document, elementIds.summaries.owner, [
           Options.NO,
-          Options.YES,
+          BusinessOrIndividual.AS_A_BUSINESS,
           BehalfOfBusinessOptions.OTHER,
-          'Other - Some other capacity',
+          'Other',
           mockApplicantContactDetails.fullName,
           mockApplicantContactDetails.businessName,
           mockApplicantContactDetails.emailAddress,
@@ -641,9 +654,9 @@ describe('/check-your-answers route', () => {
           elementIds.summaries.owner,
           [
             'Change who owns the item',
-            'Change if you work for a business',
+            'Change the capacity you’re completing the service',
             'Change who owns the item',
-            'Change if you work for a business',
+            'Change the capacity you’re completing the service',
             'Change your name',
             'Change business name',
             'Change your email',
@@ -681,8 +694,8 @@ describe('/check-your-answers route', () => {
 
         _checkSummaryKeys(document, elementIds.summaries.owner, [
           'Do you own the item?',
-          'Work for a business',
-          'Selling on behalf of',
+          'Completing the service',
+          'Who’s the owner?',
           'Owner’s name',
           'Owner’s email',
           'Owner’s address',
@@ -694,7 +707,7 @@ describe('/check-your-answers route', () => {
 
         _checkSummaryValues(document, elementIds.summaries.owner, [
           Options.NO,
-          Options.YES,
+          BusinessOrIndividual.AS_A_BUSINESS,
           BehalfOfBusinessOptions.AN_INDIVIDUAL,
           mockOwnerContactDetails.fullName,
           mockOwnerContactDetails.emailAddress,
@@ -710,7 +723,7 @@ describe('/check-your-answers route', () => {
           elementIds.summaries.owner,
           [
             'Change who owns the item',
-            'Change if you work for a business',
+            'Change the capacity you’re completing the service',
             'Change who owns the item',
             'Change owner’s name',
             'Change owner’s email',
@@ -1217,10 +1230,9 @@ const _createMocks = (
       [RedisKeys.APPLICANT_ADDRESS]: applicantAddress,
       [RedisKeys.INTENTION_FOR_ITEM]: saleIntention,
       [RedisKeys.WHAT_CAPACITY]: {
-        whatCapacity: 'Other',
-        otherCapacity: 'Some other capacity'
+        whatCapacity: 'Other'
       },
-      [RedisKeys.WORK_FOR_A_BUSINESS]: Options.YES,
+      [RedisKeys.WORK_FOR_A_BUSINESS]: true,
       [RedisKeys.SELLING_ON_BEHALF_OF]: sellingOnBehalfOf,
       [RedisKeys.PREVIOUS_APPLICATION_NUMBER]: '',
       [RedisKeys.ALREADY_CERTIFIED]: {

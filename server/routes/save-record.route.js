@@ -230,7 +230,8 @@ const _getCommonFields = async (request, itemDescription) => {
     [DataVerseFieldName.INTENTION]: _getIntentionCategoryCode(intentionForItem),
     ...(await _getInitialPhoto(request)),
     ...(await _getOwnerAndApplicantDetails(request)),
-    [DataVerseFieldName.MANUALLY_CREATED]: false
+    [DataVerseFieldName.MANUALLY_CREATED]: false,
+    [DataVerseFieldName.HAS_PREVIOUS_OWNER]: false
   }
 }
 
@@ -260,7 +261,6 @@ const _getOwnerAndApplicantDetails = async request => {
   ])
 
   const capacity = capacityResponse ? capacityResponse.whatCapacity : null
-  const capacityOther = capacityResponse ? capacityResponse.otherCapacity : null
 
   return {
     [DataVerseFieldName.OWNED_BY_APPLICANT]: isOwnedByApplicant,
@@ -289,14 +289,13 @@ const _getOwnerAndApplicantDetails = async request => {
       applicantAddressInternational
     ),
 
-    [DataVerseFieldName.WORK_FOR_A_BUSINESS]: workForABusiness === Options.YES,
+    [DataVerseFieldName.WORK_FOR_A_BUSINESS]: workForABusiness,
 
     [DataVerseFieldName.SELLING_ON_BEHALF_OF]: _getSellingOnBehalfOfCode(
       sellingOnBehalfOf
     ),
 
-    [DataVerseFieldName.CAPACITY]: _getCapacityCode(capacity),
-    [DataVerseFieldName.CAPACITY_OTHER]: capacityOther
+    [DataVerseFieldName.CAPACITY]: _getCapacityCode(capacity)
   }
 }
 
@@ -336,6 +335,7 @@ const _getNewOwnerDetails = async request => {
   return {
     [DataVerseFieldName.SECTION_2_CASE_ID]:
       existingRecord[DataVerseFieldName.SECTION_2_CASE_ID],
+    [DataVerseFieldName.HAS_PREVIOUS_OWNER]: true,
 
     // Owner details
 
@@ -381,9 +381,6 @@ const _getNewOwnerDetails = async request => {
 
     [DataVerseFieldName.PREVIOUS_CAPACITY]:
       existingRecord[DataVerseFieldName.CAPACITY],
-
-    [DataVerseFieldName.PREVIOUS_CAPACITY_OTHER]:
-      existingRecord[DataVerseFieldName.CAPACITY_OTHER],
 
     ...ownerAndApplicantDetails
   }
