@@ -50,10 +50,9 @@ const AlreadyCertifiedReverseLookup = {
 }
 
 const CapacityLookup = {
-  [Capacities.AGENT]: 881990000,
   [Capacities.EXECUTOR_ADMINISTRATOR]: 881990001,
   [Capacities.TRUSTEE]: 881990002,
-  [Capacities.OTHER]: 881990003
+  [Capacities.AGENT]: 881990003
 }
 
 const ExemptionTypeLookup = {

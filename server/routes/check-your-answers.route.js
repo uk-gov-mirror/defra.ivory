@@ -7,21 +7,22 @@ const RedisHelper = require('../services/redis-helper.service')
 const RedisService = require('../services/redis.service')
 
 const {
+  AlreadyCertifiedOptions,
   Analytics,
+  BusinessOrIndividual,
   ItemType,
   Options,
   Paths,
   RedisKeys,
-  Views,
-  AlreadyCertifiedOptions
+  Views
 } = require('../utils/constants')
 const { getIvoryVolumePercentage } = require('../utils/general')
 const { buildErrorSummary, Validators } = require('../utils/validation')
 
 const YOUR_EMAIL = 'Your email'
 const YOUR_ADDRESS = 'Your address'
-const WORK_FOR_A_BUSINESS = 'Work for a business'
-const SELLING_ON_BEHALF_OF = 'Selling on behalf of'
+const WORK_FOR_A_BUSINESS = 'Completing the service'
+const SELLING_ON_BEHALF_OF = 'Who’s the owner?'
 const BUSINESS_NAME = 'Business name'
 
 const handlers = {
@@ -315,14 +316,16 @@ const _getItemSummary = async (request, itemType) => {
 
     const hasAppliedBefore = await RedisHelper.hasAppliedBefore(request)
 
+    const alreadyCertiedChangeItems = _getChangeItems(
+      Paths.ALREADY_CERTIFIED,
+      CHANGE_LINK_HINT.AleadyCertified
+    )
+
     itemSummary.push(
       _getSummaryListRow(
         'Already has a certificate',
         alreadyCertified.alreadyCertified,
-        _getChangeItems(
-          Paths.ALREADY_CERTIFIED,
-          CHANGE_LINK_HINT.AleadyCertified
-        )
+        alreadyCertiedChangeItems
       )
     )
 
@@ -331,10 +334,7 @@ const _getItemSummary = async (request, itemType) => {
         _getSummaryListRow(
           'Certificate number',
           alreadyCertified.certificateNumber,
-          _getChangeItems(
-            Paths.ALREADY_CERTIFIED,
-            CHANGE_LINK_HINT.AleadyCertified
-          )
+          alreadyCertiedChangeItems
         )
       )
     }
@@ -435,11 +435,6 @@ const _getOwnerSummary = async (request, isOwnedByApplicant) => {
     RedisKeys.SELLING_ON_BEHALF_OF
   )
 
-  const workForABusiness = await RedisService.get(
-    request,
-    RedisKeys.WORK_FOR_A_BUSINESS
-  )
-
   const capacity = _formatCapacity(
     await RedisService.get(request, RedisKeys.WHAT_CAPACITY)
   )
@@ -474,10 +469,19 @@ const _getOwnerSummary = async (request, isOwnedByApplicant) => {
       ownerAddress
     )
   } else {
+    const workForABusiness = await RedisService.get(
+      request,
+      RedisKeys.WORK_FOR_A_BUSINESS
+    )
+
+    const workForABusinessFormatted = workForABusiness
+      ? BusinessOrIndividual.AS_A_BUSINESS
+      : BusinessOrIndividual.AS_AN_INDIVIDUAL
+
     if (sellingOnBehalfOf === 'The business I work for') {
       await _getOwnerSummaryApplicantBusiness(
         ownerSummary,
-        workForABusiness,
+        workForABusinessFormatted,
         sellingOnBehalfOf,
         applicantContactDetails,
         applicantAddress
@@ -485,7 +489,7 @@ const _getOwnerSummary = async (request, isOwnedByApplicant) => {
     } else if (sellingOnBehalfOf === 'Other') {
       await _getOwnerSummaryApplicantOther(
         ownerSummary,
-        workForABusiness,
+        workForABusinessFormatted,
         sellingOnBehalfOf,
         capacity,
         applicantContactDetails,
@@ -494,7 +498,7 @@ const _getOwnerSummary = async (request, isOwnedByApplicant) => {
     } else {
       await _getOwnerSummaryApplicantDefault(
         ownerSummary,
-        workForABusiness,
+        workForABusinessFormatted,
         sellingOnBehalfOf,
         ownerContactDetails,
         ownerAddress,
@@ -522,10 +526,6 @@ const _formatCapacity = whatCapacity => {
   let capacity
   if (whatCapacity && whatCapacity.whatCapacity) {
     capacity = whatCapacity.whatCapacity
-
-    if (capacity === 'Other') {
-      capacity += ` - ${whatCapacity.otherCapacity}`
-    }
   }
 
   return capacity
@@ -573,7 +573,7 @@ const _getOwnerSummaryOwnedByApplicant = async (
 
 const _getOwnerSummaryApplicantBusiness = async (
   ownerSummary,
-  workForABusiness,
+  workForABusinessFormatted,
   sellingOnBehalfOf,
   applicantContactDetails,
   applicantAddress
@@ -581,7 +581,7 @@ const _getOwnerSummaryApplicantBusiness = async (
   ownerSummary.push(
     _getSummaryListRow(
       WORK_FOR_A_BUSINESS,
-      workForABusiness,
+      workForABusinessFormatted,
       _getChangeItems(
         Paths.WORK_FOR_A_BUSINESS,
         CHANGE_LINK_HINT.WorkForABusiness
@@ -611,7 +611,7 @@ const _getOwnerSummaryApplicantBusiness = async (
     )
   )
 
-  if (workForABusiness === Options.YES) {
+  if (workForABusinessFormatted === BusinessOrIndividual.AS_A_BUSINESS) {
     ownerSummary.push(
       _getSummaryListRow(
         BUSINESS_NAME,
@@ -650,7 +650,7 @@ const _getOwnerSummaryApplicantBusiness = async (
 
 const _getOwnerSummaryApplicantOther = async (
   ownerSummary,
-  workForABusiness,
+  workForABusinessFormatted,
   sellingOnBehalfOf,
   capacity,
   applicantContactDetails,
@@ -659,7 +659,7 @@ const _getOwnerSummaryApplicantOther = async (
   ownerSummary.push(
     _getSummaryListRow(
       WORK_FOR_A_BUSINESS,
-      workForABusiness,
+      workForABusinessFormatted,
       _getChangeItems(
         Paths.WORK_FOR_A_BUSINESS,
         CHANGE_LINK_HINT.WorkForABusiness
@@ -697,7 +697,7 @@ const _getOwnerSummaryApplicantOther = async (
     )
   )
 
-  if (workForABusiness === Options.YES) {
+  if (workForABusinessFormatted === BusinessOrIndividual.AS_A_BUSINESS) {
     ownerSummary.push(
       _getSummaryListRow(
         BUSINESS_NAME,
@@ -736,7 +736,7 @@ const _getOwnerSummaryApplicantOther = async (
 
 const _getOwnerSummaryApplicantDefault = async (
   ownerSummary,
-  workForABusiness,
+  workForABusinessFormatted,
   sellingOnBehalfOf,
   ownerContactDetails,
   ownerAddress,
@@ -746,7 +746,7 @@ const _getOwnerSummaryApplicantDefault = async (
   ownerSummary.push(
     _getSummaryListRow(
       WORK_FOR_A_BUSINESS,
-      workForABusiness,
+      workForABusinessFormatted,
       _getChangeItems(
         Paths.WORK_FOR_A_BUSINESS,
         CHANGE_LINK_HINT.WorkForABusiness
@@ -801,7 +801,7 @@ const _getOwnerSummaryApplicantDefault = async (
     )
   )
 
-  if (workForABusiness === Options.YES) {
+  if (workForABusinessFormatted === BusinessOrIndividual.AS_A_BUSINESS) {
     ownerSummary.push(
       _getSummaryListRow(
         BUSINESS_NAME,
@@ -926,7 +926,7 @@ const CHANGE_LINK_HINT = {
   WhoOwnsTheItem: 'who owns the item',
   WhyIvoryIntegral: 'reason why all ivory is integral to item',
   WhyRmi: 'reason why item is of outstandingly high value',
-  WorkForABusiness: 'if you work for a business',
+  WorkForABusiness: 'the capacity you’re completing the service',
   YourAddress: 'your address',
   YourEmail: 'your email',
   YourFiles: 'your files',

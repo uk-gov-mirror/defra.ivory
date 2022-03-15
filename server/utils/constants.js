@@ -81,11 +81,15 @@ const BehalfOfNotBusinessOptions = {
   OTHER: 'Other'
 }
 
+const BusinessOrIndividual = {
+  AS_A_BUSINESS: 'As a business',
+  AS_AN_INDIVIDUAL: 'As an individual'
+}
+
 const Capacities = {
-  AGENT: 'Agent',
   EXECUTOR_ADMINISTRATOR: 'Executor or administrator',
-  TRUSTEE: 'Trustee',
-  OTHER: 'Other'
+  TRUSTEE: 'Trustee or similar',
+  AGENT: 'Agent or business acting on behalf of either of the above'
 }
 
 const DataVerseFieldName = {
@@ -96,7 +100,6 @@ const DataVerseFieldName = {
   APPLICANT_NAME: 'cre2c_applicantname',
   APPLICANT_POSTCODE: 'cre2c_applicantpostcode',
   APPLIED_BEFORE: 'cre2c_appliedbefore',
-  CAPACITY_OTHER: 'cre2c_capacityother',
   CAPACITY: 'cre2c_capacity',
   CERTIFICATE_ISSUE_DATE: 'cre2c_certificateissuedate',
   CERTIFICATE_KEY: 'cre2c_certificatekey',
@@ -111,6 +114,7 @@ const DataVerseFieldName = {
   INTENTION: 'cre2c_intention',
   GROUP_REGISTRATION: 'cre2c_groupregistration',
   HAS_DISTINGUISHING_FEATURES: 'cre2c_hasuniquefeatures',
+  HAS_PREVIOUS_OWNER: 'cre2c_haspreviousowner',
   ITEM_SUMMARY: 'cre2c_itemsummary',
   MANUALLY_CREATED: 'cre2c_manuallycreated',
   NAME: 'cre2c_name',
@@ -140,7 +144,6 @@ const DataVerseFieldName = {
   PREVIOUS_APPLICANT_BUSINESS_NAME: 'cre2c_previousapplicantbusinessname',
   PREVIOUS_APPLICANT_POSTCODE: 'cre2c_previousapplicantpostcode',
   PREVIOUS_APPLICATION_NUMBER: 'cre2c_previousapplicationnumber',
-  PREVIOUS_CAPACITY_OTHER: 'cre2c_previouscapacityother',
   PREVIOUS_CAPACITY: 'cre2c_previouscapacity',
   PREVIOUS_OWNED_BY_APPLICANT: 'cre2c_previousownedbyapplicant',
   PREVIOUS_OWNER_ADDRESS: 'cre2c_previousowneraddress',
@@ -475,6 +478,7 @@ module.exports = Object.freeze({
   APPINSIGHTS_CLOUDROLE: 'IvoryFrontEnd',
   BehalfOfBusinessOptions,
   BehalfOfNotBusinessOptions,
+  BusinessOrIndividual,
   Capacities,
   CharacterLimits,
   DataVerseFieldName,
