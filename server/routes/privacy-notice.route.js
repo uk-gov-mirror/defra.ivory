@@ -3,7 +3,7 @@
 const { Paths, Views } = require('../utils/constants')
 
 const handlers = {
-  get: (request, h) => {
+  get: (_request, h) => {
     const context = _getContext()
 
     return h.view(Views.PRIVACY_NOTICE, {
@@ -22,6 +22,6 @@ module.exports = [
 
 const _getContext = () => {
   return {
-    pageTitle: 'Dealing in exempted Ivory items privacy notice'
+    pageTitle: 'Dealing in exempted ivory items privacy notice'
   }
 }

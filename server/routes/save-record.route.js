@@ -1,19 +1,23 @@
 'use strict'
 
 const AnalyticsService = require('../services/analytics.service')
+const AzureBlobService = require('../services/azure-blob.service')
 const ODataService = require('../services/odata.service')
 const RedisService = require('../services/redis.service')
 const PaymentService = require('../services/payment.service')
 const RedisHelper = require('../services/redis-helper.service')
 
 const {
+  Analytics,
+  AzureContainer,
+  DEFRA_IVORY_SESSION_KEY,
   ItemType,
   Options,
   Paths,
   PaymentResult,
-  RedisKeys,
-  Analytics
+  RedisKeys
 } = require('../utils/constants')
+
 const { DataVerseFieldName } = require('../utils/constants')
 const {
   AgeExemptionReasonLookup,
@@ -89,15 +93,29 @@ const _updateRecord = async (request, entity, isSection2) => {
 }
 
 const _updateRecordAttachments = async (request, entity) => {
-  const supportingInformation = await RedisService.get(
+  const supportingEvidence = await RedisService.get(
     request,
     RedisKeys.UPLOAD_DOCUMENT
   )
 
-  if (supportingInformation) {
+  if (
+    supportingEvidence &&
+    supportingEvidence.files &&
+    supportingEvidence.files.length
+  ) {
+    supportingEvidence.fileData = []
+
+    for (let index = 0; index < supportingEvidence.files.length; index++) {
+      supportingEvidence.fileData[index] = await _getSupportingEvidenceBlob(
+        request,
+        supportingEvidence,
+        index
+      )
+    }
+
     ODataService.updateRecordAttachments(
       entity[DataVerseFieldName.SECTION_2_CASE_ID],
-      supportingInformation
+      supportingEvidence
     )
   }
 }
@@ -158,6 +176,7 @@ const _createSection10Body = async (request, itemType, itemDescription) => {
   ])
 
   return {
+    [DataVerseFieldName.GROUP_REGISTRATION]: false,
     ...(await _getCommonFields(request, itemDescription)),
     [DataVerseFieldName.SUBMISSION_REFERENCE]: submissionReference,
     [DataVerseFieldName.EXEMPTION_TYPE]: _getExemptionCategoryCode(itemType),
@@ -211,7 +230,8 @@ const _getCommonFields = async (request, itemDescription) => {
     [DataVerseFieldName.INTENTION]: _getIntentionCategoryCode(intentionForItem),
     ...(await _getInitialPhoto(request)),
     ...(await _getOwnerAndApplicantDetails(request)),
-    [DataVerseFieldName.MANUALLY_CREATED]: false
+    [DataVerseFieldName.MANUALLY_CREATED]: false,
+    [DataVerseFieldName.HAS_PREVIOUS_OWNER]: false
   }
 }
 
@@ -241,7 +261,6 @@ const _getOwnerAndApplicantDetails = async request => {
   ])
 
   const capacity = capacityResponse ? capacityResponse.whatCapacity : null
-  const capacityOther = capacityResponse ? capacityResponse.otherCapacity : null
 
   return {
     [DataVerseFieldName.OWNED_BY_APPLICANT]: isOwnedByApplicant,
@@ -258,6 +277,8 @@ const _getOwnerAndApplicantDetails = async request => {
       ? _getPostcode(ownerAddress, ownerAddressInternational)
       : null,
     [DataVerseFieldName.APPLICANT_NAME]: applicantContactDetails.fullName,
+    [DataVerseFieldName.APPLICANT_BUSINESS_NAME]:
+      applicantContactDetails.businessName,
     [DataVerseFieldName.APPLICANT_EMAIL]: applicantContactDetails.emailAddress,
     [DataVerseFieldName.APPLICANT_ADDRESS]: _formatAddress(
       applicantAddress,
@@ -268,14 +289,13 @@ const _getOwnerAndApplicantDetails = async request => {
       applicantAddressInternational
     ),
 
-    [DataVerseFieldName.WORK_FOR_A_BUSINESS]: workForABusiness === Options.YES,
+    [DataVerseFieldName.WORK_FOR_A_BUSINESS]: workForABusiness,
 
     [DataVerseFieldName.SELLING_ON_BEHALF_OF]: _getSellingOnBehalfOfCode(
       sellingOnBehalfOf
     ),
 
-    [DataVerseFieldName.CAPACITY]: _getCapacityCode(capacity),
-    [DataVerseFieldName.CAPACITY_OTHER]: capacityOther
+    [DataVerseFieldName.CAPACITY]: _getCapacityCode(capacity)
   }
 }
 
@@ -315,6 +335,7 @@ const _getNewOwnerDetails = async request => {
   return {
     [DataVerseFieldName.SECTION_2_CASE_ID]:
       existingRecord[DataVerseFieldName.SECTION_2_CASE_ID],
+    [DataVerseFieldName.HAS_PREVIOUS_OWNER]: true,
 
     // Owner details
 
@@ -334,6 +355,9 @@ const _getNewOwnerDetails = async request => {
 
     [DataVerseFieldName.PREVIOUS_APPLICANT_NAME]:
       existingRecord[DataVerseFieldName.APPLICANT_NAME],
+
+    [DataVerseFieldName.PREVIOUS_APPLICANT_BUSINESS_NAME]:
+      existingRecord[DataVerseFieldName.APPLICANT_BUSINESS_NAME],
 
     [DataVerseFieldName.PREVIOUS_APPLICANT_EMAIL]:
       existingRecord[DataVerseFieldName.APPLICANT_EMAIL],
@@ -357,9 +381,6 @@ const _getNewOwnerDetails = async request => {
 
     [DataVerseFieldName.PREVIOUS_CAPACITY]:
       existingRecord[DataVerseFieldName.CAPACITY],
-
-    [DataVerseFieldName.PREVIOUS_CAPACITY_OTHER]:
-      existingRecord[DataVerseFieldName.CAPACITY_OTHER],
 
     ...ownerAndApplicantDetails
   }
@@ -405,7 +426,9 @@ const _getInitialPhoto = async request => {
 
   return {
     [DataVerseFieldName.PHOTO_1]:
-      photos && photos.files && photos.files.length ? photos.fileData[0] : null
+      photos && photos.files && photos.files.length
+        ? await _getPhotoBlob(request, photos, 0)
+        : null
   }
 }
 
@@ -414,12 +437,53 @@ const _getAdditionalPhotos = async request => {
 
   const additionalPhotos = {}
   if (photos && photos.files && photos.files.length > 1) {
-    for (let index = 2; index <= photos.fileData.length; index++) {
-      additionalPhotos[`cre2c_photo${index}`] = photos.fileData[index - 1]
+    for (let index = 1; index < photos.files.length; index++) {
+      additionalPhotos[`cre2c_photo${index + 1}`] = await _getPhotoBlob(
+        request,
+        photos,
+        index
+      )
     }
   }
 
   return additionalPhotos
+}
+
+/**
+ * Gets an image file from blob storage and converts it into a base64 string
+ * @param {*} request
+ * @param {*} photos
+ * @param {*} index
+ * @returns
+ */
+const _getPhotoBlob = async (request, photos, index) => {
+  const blobName = `${request.state[DEFRA_IVORY_SESSION_KEY]}.${RedisKeys.UPLOAD_PHOTO}.${photos.thumbnails[index]}`
+
+  const blob = await AzureBlobService.get(AzureContainer.Images, blobName)
+
+  return blob.toString('base64')
+}
+
+/**
+ * Gets a file from blob storage and converts it into a base64 string
+ * @param {*} request
+ * @param {*} supportingEvidence
+ * @param {*} index
+ * @returns
+ */
+const _getSupportingEvidenceBlob = async (
+  request,
+  supportingEvidence,
+  index
+) => {
+  const blobName = `${request.state[DEFRA_IVORY_SESSION_KEY]}.${RedisKeys.UPLOAD_DOCUMENT}.${supportingEvidence.files[index]}`
+
+  const blob = await AzureBlobService.get(
+    AzureContainer.SupportingEvidence,
+    blobName
+  )
+
+  return blob.toString('base64')
 }
 
 const _getAlreadyCertifiedCode = value => AlreadyCertifiedLookup[value]

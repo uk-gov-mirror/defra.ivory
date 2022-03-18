@@ -4,6 +4,7 @@ const TestHelper = require('../utils/test-helper')
 const {
   AlreadyCertifiedOptions,
   BehalfOfBusinessOptions,
+  BusinessOrIndividual,
   ItemType,
   Options,
   Paths,
@@ -123,23 +124,35 @@ describe('/check-your-answers route', () => {
 
         _checkSummary(document, elementIds.summaries.item)
 
-        _checkSummaryKeys(
-          document,
-          elementIds.summaries.item,
-          'Type of exemption'
-        )
+        _checkSummaryKeys(document, elementIds.summaries.item, [
+          'Type of exemption',
+          'Already has a certificate',
+          'Revoked certificate number',
+          'Applied before'
+        ])
 
-        _checkSummaryValues(
-          document,
-          elementIds.summaries.item,
-          'Item made before 1918 that has outstandingly high artistic, cultural or historical value'
-        )
+        _checkSummaryValues(document, elementIds.summaries.item, [
+          'Item made before 1918 that has outstandingly high artistic, cultural or historical value',
+          'No',
+          '',
+          'No'
+        ])
 
         _checkSummaryChangeLinks(
           document,
           elementIds.summaries.item,
-          'Change type of exemption',
-          Paths.WHAT_TYPE_OF_ITEM_IS_IT
+          [
+            'Change type of exemption',
+            'Change whether the item has a certificate',
+            'Change revoked certificate number',
+            'Change whether an application has been made before'
+          ],
+          [
+            Paths.WHAT_TYPE_OF_ITEM_IS_IT,
+            Paths.ALREADY_CERTIFIED,
+            Paths.REVOKED_CERTIFICATE,
+            Paths.APPLIED_BEFORE
+          ]
         )
       })
 
@@ -451,6 +464,46 @@ describe('/check-your-answers route', () => {
       })
     })
 
+    describe('GET: Page sections for ItemType = MINIATURE', () => {
+      beforeEach(async () => {
+        _createMocks(ItemType.MINIATURE, true, false)
+        document = await TestHelper.submitGetRequest(server, getOptions)
+      })
+
+      it('should have the correct "Exemption Reason" summary section', () => {
+        _checkSubheading(
+          document,
+          elementIds.subHeadings.exemptionReason,
+          'Why item qualifies for exemption'
+        )
+
+        _checkSummary(document, elementIds.summaries.exemptionReason)
+
+        _checkSummaryKeys(
+          document,
+          elementIds.summaries.exemptionReason,
+          'Proof of item’s age'
+        )
+
+        _checkSummaryValues(document, elementIds.summaries.exemptionReason, [
+          'It has a stamp, serial number or signature to prove its ageI have a dated receipt showing when it was bought or repairedI have a dated publication that shows or describes the itemIt’s been in the family since before 1918I have written verification from a relevant expertI am an expert, and it’s my professional opinionIvory age reason',
+          mockIvoryVolume.otherReason,
+          ivoryIntegral
+        ])
+
+        _checkSummaryChangeLinks(
+          document,
+          elementIds.summaries.exemptionReason,
+          [
+            'Change your proof of age',
+            'Change your proof that item has less than 10% ivory',
+            'Change reason why all ivory is integral to item'
+          ],
+          [Paths.IVORY_AGE, Paths.IVORY_VOLUME, Paths.IVORY_INTEGRAL]
+        )
+      })
+    })
+
     describe('GET: Page sections for "Owner’s details"', () => {
       it('should have the correct "Owner’s details" summary section - owned by applicant', async () => {
         _createMocks(ItemType.TEN_PERCENT)
@@ -515,8 +568,8 @@ describe('/check-your-answers route', () => {
 
         _checkSummaryKeys(document, elementIds.summaries.owner, [
           'Do you own the item?',
-          'Work for a business',
-          'Selling on behalf of',
+          'Completing the service',
+          'Who’s the owner?',
           'Your name',
           'Business name',
           'Your email',
@@ -525,7 +578,7 @@ describe('/check-your-answers route', () => {
 
         _checkSummaryValues(document, elementIds.summaries.owner, [
           Options.NO,
-          Options.YES,
+          BusinessOrIndividual.AS_A_BUSINESS,
           BehalfOfBusinessOptions.BUSINESS_I_WORK_FOR,
           mockApplicantContactDetails.fullName,
           mockApplicantContactDetails.businessName,
@@ -538,7 +591,7 @@ describe('/check-your-answers route', () => {
           elementIds.summaries.owner,
           [
             'Change who owns the item',
-            'Change if you work for a business',
+            'Change the capacity you’re completing the service',
             'Change who owns the item',
             'Change your name',
             'Change business name',
@@ -576,8 +629,8 @@ describe('/check-your-answers route', () => {
 
         _checkSummaryKeys(document, elementIds.summaries.owner, [
           'Do you own the item?',
-          'Work for a business',
-          'Selling on behalf of',
+          'Completing the service',
+          'Who’s the owner?',
           'Capacity you’re acting',
           'Your name',
           'Business name',
@@ -587,9 +640,9 @@ describe('/check-your-answers route', () => {
 
         _checkSummaryValues(document, elementIds.summaries.owner, [
           Options.NO,
-          Options.YES,
+          BusinessOrIndividual.AS_A_BUSINESS,
           BehalfOfBusinessOptions.OTHER,
-          'Other - Some other capacity',
+          'Other',
           mockApplicantContactDetails.fullName,
           mockApplicantContactDetails.businessName,
           mockApplicantContactDetails.emailAddress,
@@ -601,9 +654,9 @@ describe('/check-your-answers route', () => {
           elementIds.summaries.owner,
           [
             'Change who owns the item',
-            'Change if you work for a business',
+            'Change the capacity you’re completing the service',
             'Change who owns the item',
-            'Change if you work for a business',
+            'Change the capacity you’re completing the service',
             'Change your name',
             'Change business name',
             'Change your email',
@@ -641,8 +694,8 @@ describe('/check-your-answers route', () => {
 
         _checkSummaryKeys(document, elementIds.summaries.owner, [
           'Do you own the item?',
-          'Work for a business',
-          'Selling on behalf of',
+          'Completing the service',
+          'Who’s the owner?',
           'Owner’s name',
           'Owner’s email',
           'Owner’s address',
@@ -654,7 +707,7 @@ describe('/check-your-answers route', () => {
 
         _checkSummaryValues(document, elementIds.summaries.owner, [
           Options.NO,
-          Options.YES,
+          BusinessOrIndividual.AS_A_BUSINESS,
           BehalfOfBusinessOptions.AN_INDIVIDUAL,
           mockOwnerContactDetails.fullName,
           mockOwnerContactDetails.emailAddress,
@@ -670,7 +723,7 @@ describe('/check-your-answers route', () => {
           elementIds.summaries.owner,
           [
             'Change who owns the item',
-            'Change if you work for a business',
+            'Change the capacity you’re completing the service',
             'Change who owns the item',
             'Change owner’s name',
             'Change owner’s email',
@@ -1076,14 +1129,6 @@ const mockItemDescriptionWithoutOptionalValues = {
 
 const mockPhotos = {
   files: ['1.png', '2.jpeg', '3.png', '4.jpeg', '5.png', '6.png'],
-  fileData: [
-    'file-data',
-    'file-data',
-    'file-data',
-    'file-data',
-    'file-data',
-    'file-data'
-  ],
   fileSizes: [100, 200, 300, 400, 500, 600],
   thumbnails: [
     '1-thumbnail.png',
@@ -1131,14 +1176,6 @@ const mockDocuments = {
     'document4.pdf',
     'document5.pdf',
     'document6.pdf'
-  ],
-  fileData: [
-    'document1',
-    'document2',
-    'document3',
-    'document4',
-    'document5',
-    'document6'
   ],
   fileSizes: [100, 200, 300, 400, 500, 600]
 }
@@ -1193,10 +1230,9 @@ const _createMocks = (
       [RedisKeys.APPLICANT_ADDRESS]: applicantAddress,
       [RedisKeys.INTENTION_FOR_ITEM]: saleIntention,
       [RedisKeys.WHAT_CAPACITY]: {
-        whatCapacity: 'Other',
-        otherCapacity: 'Some other capacity'
+        whatCapacity: 'Other'
       },
-      [RedisKeys.WORK_FOR_A_BUSINESS]: Options.YES,
+      [RedisKeys.WORK_FOR_A_BUSINESS]: true,
       [RedisKeys.SELLING_ON_BEHALF_OF]: sellingOnBehalfOf,
       [RedisKeys.PREVIOUS_APPLICATION_NUMBER]: '',
       [RedisKeys.ALREADY_CERTIFIED]: {
