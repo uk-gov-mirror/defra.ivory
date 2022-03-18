@@ -15,7 +15,7 @@ const { buildErrorSummary, Validators } = require('../../utils/validation')
 const { getStandardOptions } = require('../../utils/general')
 
 const handlers = {
-  get: async (request, h) => {
+  get: async (_request, h) => {
     const context = await _getContext(request)
 
     return h.view(Views.TAKEN_FROM_SPECIES, {
