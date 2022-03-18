@@ -67,15 +67,11 @@ const _getContext = async request => {
 const _getOptions = async request => {
   const whatSpecies = await RedisService.get(request, RedisKeys.WHAT_SPECIES)
 
-  const options = Object.values(Species).map(species => {
-    return {
-      value: species,
-      text: species,
-      checked: whatSpecies === species
-    }
-  })
-
-  return options
+  return Object.values(Species).map(species => ({
+    value: species,
+    text: species,
+    checked: whatSpecies === species
+  }))
 }
 
 const _validateForm = payload => {

@@ -161,7 +161,7 @@ describe('/eligibility-checker/how-certain route', () => {
           response,
           'howCertain',
           'howCertain-error',
-          'Tell us how certain you are that your item will qualify for exemption from the ban on dealing in ivory?'
+          'Tell us how certain you are that your item will qualify for exemption from the ban on dealing in ivory'
         )
       })
     })
