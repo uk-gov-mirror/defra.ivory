@@ -126,6 +126,9 @@ const _resellRecord = async request => {
 
   Object.assign(updateBody, await _getPreviousSubmission(request))
 
+  updateBody[DataVerseFieldName.CONSENT_TO_SHARE_INFORMATION] =
+    (await _getConsentToShare(request)) === Options.YES
+
   return ODataService.updateRecord(
     updateBody[DataVerseFieldName.SECTION_2_CASE_ID],
     updateBody
@@ -326,6 +329,10 @@ const _getPreviousSubmission = async request => {
     [DataVerseFieldName.APPLIED_BEFORE]: appliedBefore === Options.YES,
     [DataVerseFieldName.PREVIOUS_APPLICATION_NUMBER]: previousApplicationNumber
   }
+}
+
+const _getConsentToShare = async request => {
+  return RedisService.get(request, RedisKeys.SHARE_DETAILS_OF_ITEM)
 }
 
 const _getNewOwnerDetails = async request => {
