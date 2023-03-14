@@ -1106,6 +1106,126 @@ describe('/check-your-answers route', () => {
           'You must agree with the legal declaration'
         )
       })
+
+      it('should display a validation error message if the user does not supply mandatory itemSummary', async () => {
+        _createEmptyMocks()
+        postOptions.payload.agree = 'agree'
+        const response = await TestHelper.submitPostRequest(
+          server,
+          postOptions,
+          400
+        )
+        await TestHelper.checkValidationError(
+          response,
+          'itemSummary',
+          'itemSummary-error',
+          'You must provide the item details',
+          'You must provide the item details',
+          'There is a problem',
+          true,
+          false
+        )
+      })
+
+      it('should display a validation error message if the user does not supply mandatory itemDescriptionSummary', async () => {
+        _createMocksForDescription(ItemType.HIGH_VALUE)
+        postOptions.payload.agree = 'agree'
+        const response = await TestHelper.submitPostRequest(
+          server,
+          postOptions,
+          400
+        )
+        await TestHelper.checkValidationError(
+          response,
+          'itemDescriptionSummary',
+          'itemDescriptionSummary-error',
+          'You must provide the description of item',
+          'You must provide the description of item',
+          'There is a problem',
+          true,
+          false
+        )
+      })
+
+      it('should display a validation error message if the user does not supply mandatory photos', async () => {
+        _createMocksForPhotos(ItemType.HIGH_VALUE)
+        postOptions.payload.agree = 'agree'
+        const response = await TestHelper.submitPostRequest(
+          server,
+          postOptions,
+          400
+        )
+        await TestHelper.checkValidationError(
+          response,
+          'photoSummary',
+          'photoSummary-error',
+          'You must provide the photos of the item',
+          'You must provide the photos of the item',
+          'There is a problem',
+          true,
+          false
+        )
+      })
+
+      it('should display a validation error message if the user does not supply mandatory photos', async () => {
+        _createMocksForPhotos(ItemType.HIGH_VALUE)
+        postOptions.payload.agree = 'agree'
+        const response = await TestHelper.submitPostRequest(
+          server,
+          postOptions,
+          400
+        )
+        await TestHelper.checkValidationError(
+          response,
+          'photoSummary',
+          'photoSummary-error',
+          'You must provide the photos of the item',
+          'You must provide the photos of the item',
+          'There is a problem',
+          true,
+          false
+        )
+      })
+
+      it('should display a validation error message if the user does not supply sale Intention summary', async () => {
+        _createMocksForSaleIntentionSummary(ItemType.HIGH_VALUE)
+        postOptions.payload.agree = 'agree'
+        const response = await TestHelper.submitPostRequest(
+          server,
+          postOptions,
+          400
+        )
+        await TestHelper.checkValidationError(
+          response,
+          'saleIntentionSummary',
+          'saleIntentionSummary-error',
+          'You must provide the sale intention',
+          'You must provide the sale intention',
+          'There is a problem',
+          true,
+          false
+        )
+      })
+
+      it('should display a validation error message if the user does not supply legal assertions', async () => {
+        _createMocksForLegalAssertions('Test')
+        postOptions.payload.agree = 'agree'
+        const response = await TestHelper.submitPostRequest(
+          server,
+          postOptions,
+          400
+        )
+        await TestHelper.checkValidationError(
+          response,
+          'legalAssertions',
+          'legalAssertions-error',
+          'You must provide the legal Assertions',
+          'You must provide the legal Assertions',
+          'There is a problem',
+          true,
+          false
+        )
+      })
     })
   })
 })
@@ -1245,6 +1365,89 @@ const _createMocks = (
       [RedisKeys.PREVIOUS_APPLICATION_NUMBER]: ''
     }
 
+    return mockDataMap[redisKey]
+  })
+}
+
+const _createEmptyMocks = () => {
+  TestHelper.createMocks()
+  RedisService.get = jest.fn((request, redisKey) => {
+    const mockDataMap = {
+    }
+    return mockDataMap[redisKey]
+  })
+}
+
+const _createMocksForDescription = (itemType) => {
+  TestHelper.createMocks()
+  RedisService.get = jest.fn((request, redisKey) => {
+    const mockDataMap = {
+      [RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT]: itemType,
+      [RedisKeys.DESCRIBE_THE_ITEM]: null
+    }
+    return mockDataMap[redisKey]
+  })
+}
+
+const _createMocksForPhotos = (itemType,
+  includeOptionalItemDetails = true) => {
+  TestHelper.createMocks()
+  RedisService.get = jest.fn((request, redisKey) => {
+    const mockDataMap = {
+      [RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT]: itemType,
+      [RedisKeys.DESCRIBE_THE_ITEM]: includeOptionalItemDetails
+        ? mockItemDescription
+        : mockItemDescriptionWithoutOptionalValues,
+      [RedisKeys.UPLOAD_PHOTO]: null
+    }
+    return mockDataMap[redisKey]
+  })
+}
+
+const _createMocksForSaleIntentionSummary = (itemType,
+  includeOptionalItemDetails = true, ownedByApplicant = true) => {
+  TestHelper.createMocks()
+  RedisService.get = jest.fn((request, redisKey) => {
+    const mockDataMap = {
+      [RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT]: itemType,
+      [RedisKeys.DESCRIBE_THE_ITEM]: includeOptionalItemDetails
+        ? mockItemDescription
+        : mockItemDescriptionWithoutOptionalValues,
+      [RedisKeys.UPLOAD_PHOTO]: mockPhotos,
+      [RedisKeys.OWNED_BY_APPLICANT]: ownedByApplicant
+        ? Options.YES
+        : Options.NO,
+      [RedisKeys.OWNER_CONTACT_DETAILS]: mockOwnerContactDetails,
+      [RedisKeys.APPLICANT_CONTACT_DETAILS]: ownedByApplicant
+        ? mockOwnerContactDetails
+        : mockApplicantContactDetails,
+      [RedisKeys.OWNER_ADDRESS]: ownerAddress,
+      [RedisKeys.INTENTION_FOR_ITEM]: null
+    }
+    return mockDataMap[redisKey]
+  })
+}
+
+const _createMocksForLegalAssertions = (itemType,
+  includeOptionalItemDetails = true, ownedByApplicant = true) => {
+  TestHelper.createMocks()
+  RedisService.get = jest.fn((request, redisKey) => {
+    const mockDataMap = {
+      [RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT]: itemType,
+      [RedisKeys.DESCRIBE_THE_ITEM]: includeOptionalItemDetails
+        ? mockItemDescription
+        : mockItemDescriptionWithoutOptionalValues,
+      [RedisKeys.UPLOAD_PHOTO]: mockPhotos,
+      [RedisKeys.OWNED_BY_APPLICANT]: ownedByApplicant
+        ? Options.YES
+        : Options.NO,
+      [RedisKeys.OWNER_CONTACT_DETAILS]: mockOwnerContactDetails,
+      [RedisKeys.APPLICANT_CONTACT_DETAILS]: ownedByApplicant
+        ? mockOwnerContactDetails
+        : mockApplicantContactDetails,
+      [RedisKeys.OWNER_ADDRESS]: ownerAddress,
+      [RedisKeys.INTENTION_FOR_ITEM]: saleIntention
+    }
     return mockDataMap[redisKey]
   })
 }
