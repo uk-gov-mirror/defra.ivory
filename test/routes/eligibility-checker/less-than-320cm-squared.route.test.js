@@ -60,7 +60,7 @@ describe('/eligibility-checker/less-than-320cm-squared route', () => {
       )
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        'Does the portrait miniature have an ivory surface area of less than 320 square centimetres?'
+        'Does the portrait miniature have an ivory surface area of no more than 320 square centimetres?'
       )
     })
 
@@ -153,7 +153,7 @@ describe('/eligibility-checker/less-than-320cm-squared route', () => {
             response,
             'lessThan320cmSquared',
             'lessThan320cmSquared-error',
-            'Tell us whether your portrait miniature has an ivory surface area of less than 320 square centimetres'
+            'Tell us whether your portrait miniature has an ivory surface area of no more than 320 square centimetres'
           )
         })
       })
