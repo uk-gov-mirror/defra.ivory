@@ -27,7 +27,7 @@
             html: '<span class="govuk-!-font-weight-bold">What is the item?</span>'
           },
           hint: {
-            text: "For example, 'sword', 'chest of drawers'"
+            html: "For example, 'sword', 'chest of drawers'<br>No more than 128 characters, so that it will fit on your certificate."
           },
           id: "whatIsItem",
           name: "whatIsItem",
@@ -55,6 +55,9 @@
           type: "distinguishingFeatures",
           label: {
             text: "Give details"
+          },
+          hint: {
+            text: "No more than 243 characters, so that it will fit on your certificate."
           },
           value: distinguishingFeatures,
           errorMessage: fieldErrors['distinguishingFeatures']
