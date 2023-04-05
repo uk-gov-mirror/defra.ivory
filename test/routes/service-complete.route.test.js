@@ -387,6 +387,7 @@ describe('/service-complete route', () => {
                 exemptionType: ItemType.MUSICAL,
                 fullName: mockOwnerContactDetails.fullName,
                 isMuseum: false,
+                whatIsItem: itemDescription.whatIsItem,
                 submissionReference
               }
             )
@@ -411,6 +412,7 @@ describe('/service-complete route', () => {
                 exemptionType: ItemType.MUSEUM,
                 fullName: mockApplicantContactDetails.fullName,
                 isMuseum: true,
+                whatIsItem: itemDescription.whatIsItem,
                 submissionReference
               }
             )
@@ -422,6 +424,7 @@ describe('/service-complete route', () => {
               {
                 exemptionType: ItemType.MUSEUM,
                 fullName: mockOwnerContactDetails.fullName,
+                whatIsItem: itemDescription.whatIsItem,
                 submissionReference
               }
             )
@@ -444,6 +447,7 @@ describe('/service-complete route', () => {
                 exemptionType: ItemType.MUSEUM,
                 fullName: mockApplicantContactDetails.fullName,
                 isMuseum: true,
+                whatIsItem: itemDescription.whatIsItem,
                 submissionReference
               }
             )
@@ -663,6 +667,10 @@ const paymentReference = 'PAYMENT_REFERENCE'
 const submissionReference = '1234ABCD'
 const certificateNumber = 'CERTIFICATE_NUMBER'
 
+const itemDescription = {
+  whatIsItem: 'Sword'
+}
+
 const mockOwnerContactDetails = {
   fullName: 'OWNER_NAME',
   emailAddress: 'OWNER@EMAIL.COM',
@@ -678,7 +686,8 @@ const mockApplicantContactDetails = {
 const redisMockDataMap = {
   [RedisKeys.PAYMENT_ID]: paymentReference,
   [RedisKeys.SUBMISSION_REFERENCE]: submissionReference,
-  [RedisKeys.OWNER_CONTACT_DETAILS]: mockOwnerContactDetails
+  [RedisKeys.OWNER_CONTACT_DETAILS]: mockOwnerContactDetails,
+  [RedisKeys.DESCRIBE_THE_ITEM]: itemDescription
 }
 
 const _createMocks = () => {
@@ -737,6 +746,8 @@ const _createSection10RedisMock = (
       ? mockOwnerContactDetails
       : null
   }
+
+  redisMockDataMap[RedisKeys.DESCRIBE_THE_ITEM] = itemDescription
 
   RedisService.get = jest.fn((request, redisKey) => {
     return redisMockDataMap[redisKey]
