@@ -55,7 +55,7 @@ const handlers = {
 const _getContext = () => {
   return {
     pageTitle:
-      'Does the portrait miniature have an ivory surface area of less than 320 square centimetres?',
+      'Does the portrait miniature have an ivory surface area of no more than 320 square centimetres?',
     helpText:
       'Only measure the parts of the portrait you can see. Do not include the frame or areas covered by the frame.',
     items: getStandardOptions()
@@ -68,7 +68,7 @@ const _validateForm = payload => {
     errors.push({
       name: 'lessThan320cmSquared',
       text:
-        'Tell us whether your portrait miniature has an ivory surface area of less than 320 square centimetres'
+        'Tell us whether your portrait miniature has an ivory surface area of no more than 320 square centimetres'
     })
   }
   return errors

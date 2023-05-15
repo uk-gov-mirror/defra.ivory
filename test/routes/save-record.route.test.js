@@ -21,6 +21,7 @@ const ODataService = require('../../server/services/odata.service')
 
 jest.mock('../../server/services/payment.service')
 const PaymentService = require('../../server/services/payment.service')
+const expect = require('expect')
 
 describe('/save-record route', () => {
   let server
@@ -74,7 +75,34 @@ describe('/save-record route', () => {
         )
 
         expect(ODataService.createRecord).toBeCalledTimes(1)
-        expect(ODataService.updateRecord).toBeCalledTimes(1)
+        expect(ODataService.updatePhotos).toBeCalledTimes(1)
+        expect(ODataService.updatePhotos).toBeCalledWith(false,
+          { cre2c_ivorysection10caseid: 'THE_SECTION_10_CASE_ID' },
+          mockImageUploadData
+        )
+
+        expect(response.headers.location).toEqual(nextUrl)
+      })
+
+      it('should save the photo urls in the data verse on createRecord() and redirect to the service complete page', async () => {
+        PaymentService.lookupPayment = jest
+          .fn()
+          .mockResolvedValue({ state: { status: 'success' } })
+
+        expect(ODataService.createRecord).toBeCalledTimes(0)
+
+        const response = await TestHelper.submitGetRequest(
+          server,
+          getOptions,
+          302,
+          false
+        )
+
+        expect(ODataService.createRecord).toBeCalledTimes(1)
+        expect(ODataService.createRecord).toHaveBeenCalledWith(expect.objectContaining({
+          cre2c_photo1url: 'http://azure.blob/image1.jpg',
+          cre2c_photo2url: 'http://azure.blob/image2.jpg'
+        }), false)
 
         expect(response.headers.location).toEqual(nextUrl)
       })
@@ -127,9 +155,57 @@ describe('/save-record route', () => {
         )
 
         expect(ODataService.createRecord).toBeCalledTimes(1)
-        expect(ODataService.updateRecord).toBeCalledTimes(1)
+        expect(ODataService.updatePhotos).toBeCalledTimes(1)
+        expect(ODataService.updatePhotos).toBeCalledWith(
+          true,
+          { cre2c_ivorysection2caseid: 'THE_SECTION_2_CASE_ID' },
+          mockImageUploadData
+        )
         expect(ODataService.updateRecordAttachments).toBeCalledTimes(1)
+        expect(response.headers.location).toEqual(nextUrl)
+      })
 
+      it('should save the photo urls in the data verse and redirect to the service complete page', async () => {
+        PaymentService.lookupPayment = jest
+          .fn()
+          .mockResolvedValue({ state: { status: 'success' } })
+
+        expect(ODataService.createRecord).toBeCalledTimes(0)
+
+        const response = await TestHelper.submitGetRequest(
+          server,
+          getOptions,
+          302,
+          false
+        )
+
+        expect(ODataService.createRecord).toBeCalledTimes(1)
+        expect(ODataService.createRecord).toHaveBeenCalledWith(expect.objectContaining({
+          cre2c_photo1url: 'http://azure.blob/image1.jpg',
+          cre2c_photo2url: 'http://azure.blob/image2.jpg'
+        }), true)
+        expect(response.headers.location).toEqual(nextUrl)
+      })
+
+      it('should save the supporting document urls in the data verse and redirect to the service complete page', async () => {
+        PaymentService.lookupPayment = jest
+          .fn()
+          .mockResolvedValue({ state: { status: 'success' } })
+
+        expect(ODataService.createRecord).toBeCalledTimes(0)
+
+        const response = await TestHelper.submitGetRequest(
+          server,
+          getOptions,
+          302,
+          false
+        )
+
+        expect(ODataService.createRecord).toBeCalledTimes(1)
+        expect(ODataService.createRecord).toHaveBeenCalledWith(expect.objectContaining({
+          cre2c_document1url: 'http://azure.blob/supporting_doc1.pdf',
+          cre2c_document2url: 'http://azure.blob/supporting_doc2.pdf'
+        }), true)
         expect(response.headers.location).toEqual(nextUrl)
       })
 
@@ -301,14 +377,16 @@ const mockApplicantData = {
 
 const mockFileAttachmentData = {
   files: ['document1.pdf', 'document2.pdf'],
-  fileSizes: [100, 200]
+  fileSizes: [100, 200],
+  urls: ['http://azure.blob/supporting_doc1.pdf', 'http://azure.blob/supporting_doc2.pdf']
 }
 
 const mockImageUploadData = {
   files: ['lamp1.png', 'lamp2.png'],
   fileSizes: [100, 200],
   thumbnails: ['lamp1-thumbnail.png', 'lamp2-thumbnail.png'],
-  thumbnailData: ['lamp-thumbnail-data1', 'lamp-thumbnail-data2']
+  thumbnailData: ['lamp-thumbnail-data1', 'lamp-thumbnail-data2'],
+  urls: ['http://azure.blob/image1.jpg', 'http://azure.blob/image2.jpg']
 }
 
 const section10RedisMockDataMap = {

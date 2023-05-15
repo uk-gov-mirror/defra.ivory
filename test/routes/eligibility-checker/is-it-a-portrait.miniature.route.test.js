@@ -121,7 +121,7 @@ describe('/eligibility-checker/is-it-a-portrait-miniature route', () => {
           server,
           'Yes',
           nextUrlIsItemPre1918,
-          'Portrait miniature made before 1918 with a surface area less than 320 square centimetres'
+          'Portrait miniature made before 1918 with a surface area of no more than 320 square centimetres'
         )
       })
 

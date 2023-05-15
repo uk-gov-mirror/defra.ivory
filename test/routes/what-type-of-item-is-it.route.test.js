@@ -100,8 +100,8 @@ describe('/what-type-of-item-is-it route', () => {
       TestHelper.checkRadioOption(
         document,
         elementIds.whatTypeOfItemIsIt3,
-        'Portrait miniature made before 1918 with a surface area less than 320 square centimetres',
-        'Portrait miniature made before 1918 with a surface area less than 320 square centimetres',
+        'Portrait miniature made before 1918 with a surface area of no more than 320 square centimetres',
+        'Portrait miniature made before 1918 with a surface area of no more than 320 square centimetres',
         false,
         ''
       )
@@ -197,7 +197,7 @@ describe('/what-type-of-item-is-it route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Portrait miniature made before 1918 with a surface area less than 320 square centimetres',
+          'Portrait miniature made before 1918 with a surface area of no more than 320 square centimetres',
           nextUrl
         )
       })
