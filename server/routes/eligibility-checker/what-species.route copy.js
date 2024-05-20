@@ -53,25 +53,14 @@ const handlers = {
       label: context.pageTitle
     })
 
-    const speciesItems = _getSpeciesItems()
-
     // If Two or more option, then continue onto the next question
-    if (speciesItems.includes(payload.whatSpecies)) {
+    if (payload.whatSpecies === twoOrMoreOption) {
       await RedisService.set(
         request,
         RedisKeys.WHAT_SPECIES,
         payload.whatSpecies
       )
-      return h.redirect(Paths.WHAT_TYPE_OF_ITEM_IS_IT)
-
-    // If not sure display a screen giving the user the option to proceed or end their journey
-    } else if (payload.whatSpecies === twoOrMoreOption) {
-      await RedisService.set(
-        request,
-        RedisKeys.WHAT_SPECIES,
-        payload.whatSpecies
-      )
-      return h.redirect(Paths.WHAT_TYPE_OF_ITEM_IS_IT)
+      return h.redirect(Paths.SELLING_TO_MUSEUM)
 
     // If not sure display a screen giving the user the option to proceed or end their journey
     } else if (payload.whatSpecies === notSureOption) {
@@ -107,18 +96,7 @@ const _getSpeciesItems = () => {
 const _getOptions = async request => {
   const whatSpecies = await RedisService.get(request, RedisKeys.WHAT_SPECIES)
 
-  const speciesOptions = Object.values(Species).map(species => {
-    return {
-      value: species,
-      text: species,
-      checked: whatSpecies === species
-    }
-  })
-
-  const otherOptions = [
-    {
-      divider: 'or'
-    },
+  const options = [
     {
       value: twoOrMoreOption,
       text: twoOrMoreOption,
@@ -135,8 +113,6 @@ const _getOptions = async request => {
       checked: whatSpecies === noneOfTheseOption
     }
   ]
-
-  const options = [...speciesOptions, ...otherOptions]
 
   return options
 }
