@@ -72,8 +72,8 @@ const handlers = {
 
     return h.redirect(
       payload.howCertain === completelyCertain
-        ? Paths.WHAT_SPECIES
-        : Paths.CONTAIN_ELEPHANT_IVORY
+        ? Paths.WHAT_SPECIES_EXPERT
+        : Paths.WHAT_SPECIES
     )
   }
 }

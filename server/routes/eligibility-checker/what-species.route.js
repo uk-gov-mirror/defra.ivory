@@ -62,7 +62,7 @@ const handlers = {
         RedisKeys.WHAT_SPECIES,
         payload.whatSpecies
       )
-      return h.redirect(Paths.WHAT_TYPE_OF_ITEM_IS_IT)
+      return h.redirect(Paths.SELLING_TO_MUSEUM)
 
     // If not sure display a screen giving the user the option to proceed or end their journey
     } else if (payload.whatSpecies === twoOrMoreOption) {
@@ -71,7 +71,7 @@ const handlers = {
         RedisKeys.WHAT_SPECIES,
         payload.whatSpecies
       )
-      return h.redirect(Paths.WHAT_TYPE_OF_ITEM_IS_IT)
+      return h.redirect(Paths.SELLING_TO_MUSEUM)
 
     // If not sure display a screen giving the user the option to proceed or end their journey
     } else if (payload.whatSpecies === notSureOption) {
