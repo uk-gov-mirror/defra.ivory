@@ -13,8 +13,7 @@ describe('/eligibility-checker/how-certain route', () => {
   let server
   const url = '/eligibility-checker/how-certain'
   const nextUrlWhatSpeciesExpert = '/what-species-expert'
-  const nextUrlContainElephantIvory =
-    '/eligibility-checker/contain-elephant-ivory'
+  const nextUrlWhatSpecies = '/eligibility-checker/what-species'
 
   const elementIds = {
     help1: 'help1',
@@ -143,7 +142,7 @@ describe('/eligibility-checker/how-certain route', () => {
           postOptions,
           server,
           'I’d like some help to work this out',
-          nextUrlContainElephantIvory,
+          nextUrlWhatSpecies,
           true
         )
       })

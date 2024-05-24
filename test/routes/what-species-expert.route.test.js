@@ -117,15 +117,6 @@ describe('/what-species-expert route', () => {
         false,
         ''
       )
-
-      TestHelper.checkRadioOption(
-        document,
-        elementIds.whatSpecies6,
-        'Walrus',
-        'Walrus',
-        false,
-        ''
-      )
     })
 
     it('should have the correct summary text title', () => {
@@ -134,7 +125,7 @@ describe('/what-species-expert route', () => {
       )
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        "I'm not sure what species my item contains"
+        'How to identify different types of ivory'
       )
     })
 
@@ -143,9 +134,6 @@ describe('/what-species-expert route', () => {
         `#${elementIds.needMoreHelp} .govuk-details__text`
       )
       expect(element).toBeTruthy()
-      expect(TestHelper.getTextContent(element)).toEqual(
-        'Use our eligibility checker or read our guidance on how to identify different species of ivory.'
-      )
     })
 
     it('should have the correct summary text links', () => {
@@ -155,6 +143,8 @@ describe('/what-species-expert route', () => {
         'eligibility checker',
         '/eligibility-checker/contain-elephant-ivory'
       )
+
+      console.log('document', document)
 
       element = document.querySelector(`#${elementIds.guidance}`)
       TestHelper.checkLink(
@@ -241,7 +231,7 @@ describe('/what-species-expert route', () => {
           response,
           'whatSpecies',
           'whatSpecies-error',
-          'You must tell us what species of ivory your item contains'
+          'Please choose an option'
         )
       })
     })

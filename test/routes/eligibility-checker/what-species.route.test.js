@@ -79,7 +79,7 @@ describe('/eligibility-checker/what-species route', () => {
 
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        'Any ivory in your item must be ‘worked’ ivory. Worked ivory means it has been carved or significantly altered from its original state.'
+        'To use this service you must know for sure whether your item contains ivory from [one [or more] of these 5 species]. If you’re uncertain about your item and you choose to declare it anyway, we’ll assume it does contain ivory from [one [or more] of these 5 species]’'
       )
     })
 
@@ -115,8 +115,8 @@ describe('/eligibility-checker/what-species route', () => {
       TestHelper.checkRadioOption(
         document,
         elementIds.whatSpecies,
-        'Hippopotamus',
-        'Hippopotamus',
+        'Elephant',
+        'Elephant',
         false,
         ''
       )
@@ -124,8 +124,8 @@ describe('/eligibility-checker/what-species route', () => {
       TestHelper.checkRadioOption(
         document,
         elementIds.whatSpecies2,
-        'Killer whale',
-        'Killer whale',
+        'Hippopotamus',
+        'Hippopotamus',
         false,
         ''
       )
@@ -133,8 +133,8 @@ describe('/eligibility-checker/what-species route', () => {
       TestHelper.checkRadioOption(
         document,
         elementIds.whatSpecies3,
-        'Narwhal',
-        'Narwhal',
+        'Killer whale',
+        'Killer whale',
         false,
         ''
       )
@@ -142,8 +142,8 @@ describe('/eligibility-checker/what-species route', () => {
       TestHelper.checkRadioOption(
         document,
         elementIds.whatSpecies4,
-        'Sperm whale',
-        'Sperm whale',
+        'Narwhal',
+        'Narwhal',
         false,
         ''
       )
@@ -151,8 +151,8 @@ describe('/eligibility-checker/what-species route', () => {
       TestHelper.checkRadioOption(
         document,
         elementIds.whatSpecies5,
-        'Walrus',
-        'Walrus',
+        'Sperm whale',
+        'Sperm whale',
         false,
         ''
       )
@@ -160,8 +160,8 @@ describe('/eligibility-checker/what-species route', () => {
       TestHelper.checkRadioOption(
         document,
         elementIds.whatSpecies7,
-        'None of these',
-        'None of these',
+        'Two or more of these species',
+        'Two or more of these species',
         false,
         ''
       )
@@ -244,7 +244,7 @@ describe('/eligibility-checker/what-species route', () => {
           response,
           'whatSpecies',
           'whatSpecies-error',
-          'You must tell us what species of ivory your item contains'
+          'Please choose an option'
         )
       })
     })
