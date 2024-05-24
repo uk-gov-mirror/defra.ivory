@@ -10,6 +10,7 @@ describe('/eligibility-checker/what-species route', () => {
   let server
   const url = '/eligibility-checker/what-species'
   const nextUrl = '/eligibility-checker/selling-to-museum'
+  const nextUrlNotSure = '/eligibility-checker/option-to-proceed'
 
   const elementIds = {
     pageTitle: 'pageTitle',
@@ -190,7 +191,7 @@ describe('/eligibility-checker/what-species route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Musical instrument made before 1975 with less than 20% ivory',
+          'Elephant',
           nextUrl
         )
       })
@@ -199,7 +200,7 @@ describe('/eligibility-checker/what-species route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Item made before 3 March 1947 with less than 10% ivory',
+          'Hippopotamus',
           nextUrl
         )
       })
@@ -208,7 +209,7 @@ describe('/eligibility-checker/what-species route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Portrait miniature made before 1918 with a surface area less than 320 square centimetres',
+          'Killer whale',
           nextUrl
         )
       })
@@ -217,7 +218,7 @@ describe('/eligibility-checker/what-species route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Item to be sold or hired out to a qualifying museum',
+          'Narwhal',
           nextUrl
         )
       })
@@ -226,8 +227,26 @@ describe('/eligibility-checker/what-species route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Item made before 1918 that has outstandingly high artistic, cultural or historical value',
+          'Sperm whale',
           nextUrl
+        )
+      })
+
+      it('should store the value in Redis and progress to the next route when the sixth option has been selected', async () => {
+        await _checkSelectedRadioAction(
+          postOptions,
+          server,
+          'Two or more of these species',
+          nextUrl
+        )
+      })
+
+      it('should store the value in Redis and progress to the next route when the seventh option has been selected', async () => {
+        await _checkSelectedRadioAction(
+          postOptions,
+          server,
+          'I\'m not sure',
+          nextUrlNotSure
         )
       })
     })

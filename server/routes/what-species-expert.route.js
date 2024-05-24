@@ -22,7 +22,7 @@ const handlers = {
   get: async (request, h) => {
     const context = await _getContext(request)
 
-    return h.view(Views.WHAT_SPECIES, {
+    return h.view(Views.WHAT_SPECIES_EXPERT, {
       ...context
     })
   },
@@ -96,6 +96,7 @@ const _getContext = async request => {
     pageTitle: 'What species of ivory does your item contain?',
     speciesItems: await _getSpeciesItems(request),
     items: await _getOptions(request),
+    eligibilityCheckerUrl: Paths.CONTAIN_ELEPHANT_IVORY,
     guidanceUrl: Urls.GOV_UK_TOP_OF_MAIN
   }
 }

@@ -1,7 +1,7 @@
 'use strict'
 
-const AnalyticsService = require('../../services/analytics.service')
-const RedisService = require('../../services/redis.service')
+const AnalyticsService = require('../services/analytics.service')
+const RedisService = require('../services/redis.service')
 
 const {
   Analytics,
@@ -9,9 +9,9 @@ const {
   RedisKeys,
   Urls,
   Views
-} = require('../../utils/constants')
+} = require('../utils/constants')
 
-const { buildErrorSummary, Validators } = require('../../utils/validation')
+const { buildErrorSummary, Validators } = require('../utils/validation')
 
 const proceedWithRegistration = 'Assume item contains ivory and proceed with registration'
 const doNotRegister = 'Do not continue with registration'
@@ -38,7 +38,7 @@ const handlers = {
       })
 
       return h
-        .view(Views.OPTION_TO_PROCEED_ELIGIBILITY, {
+        .view(Views.OPTION_TO_PROCEED, {
           ...context,
           ...buildErrorSummary(errors)
         })
@@ -57,7 +57,7 @@ const handlers = {
         RedisKeys.OPTION_TO_PROCEED,
         payload.optionToProceed
       )
-      return h.redirect(Paths.SELLING_TO_MUSEUM)
+      return h.redirect(Paths.WHAT_TYPE_OF_ITEM_IS_IT)
     } else {
       await RedisService.delete(request, RedisKeys.OPTION_TO_PROCEED)
 
@@ -109,12 +109,12 @@ const _validateForm = payload => {
 module.exports = [
   {
     method: 'GET',
-    path: `${Paths.OPTION_TO_PROCEED_ELIGIBILITY}`,
+    path: `${Paths.OPTION_TO_PROCEED}`,
     handler: handlers.get
   },
   {
     method: 'POST',
-    path: `${Paths.OPTION_TO_PROCEED_ELIGIBILITY}`,
+    path: `${Paths.OPTION_TO_PROCEED}`,
     handler: handlers.post
   }
 ]

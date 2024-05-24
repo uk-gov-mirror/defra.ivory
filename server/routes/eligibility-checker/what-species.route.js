@@ -80,7 +80,7 @@ const handlers = {
         RedisKeys.WHAT_SPECIES,
         payload.whatSpecies
       )
-      return h.redirect(Paths.OPTION_TO_PROCEED)
+      return h.redirect(Paths.OPTION_TO_PROCEED_ELIGIBILITY)
 
     // If none of these then end the journey
     } else {
