@@ -118,11 +118,7 @@ const _updatePhotoAttachments = async (request, entity, isSection2) => {
     RedisKeys.UPLOAD_PHOTO
   )
 
-  if (
-    attachedPhotos &&
-    attachedPhotos.files &&
-    attachedPhotos.files.length
-  ) {
+  if (attachedPhotos?.files?.length) {
     attachedPhotos.fileData = []
 
     for (let index = 0; index < attachedPhotos.files.length; index++) {
@@ -216,7 +212,7 @@ const _createSection10Body = async (request, itemType, itemDescription) => {
 const _getPhotoUrls = async request => {
   const photos = await RedisService.get(request, RedisKeys.UPLOAD_PHOTO)
   const photoUrls = {}
-  if (photos && photos.files && photos.files.length > 0) {
+  if (photos?.files?.length > 0) {
     for (let index = 0; index < photos.files.length; index++) {
       photoUrls[`cre2c_photo${index + 1}url`] = photos.urls[index]
     }
@@ -227,7 +223,7 @@ const _getPhotoUrls = async request => {
 const _getSupportingDocumentUrls = async request => {
   const supportingDocs = await RedisService.get(request, RedisKeys.UPLOAD_DOCUMENT)
   const supportingDocUrls = {}
-  if (supportingDocs && supportingDocs.files && supportingDocs.files.length > 0) {
+  if (supportingDocs?.files?.length > 0) {
     for (let index = 0; index < supportingDocs.files.length; index++) {
       supportingDocUrls[`cre2c_document${index + 1}url`] = supportingDocs.urls[index]
     }
