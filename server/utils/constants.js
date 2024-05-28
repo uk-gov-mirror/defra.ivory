@@ -37,6 +37,8 @@ const AzureContainer = {
 
 const CharacterLimits = {
   Input: 4000,
+  WhatIsTheItem: 128,
+  DistinguishingFeatures: 243,
   Textarea: 100000
 }
 
@@ -124,6 +126,12 @@ const DataVerseFieldName = {
   OWNER_NAME: 'cre2c_ownername',
   OWNER_POSTCODE: 'cre2c_ownerpostcode',
   PAYMENT_REFERENCE: 'cre2c_paymentreference',
+  PHOTO_1_URL: 'cre2c_photo1url',
+  PHOTO_2_URL: 'cre2c_photo2url',
+  PHOTO_3_URL: 'cre2c_photo3url',
+  PHOTO_4_URL: 'cre2c_photo4url',
+  PHOTO_5_URL: 'cre2c_photo5url',
+  PHOTO_6_URL: 'cre2c_photo6url',
   PHOTO_1: 'cre2c_photo1',
   PHOTO_1_ID: 'cre2c_photo1id',
   PHOTO_2: 'cre2c_photo2',
@@ -200,7 +208,7 @@ const ItemType = {
   MUSICAL: 'Musical instrument made before 1975 with less than 20% ivory',
   TEN_PERCENT: 'Item made before 3 March 1947 with less than 10% ivory',
   MINIATURE:
-    'Portrait miniature made before 1918 with a surface area less than 320 square centimetres',
+    'Portrait miniature made before 1918 with a surface area of no more than 320 square centimetres',
   MUSEUM: 'Item to be sold or hired out to a qualifying museum',
   HIGH_VALUE:
     'Item made before 1918 that has outstandingly high artistic, cultural or historical value'

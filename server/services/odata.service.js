@@ -217,8 +217,6 @@ module.exports = class ODataService {
 
     _setContentLength(headers, body)
 
-    console.log(`Patching URL: [${url}]`)
-
     const response = await fetch(url, {
       method: 'PATCH',
       body: JSON.stringify(body),
@@ -234,11 +232,43 @@ module.exports = class ODataService {
     }
   }
 
+  static async updatePhotos (isSection2, entity, photoRecords) {
+    const token = await ActiveDirectoryAuthService.getToken()
+
+    const id = isSection2
+      ? entity[DataVerseFieldName.SECTION_2_CASE_ID]
+      : entity[DataVerseFieldName.SECTION_10_CASE_ID]
+
+    const apiEndpoint = `${config.dataverseResource}/${config.dataverseApiEndpoint}`
+    const patchCommands = []
+    for (let i = 0; i < photoRecords.files.length; i++) {
+      const fieldName = `cre2c_photo${i + 1}`
+      const url = `${apiEndpoint}/${isSection2 ? SECTION_2_ENDPOINT : SECTION_10_ENDPOINT}(${id})/${fieldName}`
+
+      const headers = {
+        'OData-Version': ODATA_VERSION_NUMBER,
+        'OData-MaxVersion': ODATA_VERSION_NUMBER,
+        [AUTHORIZATION]: `Bearer ${token}`,
+        [PREFER]: PREFER_REPRESENTATION,
+        [CONTENT_TYPE]: ContentTypes.APPLICATION_OCTET_STREAM
+      }
+
+      const body = Buffer.from(photoRecords.fileData[i], 'base64')
+
+      patchCommands.push(fetch(url, {
+        method: 'PATCH',
+        headers,
+        body
+      }))
+    }
+    await Promise.all(patchCommands)
+  }
+
   static async updateRecordAttachments (id, supportingInformation) {
     const token = await ActiveDirectoryAuthService.getToken()
 
     const apiEndpoint = `${config.dataverseResource}/${config.dataverseApiEndpoint}`
-
+    const patchCommands = []
     for (let i = 0; i < supportingInformation.files.length; i++) {
       const fieldName = `cre2c_supportingevidence${i + 1}`
       const url = `${apiEndpoint}/${SECTION_2_ENDPOINT}(${id})/${fieldName}`
@@ -254,14 +284,13 @@ module.exports = class ODataService {
 
       const body = Buffer.from(supportingInformation.fileData[i], 'base64')
 
-      console.log(`Patching URL: [${url}]`)
-
-      await fetch(url, {
+      patchCommands.push(fetch(url, {
         method: 'PATCH',
         headers,
         body
-      })
+      }))
     }
+    await Promise.all(patchCommands)
   }
 }
 

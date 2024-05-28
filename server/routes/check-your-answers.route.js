@@ -37,7 +37,7 @@ const handlers = {
   post: async (request, h) => {
     const context = await _getContext(request)
     const payload = request.payload
-    const errors = _validateForm(payload)
+    const errors = _validateForm(payload, context)
 
     if (errors.length) {
       AnalyticsService.sendEvent(request, {
@@ -116,12 +116,42 @@ const _getContext = async request => {
   }
 }
 
-const _validateForm = payload => {
+const _validateForm = (payload, context) => {
   const errors = []
   if (Validators.empty(payload.agree)) {
     errors.push({
       name: 'agree',
       text: 'You must agree with the legal declaration'
+    })
+  }
+  if (Validators.empty(context.itemSummary[0].value.text)) {
+    errors.push({
+      name: 'itemSummary',
+      text: 'You must provide the item details'
+    })
+  }
+  if (Validators.empty(context.itemDescriptionSummary[0].value.text)) {
+    errors.push({
+      name: 'itemDescriptionSummary',
+      text: 'You must provide the description of item'
+    })
+  }
+  if (Validators.empty(context.photoSummary[0].value.html)) {
+    errors.push({
+      name: 'photoSummary',
+      text: 'You must provide the photos of the item'
+    })
+  }
+  if (Validators.empty(context.saleIntentionSummary[0].value.text)) {
+    errors.push({
+      name: 'saleIntentionSummary',
+      text: 'You must provide the sale intention'
+    })
+  }
+  if (Validators.empty(context.legalAssertions)) {
+    errors.push({
+      name: 'legalAssertions',
+      text: 'You must provide the legal Assertions'
     })
   }
   return errors
@@ -955,7 +985,7 @@ const LEGAL_ASSERTIONS = {
   ],
   [ItemType.MINIATURE]: [
     'the portrait miniature was made before 1918',
-    'the surface area of ivory on the miniature is less than 320 square centimetres',
+    'the surface area of ivory on the miniature is no more than 320 square centimetres',
     BEFORE_1975,
     COMPLETE_AND_CORRECT
   ],

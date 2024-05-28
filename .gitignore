@@ -6,3 +6,4 @@ lcov.info
 .env
 test-output
 *.pfx
+/.idea/

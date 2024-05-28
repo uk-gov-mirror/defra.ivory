@@ -89,7 +89,7 @@ module.exports = class TestHelper {
    * @param options - The options to be sent to the request (e.g. URL, headers, payload)
    * @param expectedResponseCode - The expected HTTP response code).
    *  302 (redirect) would be expected after a successful POST.
-   *  400 would be expected if a vaiidation error occurs.
+   *  400 would be expected if a validation error occurs.
    * @returns  the HTTP response
    */
   static async submitPostRequest (server, options, expectedResponseCode = 302) {
@@ -250,6 +250,7 @@ module.exports = class TestHelper {
    * @param expectedValidationMessage - The expected summary panel validation error message
    * @param expectedFieldValidationMessage - The expected field alidation error message
    * @param isUsingHrefs - Flag to indicate if summary panel field errors use hyperlnks to the error field
+   * @param checkFieldError - Flag to indicate if html field errors is checked
    */
   static checkValidationError (
     response,
@@ -258,7 +259,8 @@ module.exports = class TestHelper {
     expectedValidationMessage,
     expectedFieldValidationMessage = expectedValidationMessage,
     summaryHeading = DEFAULT_VALIDATION_SUMMARY_HEADING,
-    isUsingHrefs = true
+    isUsingHrefs = true,
+    checkFieldError = true
   ) {
     const document = TestHelper.getDocument(response)
 
@@ -280,10 +282,12 @@ module.exports = class TestHelper {
     }
 
     // Field error
-    element = document.querySelector(`#${fieldErrorId}`)
-    expect(TestHelper.getTextContent(element)).toContain(
-      expectedFieldValidationMessage
-    )
+    if (checkFieldError) {
+      element = document.querySelector(`#${fieldErrorId}`)
+      expect(TestHelper.getTextContent(element)).toContain(
+        expectedFieldValidationMessage
+      )
+    }
   }
 
   /**
