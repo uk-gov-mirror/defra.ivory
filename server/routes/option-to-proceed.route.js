@@ -32,7 +32,7 @@ const handlers = {
     const payload = request.payload
     const errors = _validateForm(payload)
 
-    const BAD_REQUEST = 400;
+    const BAD_REQUEST = 400
 
     if (errors.length) {
       AnalyticsService.sendEvent(request, {
@@ -46,7 +46,7 @@ const handlers = {
           ...context,
           ...buildErrorSummary(errors)
         })
-        .code(BAD_REQUEST);
+        .code(BAD_REQUEST)
     }
 
     AnalyticsService.sendEvent(request, {
