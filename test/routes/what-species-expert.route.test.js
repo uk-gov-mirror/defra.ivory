@@ -297,7 +297,6 @@ const _checkSelectedRadioAction = async (
       selectedOption
     )
   }
-  
 
   expect(response.headers.location).toEqual(nextUrl)
 }
