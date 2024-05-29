@@ -1323,6 +1323,51 @@ const applicantAddress = 'APPLICANT_ADDRESS'
 
 const saleIntention = 'Sell it'
 
+const _getDefaultMocks = (itemType,
+  includeOptionalItemDetails = true,
+  ownedByApplicant = true,
+  sellingOnBehalfOf = null,
+  isAlreadyCertified = false
+) => {
+  return {
+    [RedisKeys.WHAT_SPECIES]: Species.HIPPOPOTAMUS,
+    [RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT]: itemType,
+    [RedisKeys.DESCRIBE_THE_ITEM]: includeOptionalItemDetails
+      ? mockItemDescription
+      : mockItemDescriptionWithoutOptionalValues,
+    [RedisKeys.UPLOAD_PHOTO]: mockPhotos,
+    [RedisKeys.WHY_IS_ITEM_RMI]: whyRmi,
+    [RedisKeys.IVORY_VOLUME]: mockIvoryVolume,
+    [RedisKeys.IVORY_INTEGRAL]: ivoryIntegral,
+    [RedisKeys.IVORY_AGE]: mockIvoryAge,
+    [RedisKeys.UPLOAD_DOCUMENT]: mockDocuments,
+    [RedisKeys.OWNED_BY_APPLICANT]: ownedByApplicant
+      ? Options.YES
+      : Options.NO,
+    [RedisKeys.OWNER_CONTACT_DETAILS]: mockOwnerContactDetails,
+    [RedisKeys.APPLICANT_CONTACT_DETAILS]: ownedByApplicant
+      ? mockOwnerContactDetails
+      : mockApplicantContactDetails,
+    [RedisKeys.OWNER_ADDRESS]: ownerAddress,
+    [RedisKeys.APPLICANT_ADDRESS]: applicantAddress,
+    [RedisKeys.INTENTION_FOR_ITEM]: saleIntention,
+    [RedisKeys.WHAT_CAPACITY]: {
+      whatCapacity: 'Other'
+    },
+    [RedisKeys.WORK_FOR_A_BUSINESS]: true,
+    [RedisKeys.SELLING_ON_BEHALF_OF]: sellingOnBehalfOf,
+    [RedisKeys.PREVIOUS_APPLICATION_NUMBER]: '',
+    [RedisKeys.ALREADY_CERTIFIED]: {
+      alreadyCertified: isAlreadyCertified
+        ? AlreadyCertifiedOptions.YES
+        : AlreadyCertifiedOptions.NO
+    },
+    [RedisKeys.REVOKED_CERTIFICATE]: '',
+    [RedisKeys.APPLIED_BEFORE]: '',
+    [RedisKeys.PREVIOUS_APPLICATION_NUMBER]: ''
+  }
+}
+
 const _createMocks = (
   itemType,
   includeOptionalItemDetails = true,
@@ -1332,44 +1377,16 @@ const _createMocks = (
 ) => {
   TestHelper.createMocks()
 
+  const defaultMocks = _getDefaultMocks(
+    itemType,
+    includeOptionalItemDetails,
+    ownedByApplicant,
+    sellingOnBehalfOf,
+    isAlreadyCertified
+  )
+
   RedisService.get = jest.fn((request, redisKey) => {
-    const mockDataMap = {
-      [RedisKeys.WHAT_SPECIES]: Species.HIPPOPOTAMUS,
-      [RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT]: itemType,
-      [RedisKeys.DESCRIBE_THE_ITEM]: includeOptionalItemDetails
-        ? mockItemDescription
-        : mockItemDescriptionWithoutOptionalValues,
-      [RedisKeys.UPLOAD_PHOTO]: mockPhotos,
-      [RedisKeys.WHY_IS_ITEM_RMI]: whyRmi,
-      [RedisKeys.IVORY_VOLUME]: mockIvoryVolume,
-      [RedisKeys.IVORY_INTEGRAL]: ivoryIntegral,
-      [RedisKeys.IVORY_AGE]: mockIvoryAge,
-      [RedisKeys.UPLOAD_DOCUMENT]: mockDocuments,
-      [RedisKeys.OWNED_BY_APPLICANT]: ownedByApplicant
-        ? Options.YES
-        : Options.NO,
-      [RedisKeys.OWNER_CONTACT_DETAILS]: mockOwnerContactDetails,
-      [RedisKeys.APPLICANT_CONTACT_DETAILS]: ownedByApplicant
-        ? mockOwnerContactDetails
-        : mockApplicantContactDetails,
-      [RedisKeys.OWNER_ADDRESS]: ownerAddress,
-      [RedisKeys.APPLICANT_ADDRESS]: applicantAddress,
-      [RedisKeys.INTENTION_FOR_ITEM]: saleIntention,
-      [RedisKeys.WHAT_CAPACITY]: {
-        whatCapacity: 'Other'
-      },
-      [RedisKeys.WORK_FOR_A_BUSINESS]: true,
-      [RedisKeys.SELLING_ON_BEHALF_OF]: sellingOnBehalfOf,
-      [RedisKeys.PREVIOUS_APPLICATION_NUMBER]: '',
-      [RedisKeys.ALREADY_CERTIFIED]: {
-        alreadyCertified: isAlreadyCertified
-          ? AlreadyCertifiedOptions.YES
-          : AlreadyCertifiedOptions.NO
-      },
-      [RedisKeys.REVOKED_CERTIFICATE]: '',
-      [RedisKeys.APPLIED_BEFORE]: '',
-      [RedisKeys.PREVIOUS_APPLICATION_NUMBER]: ''
-    }
+    const mockDataMap = { ...defaultMocks }
 
     return mockDataMap[redisKey]
   })
@@ -1387,7 +1404,9 @@ const _createEmptyMocks = () => {
 const _createMocksForDescription = (itemType) => {
   TestHelper.createMocks()
   RedisService.get = jest.fn((request, redisKey) => {
+    const defaultMocks = _getDefaultMocks(itemType)
     const mockDataMap = {
+      ...defaultMocks,
       [RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT]: itemType,
       [RedisKeys.DESCRIBE_THE_ITEM]: null
     }
@@ -1399,7 +1418,9 @@ const _createMocksForPhotos = (itemType,
   includeOptionalItemDetails = true) => {
   TestHelper.createMocks()
   RedisService.get = jest.fn((request, redisKey) => {
+    const defaultMocks = _getDefaultMocks(itemType, includeOptionalItemDetails)
     const mockDataMap = {
+      ...defaultMocks,
       [RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT]: itemType,
       [RedisKeys.DESCRIBE_THE_ITEM]: includeOptionalItemDetails
         ? mockItemDescription
@@ -1414,7 +1435,9 @@ const _createMocksForSaleIntentionSummary = (itemType,
   includeOptionalItemDetails = true, ownedByApplicant = true) => {
   TestHelper.createMocks()
   RedisService.get = jest.fn((request, redisKey) => {
+    const defaultMocks = _getDefaultMocks(itemType, includeOptionalItemDetails, ownedByApplicant)
     const mockDataMap = {
+      ...defaultMocks,
       [RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT]: itemType,
       [RedisKeys.DESCRIBE_THE_ITEM]: includeOptionalItemDetails
         ? mockItemDescription
@@ -1438,7 +1461,9 @@ const _createMocksForLegalAssertions = (itemType,
   includeOptionalItemDetails = true, ownedByApplicant = true) => {
   TestHelper.createMocks()
   RedisService.get = jest.fn((request, redisKey) => {
+    const defaultMocks = _getDefaultMocks(itemType, includeOptionalItemDetails, ownedByApplicant)
     const mockDataMap = {
+      ...defaultMocks,
       [RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT]: itemType,
       [RedisKeys.DESCRIBE_THE_ITEM]: includeOptionalItemDetails
         ? mockItemDescription
