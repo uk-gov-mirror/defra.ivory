@@ -11,6 +11,7 @@ describe('/what-species-expert route', () => {
   const url = '/what-species-expert'
   const nextUrl = '/what-type-of-item-is-it'
   const nextUrlNotSure = '/option-to-proceed'
+  const nextUrlNoneOfThese = '/eligibility-checker/do-not-need-service'
 
   const elementIds = {
     pageTitle: 'pageTitle',
@@ -219,7 +220,7 @@ describe('/what-species-expert route', () => {
         )
       })
 
-      it('should store the value in Redis and progress to the next route when the fifth option has been selected', async () => {
+      it('should store the value in Redis and progress to the next route when the sixth option has been selected', async () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
@@ -228,12 +229,21 @@ describe('/what-species-expert route', () => {
         )
       })
 
-      it('should store the value in Redis and progress to the next route when the fifth option has been selected', async () => {
+      it('should store the value in Redis and progress to the next route when the seventh option has been selected', async () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
           'I\'m not sure',
           nextUrlNotSure
+        )
+      })
+
+      it('should delete Redis and end the user journey if none are selected', async () => {
+        await _checkSelectedRadioAction(
+          postOptions,
+          server,
+          'None of these',
+          nextUrlNoneOfThese
         )
       })
     })
@@ -276,12 +286,17 @@ const _checkSelectedRadioAction = async (
 
   const response = await TestHelper.submitPostRequest(server, postOptions)
 
-  expect(RedisService.set).toBeCalledTimes(1)
-  expect(RedisService.set).toBeCalledWith(
-    expect.any(Object),
-    redisKey,
-    selectedOption
-  )
+  if (selectedOption === 'None of these') {
+    expect(RedisService.delete).toBeCalledTimes(1)
+    expect(RedisService.delete).toBeCalledWith(expect.any(Object), redisKey)
+  } else {
+    expect(RedisService.set).toBeCalledTimes(1)
+    expect(RedisService.set).toBeCalledWith(
+      expect.any(Object),
+      redisKey,
+      selectedOption
+    )
+  }
 
   expect(response.headers.location).toEqual(nextUrl)
 }
