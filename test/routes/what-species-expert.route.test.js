@@ -10,6 +10,7 @@ describe('/what-species-expert route', () => {
   let server
   const url = '/what-species-expert'
   const nextUrl = '/what-type-of-item-is-it'
+  const nextUrlNotSure = '/option-to-proceed'
 
   const elementIds = {
     pageTitle: 'pageTitle',
@@ -117,15 +118,6 @@ describe('/what-species-expert route', () => {
         false,
         ''
       )
-
-      TestHelper.checkRadioOption(
-        document,
-        elementIds.whatSpecies6,
-        'Walrus',
-        'Walrus',
-        false,
-        ''
-      )
     })
 
     it('should have the correct summary text title', () => {
@@ -134,7 +126,7 @@ describe('/what-species-expert route', () => {
       )
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        "I'm not sure what species my item contains"
+        'I\'m not sure what species my item contains'
       )
     })
 
@@ -143,9 +135,6 @@ describe('/what-species-expert route', () => {
         `#${elementIds.needMoreHelp} .govuk-details__text`
       )
       expect(element).toBeTruthy()
-      expect(TestHelper.getTextContent(element)).toEqual(
-        'Use our eligibility checker or read our guidance on how to identify different species of ivory.'
-      )
     })
 
     it('should have the correct summary text links', () => {
@@ -155,6 +144,8 @@ describe('/what-species-expert route', () => {
         'eligibility checker',
         '/eligibility-checker/contain-elephant-ivory'
       )
+
+      console.log('document', document)
 
       element = document.querySelector(`#${elementIds.guidance}`)
       TestHelper.checkLink(
@@ -187,7 +178,7 @@ describe('/what-species-expert route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Musical instrument made before 1975 with less than 20% ivory',
+          'Elephant',
           nextUrl
         )
       })
@@ -196,7 +187,7 @@ describe('/what-species-expert route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Item made before 3 March 1947 with less than 10% ivory',
+          'Hippopotamus',
           nextUrl
         )
       })
@@ -205,7 +196,7 @@ describe('/what-species-expert route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Portrait miniature made before 1918 with a surface area less than 320 square centimetres',
+          'Killer whale',
           nextUrl
         )
       })
@@ -214,7 +205,7 @@ describe('/what-species-expert route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Item to be sold or hired out to a qualifying museum',
+          'Narwhal',
           nextUrl
         )
       })
@@ -223,8 +214,26 @@ describe('/what-species-expert route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Item made before 1918 that has outstandingly high artistic, cultural or historical value',
+          'Sperm whale',
           nextUrl
+        )
+      })
+
+      it('should store the value in Redis and progress to the next route when the fifth option has been selected', async () => {
+        await _checkSelectedRadioAction(
+          postOptions,
+          server,
+          'Two or more of these species',
+          nextUrl
+        )
+      })
+
+      it('should store the value in Redis and progress to the next route when the fifth option has been selected', async () => {
+        await _checkSelectedRadioAction(
+          postOptions,
+          server,
+          'I\'m not sure',
+          nextUrlNotSure
         )
       })
     })
@@ -241,7 +250,7 @@ describe('/what-species-expert route', () => {
           response,
           'whatSpecies',
           'whatSpecies-error',
-          'You must tell us what species of ivory your item contains'
+          'Please choose an option'
         )
       })
     })

@@ -14,6 +14,8 @@ const {
 
 const { buildErrorSummary, Validators } = require('../../utils/validation')
 
+const twoOrMoreOption = 'Two or more of these species'
+const notSureOption = 'I\'m not sure'
 const noneOfTheseOption = 'None of these'
 
 const handlers = {
@@ -51,17 +53,40 @@ const handlers = {
       label: context.pageTitle
     })
 
-    if (payload.whatSpecies === noneOfTheseOption) {
-      await RedisService.delete(request, RedisKeys.WHAT_SPECIES)
-      return h.redirect(Paths.DO_NOT_NEED_SERVICE)
-    } else {
+    const speciesItems = _getSpeciesItems()
+
+    // If Two or more option, then continue onto the next question
+    if (speciesItems.includes(payload.whatSpecies)) {
       await RedisService.set(
         request,
         RedisKeys.WHAT_SPECIES,
         payload.whatSpecies
       )
-
       return h.redirect(Paths.SELLING_TO_MUSEUM)
+
+    // If not sure display a screen giving the user the option to proceed or end their journey
+    } else if (payload.whatSpecies === twoOrMoreOption) {
+      await RedisService.set(
+        request,
+        RedisKeys.WHAT_SPECIES,
+        payload.whatSpecies
+      )
+      return h.redirect(Paths.SELLING_TO_MUSEUM)
+
+    // If not sure display a screen giving the user the option to proceed or end their journey
+    } else if (payload.whatSpecies === notSureOption) {
+      await RedisService.set(
+        request,
+        RedisKeys.WHAT_SPECIES,
+        payload.whatSpecies
+      )
+      return h.redirect(Paths.OPTION_TO_PROCEED_ELIGIBILITY)
+
+    // If none of these then end the journey
+    } else {
+      await RedisService.delete(request, RedisKeys.WHAT_SPECIES)
+
+      return h.redirect(Paths.DO_NOT_NEED_SERVICE)
     }
   }
 }
@@ -69,15 +94,20 @@ const handlers = {
 const _getContext = async request => {
   return {
     pageTitle: 'What species of ivory does your item contain?',
+    speciesItems: await _getSpeciesItems(request),
     items: await _getOptions(request),
     guidanceUrl: Urls.GOV_UK_TOP_OF_MAIN
   }
 }
 
+const _getSpeciesItems = () => {
+  return Object.values(Species)
+}
+
 const _getOptions = async request => {
   const whatSpecies = await RedisService.get(request, RedisKeys.WHAT_SPECIES)
 
-  const options = Object.values(Species).map(species => {
+  const speciesOptions = Object.values(Species).map(species => {
     return {
       value: species,
       text: species,
@@ -85,17 +115,28 @@ const _getOptions = async request => {
     }
   })
 
-  // Remove the Elephant option
-  options.shift()
+  const otherOptions = [
+    {
+      divider: 'or'
+    },
+    {
+      value: twoOrMoreOption,
+      text: twoOrMoreOption,
+      checked: whatSpecies === twoOrMoreOption
+    },
+    {
+      value: notSureOption,
+      text: notSureOption,
+      checked: whatSpecies === notSureOption
+    },
+    {
+      value: noneOfTheseOption,
+      text: noneOfTheseOption,
+      checked: whatSpecies === noneOfTheseOption
+    }
+  ]
 
-  options.push({
-    divider: 'or'
-  })
-
-  options.push({
-    value: noneOfTheseOption,
-    text: noneOfTheseOption
-  })
+  const options = [...speciesOptions, ...otherOptions]
 
   return options
 }
@@ -106,7 +147,7 @@ const _validateForm = payload => {
   if (Validators.empty(payload.whatSpecies)) {
     errors.push({
       name: 'whatSpecies',
-      text: 'You must tell us what species of ivory your item contains '
+      text: 'Please choose an option'
     })
   }
 

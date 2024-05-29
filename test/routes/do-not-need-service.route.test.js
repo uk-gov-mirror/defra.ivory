@@ -116,12 +116,6 @@ describe('Eligibility checker - do not need service route', () => {
         )
         expect(element).toBeTruthy()
         expect(TestHelper.getTextContent(element)).toEqual('sperm whale')
-
-        element = document.querySelector(
-          `#${elementIds.speciesList} > li:nth-child(6)`
-        )
-        expect(element).toBeTruthy()
-        expect(TestHelper.getTextContent(element)).toEqual('walrus')
       })
     })
 

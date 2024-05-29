@@ -288,6 +288,8 @@ const Paths = {
   MADE_BEFORE_1975: '/eligibility-checker/made-before-1975',
   MAKE_PAYMENT: '/make-payment',
   OWNER_ADDRESS_CHOOSE: '/user-details/owner/address-choose',
+  OPTION_TO_PROCEED: '/option-to-proceed',
+  OPTION_TO_PROCEED_ELIGIBILITY: '/eligibility-checker/option-to-proceed',
   OWNER_ADDRESS_CONFIRM: '/user-details/owner/address-confirm',
   OWNER_ADDRESS_ENTER: '/user-details/owner/address-enter',
   OWNER_ADDRESS_FIND: '/user-details/owner/address-find',
@@ -367,6 +369,8 @@ const Views = {
   LESS_THAN_320CM_SQUARED: 'eligibility-checker/less-than-320cm-squared',
   MADE_BEFORE_1947: 'eligibility-checker/made-before-1947',
   MADE_BEFORE_1975: 'eligibility-checker/made-before-1975',
+  OPTION_TO_PROCEED: 'option-to-proceed',
+  OPTION_TO_PROCEED_ELIGIBILITY: 'eligibility-checker/option-to-proceed',
   PAGE_NOT_FOUND: 'errors/page-not-found',
   PASS_DATA_TO_PI: 'pass-data-to-pi/application-details',
   PREVIOUS_APPLICATION_NUMBER: 'previous-application-number',
@@ -415,6 +419,7 @@ const RedisKeys = {
   IVORY_AGE: 'ivory-age',
   IVORY_INTEGRAL: 'ivory-integral',
   IVORY_VOLUME: 'ivory-volume',
+  OPTION_TO_PROCEED: 'option-to-proceed',
   OWNED_BY_APPLICANT: 'owned-by-applicant',
   OWNER_ADDRESS_INTERNATIONAL: 'owner.address.international',
   OWNER_ADDRESS: 'owner.address',
@@ -447,8 +452,7 @@ const Species = {
   HIPPOPOTAMUS: 'Hippopotamus',
   KILLER_WHALE: 'Killer whale',
   NARWHAL: 'Narwhal',
-  SPERM_WHALE: 'Sperm whale',
-  WALRUS: 'Walrus'
+  SPERM_WHALE: 'Sperm whale'
 }
 
 const StatusCodes = {
