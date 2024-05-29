@@ -11,6 +11,7 @@ describe('/eligibility-checker/what-species route', () => {
   const url = '/eligibility-checker/what-species'
   const nextUrl = '/eligibility-checker/selling-to-museum'
   const nextUrlNotSure = '/eligibility-checker/option-to-proceed'
+  const nextUrlNoneOfThese = '/eligibility-checker/do-not-need-service'
 
   const elementIds = {
     pageTitle: 'pageTitle',
@@ -251,6 +252,15 @@ describe('/eligibility-checker/what-species route', () => {
       })
     })
 
+    it('should delete Redis and end the user journey if none are selected', async () => {
+      await _checkSelectedRadioAction(
+        postOptions,
+        server,
+        'None of these',
+        nextUrlNoneOfThese
+      )
+    })
+
     describe('Failure', () => {
       it('should display a validation error message if the user does not select an item', async () => {
         postOptions.payload.whatSpecies = ''
@@ -289,12 +299,17 @@ const _checkSelectedRadioAction = async (
 
   const response = await TestHelper.submitPostRequest(server, postOptions)
 
-  expect(RedisService.set).toBeCalledTimes(1)
-  expect(RedisService.set).toBeCalledWith(
-    expect.any(Object),
-    redisKey,
-    selectedOption
-  )
+  if (selectedOption === 'None of these') {
+    expect(RedisService.delete).toBeCalledTimes(1)
+    expect(RedisService.delete).toBeCalledWith(expect.any(Object), redisKey)
+  } else {
+    expect(RedisService.set).toBeCalledTimes(1)
+    expect(RedisService.set).toBeCalledWith(
+      expect.any(Object),
+      redisKey,
+      selectedOption
+    )
+  }
 
   expect(response.headers.location).toEqual(nextUrl)
 }
