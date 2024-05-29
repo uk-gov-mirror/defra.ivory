@@ -3,7 +3,6 @@
 jest.mock('../../server/services/redis.service')
 const RedisService = require('../../server/services/redis.service')
 
-const { Urls } = require('../../server/utils/constants')
 const TestHelper = require('../utils/test-helper')
 
 describe('/option-to-proceed route', () => {
