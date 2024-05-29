@@ -220,12 +220,21 @@ describe('/what-species-expert route', () => {
         )
       })
 
-      it('should store the value in Redis and progress to the next route when the fifth option has been selected', async () => {
+      it('should store the value in Redis and progress to the next route when the sixth option has been selected', async () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
           'Two or more of these species',
           nextUrl
+        )
+      })
+
+      it('should store the value in Redis and progress to the next route when the seventh option has been selected', async () => {
+        await _checkSelectedRadioAction(
+          postOptions,
+          server,
+          'I\'m not sure',
+          nextUrlNotSure
         )
       })
 
