@@ -32,6 +32,8 @@ const handlers = {
     const payload = request.payload
     const errors = _validateForm(payload)
 
+    const BAD_REQUEST = 400;
+
     if (errors.length) {
       AnalyticsService.sendEvent(request, {
         category: Analytics.Category.ERROR,
@@ -44,7 +46,7 @@ const handlers = {
           ...context,
           ...buildErrorSummary(errors)
         })
-        .code(400)
+        .code(BAD_REQUEST);
     }
 
     AnalyticsService.sendEvent(request, {
@@ -61,7 +63,7 @@ const handlers = {
       )
       return h.redirect(Paths.WHAT_TYPE_OF_ITEM_IS_IT)
     } else {
-      await RedisService.delete(request, RedisKeys.OPTION_TO_PROCEED)
+      RedisService.delete(request, RedisKeys.OPTION_TO_PROCEED)
 
       return h.redirect(Paths.DO_NOT_NEED_SERVICE)
     }
