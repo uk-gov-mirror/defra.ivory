@@ -10,12 +10,12 @@ const {
   Views
 } = require('../utils/constants')
 
-const { buildErrorSummary, Validators } = require('../utils/validation')
+const { buildErrorSummary } = require('../utils/validation')
 
 const {
   proceedWithRegistration,
-  _getContext, 
-  _validateForm 
+  _getContext,
+  _validateForm
 } = require('./common/option-to-proceed')
 
 const handlers = {
