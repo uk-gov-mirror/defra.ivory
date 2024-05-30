@@ -21,28 +21,24 @@
           }
       }) %}
 
-        <p class="govuk-body" id="introPara">Unless your item is to be sold or hired out to a qualifying museum, any replacement ivory must have been taken from the item's ivory type before 1975 and added only for the purpose of restoring the item.</p>
+        <p class="govuk-body" id="helpText">
+          Given that you are not sure whether your item contains ivory do you wish to proceed with registration. You can continue regsitration under the assumption it is likely your item contains ivory.
+        </p>
 
         {{ govukRadios({
-          idPrefix: "whatTypeOfItemIsIt",
-          name: "whatTypeOfItemIsIt",
-          errorMessage: fieldErrors['whatTypeOfItemIsIt'],
+          idPrefix: "optionToProceed",
+          name: "optionToProceed",
+          errorMessage: fieldErrors['optionToProceed'],
           items: items
-        }) }}
-
-        {{ govukDetails({
-          id: "needMoreHelp",
-          summaryText: "I need more help to work this out",
-          html: 'Use our eligibility checker to <a id="eligibilityChecker" href="' + linkUrl + '" class="govuk-link">check if you can sell or hire out your item</a>.'
         }) }}
 
       {% endcall %}
 
       {{ govukButton({
           attributes: {
-            id: "continue"
+            id: "callToAction"
           },
-          text: "Continue"
+          text: "Confirm and submit"
         })
       }}
 

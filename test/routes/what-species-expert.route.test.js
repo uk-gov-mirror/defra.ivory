@@ -3,25 +3,29 @@
 jest.mock('../../server/services/redis.service')
 const RedisService = require('../../server/services/redis.service')
 
+const { Urls } = require('../../server/utils/constants')
 const TestHelper = require('../utils/test-helper')
 
-describe('/what-type-of-item-is-it route', () => {
+describe('/what-species-expert route', () => {
   let server
-  const url = '/what-type-of-item-is-it'
-  const nextUrl = '/can-continue'
-  const nextUrlAlreadyCertified = '/already-certified'
+  const url = '/what-species-expert'
+  const nextUrl = '/what-type-of-item-is-it'
+  const nextUrlNotSure = '/option-to-proceed'
+  const nextUrlNoneOfThese = '/eligibility-checker/do-not-need-service'
 
   const elementIds = {
     pageTitle: 'pageTitle',
     introPara: 'introPara',
-    whatTypeOfItemIsIt: 'whatTypeOfItemIsIt',
-    whatTypeOfItemIsIt2: 'whatTypeOfItemIsIt-2',
-    whatTypeOfItemIsIt3: 'whatTypeOfItemIsIt-3',
-    whatTypeOfItemIsIt4: 'whatTypeOfItemIsIt-4',
-    whatTypeOfItemIsIt5: 'whatTypeOfItemIsIt-5',
-    eligibilityChecker: 'eligibilityChecker',
+    whatSpecies: 'whatSpecies',
+    whatSpecies2: 'whatSpecies-2',
+    whatSpecies3: 'whatSpecies-3',
+    whatSpecies4: 'whatSpecies-4',
+    whatSpecies5: 'whatSpecies-5',
+    whatSpecies6: 'whatSpecies-6',
     needMoreHelp: 'needMoreHelp',
-    continue: 'continue'
+    eligibilityChecker: 'eligibilityChecker',
+    guidance: 'guidance',
+    callToAction: 'callToAction'
   }
 
   let document
@@ -66,60 +70,52 @@ describe('/what-type-of-item-is-it route', () => {
       )
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        'What is your ivory item?'
-      )
-    })
-
-    it('should have the correct introPara', () => {
-      const element = document.querySelector(`#${elementIds.introPara}`)
-      expect(element).toBeTruthy()
-      expect(TestHelper.getTextContent(element)).toEqual(
-        "Unless your item is to be sold or hired out to a qualifying museum, any replacement ivory must have been taken from the item's ivory type before 1975 and added only for the purpose of restoring the item."
+        'What species of ivory does your item contain?'
       )
     })
 
     it('should have the correct radio buttons', () => {
       TestHelper.checkRadioOption(
         document,
-        elementIds.whatTypeOfItemIsIt,
-        'Musical instrument made before 1975 with less than 20% ivory',
-        'Musical instrument made before 1975 with less than 20% ivory',
+        elementIds.whatSpecies,
+        'Elephant',
+        'Elephant',
         false,
         ''
       )
 
       TestHelper.checkRadioOption(
         document,
-        elementIds.whatTypeOfItemIsIt2,
-        'Item made before 3 March 1947 with less than 10% ivory',
-        'Item made before 3 March 1947 with less than 10% ivory',
-        false,
-        'The ivory must be integral to the item.'
-      )
-
-      TestHelper.checkRadioOption(
-        document,
-        elementIds.whatTypeOfItemIsIt3,
-        'Portrait miniature made before 1918 with a surface area of no more than 320 square centimetres',
-        'Portrait miniature made before 1918 with a surface area of no more than 320 square centimetres',
+        elementIds.whatSpecies2,
+        'Hippopotamus',
+        'Hippopotamus',
         false,
         ''
       )
 
       TestHelper.checkRadioOption(
         document,
-        elementIds.whatTypeOfItemIsIt4,
-        'Item to be sold or hired out to a qualifying museum',
-        'Item to be sold or hired out to a qualifying museum',
+        elementIds.whatSpecies3,
+        'Killer whale',
+        'Killer whale',
         false,
-        'This cannot be raw (‘unworked’) ivory. You don’t need to tell us if you are a qualifying museum that’s selling or hiring out an ivory item to another qualifying museum.'
+        ''
       )
 
       TestHelper.checkRadioOption(
         document,
-        elementIds.whatTypeOfItemIsIt5,
-        'Item made before 1918 that has outstandingly high artistic, cultural or historical value',
-        'Item made before 1918 that has outstandingly high artistic, cultural or historical value',
+        elementIds.whatSpecies4,
+        'Narwhal',
+        'Narwhal',
+        false,
+        ''
+      )
+
+      TestHelper.checkRadioOption(
+        document,
+        elementIds.whatSpecies5,
+        'Sperm whale',
+        'Sperm whale',
         false,
         ''
       )
@@ -131,7 +127,7 @@ describe('/what-type-of-item-is-it route', () => {
       )
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        'I need more help to work this out'
+        'I\'m not sure what species my item contains'
       )
     })
 
@@ -140,26 +136,30 @@ describe('/what-type-of-item-is-it route', () => {
         `#${elementIds.needMoreHelp} .govuk-details__text`
       )
       expect(element).toBeTruthy()
-      expect(TestHelper.getTextContent(element)).toEqual(
-        'Use our eligibility checker to check if you can sell or hire out your item.'
-      )
     })
 
-    it('should have the correct summary text link', () => {
-      const element = document.querySelector(
-        `#${elementIds.eligibilityChecker}`
-      )
+    it('should have the correct summary text links', () => {
+      let element = document.querySelector(`#${elementIds.eligibilityChecker}`)
       TestHelper.checkLink(
         element,
-        'check if you can sell or hire out your item',
+        'eligibility checker',
         '/eligibility-checker/contain-elephant-ivory'
+      )
+
+      console.log('document', document)
+
+      element = document.querySelector(`#${elementIds.guidance}`)
+      TestHelper.checkLink(
+        element,
+        'read our guidance',
+        Urls.GOV_UK_TOP_OF_MAIN
       )
     })
 
     it('should have the correct Call to Action button', () => {
-      const element = document.querySelector(`#${elementIds.continue}`)
+      const element = document.querySelector(`#${elementIds.callToAction}`)
       expect(element).toBeTruthy()
-      expect(TestHelper.getTextContent(element)).toEqual('Continue')
+      expect(TestHelper.getTextContent(element)).toEqual('Confirm and submit')
     })
   })
 
@@ -179,7 +179,7 @@ describe('/what-type-of-item-is-it route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Musical instrument made before 1975 with less than 20% ivory',
+          'Elephant',
           nextUrl
         )
       })
@@ -188,7 +188,7 @@ describe('/what-type-of-item-is-it route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Item made before 3 March 1947 with less than 10% ivory',
+          'Hippopotamus',
           nextUrl
         )
       })
@@ -197,7 +197,7 @@ describe('/what-type-of-item-is-it route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Portrait miniature made before 1918 with a surface area of no more than 320 square centimetres',
+          'Killer whale',
           nextUrl
         )
       })
@@ -206,7 +206,7 @@ describe('/what-type-of-item-is-it route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Item to be sold or hired out to a qualifying museum',
+          'Narwhal',
           nextUrl
         )
       })
@@ -215,15 +215,42 @@ describe('/what-type-of-item-is-it route', () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'Item made before 1918 that has outstandingly high artistic, cultural or historical value',
-          nextUrlAlreadyCertified
+          'Sperm whale',
+          nextUrl
+        )
+      })
+
+      it('should store the value in Redis and progress to the next route when the sixth option has been selected', async () => {
+        await _checkSelectedRadioAction(
+          postOptions,
+          server,
+          'Two or more of these species',
+          nextUrl
+        )
+      })
+
+      it('should store the value in Redis and progress to the next route when the seventh option has been selected', async () => {
+        await _checkSelectedRadioAction(
+          postOptions,
+          server,
+          'I\'m not sure',
+          nextUrlNotSure
+        )
+      })
+
+      it('should delete Redis and end the user journey if none are selected', async () => {
+        await _checkSelectedRadioAction(
+          postOptions,
+          server,
+          'None of these',
+          nextUrlNoneOfThese
         )
       })
     })
 
     describe('Failure', () => {
       it('should display a validation error message if the user does not select an item', async () => {
-        postOptions.payload.whatTypeOfItemIsIt = ''
+        postOptions.payload.whatSpecies = ''
         const response = await TestHelper.submitPostRequest(
           server,
           postOptions,
@@ -231,9 +258,9 @@ describe('/what-type-of-item-is-it route', () => {
         )
         await TestHelper.checkValidationError(
           response,
-          'whatTypeOfItemIsIt',
-          'whatTypeOfItemIsIt-error',
-          'Tell us what type of ivory you want to sell or hire out'
+          'whatSpecies',
+          'whatSpecies-error',
+          'Please choose an option'
         )
       })
     })
@@ -242,6 +269,8 @@ describe('/what-type-of-item-is-it route', () => {
 
 const _createMocks = () => {
   TestHelper.createMocks()
+
+  RedisService.get = jest.fn()
 }
 
 const _checkSelectedRadioAction = async (
@@ -250,19 +279,24 @@ const _checkSelectedRadioAction = async (
   selectedOption,
   nextUrl
 ) => {
-  const redisKeyTypeOfItem = 'what-type-of-item-is-it'
-  postOptions.payload.whatTypeOfItemIsIt = selectedOption
+  const redisKey = 'what-species'
+  postOptions.payload.whatSpecies = selectedOption
 
   expect(RedisService.set).toBeCalledTimes(0)
 
   const response = await TestHelper.submitPostRequest(server, postOptions)
 
-  expect(RedisService.set).toBeCalledTimes(1)
-  expect(RedisService.set).toBeCalledWith(
-    expect.any(Object),
-    redisKeyTypeOfItem,
-    selectedOption
-  )
+  if (selectedOption === 'None of these') {
+    expect(RedisService.delete).toBeCalledTimes(1)
+    expect(RedisService.delete).toBeCalledWith(expect.any(Object), redisKey)
+  } else {
+    expect(RedisService.set).toBeCalledTimes(1)
+    expect(RedisService.set).toBeCalledWith(
+      expect.any(Object),
+      redisKey,
+      selectedOption
+    )
+  }
 
   expect(response.headers.location).toEqual(nextUrl)
 }
