@@ -51,15 +51,15 @@ describe('/eligibility-checker/taken-from-species route', () => {
       beforeEach(async () => {
         document = await TestHelper.submitGetRequest(server, getOptions)
       })
-  
+
       it('should have the Beta banner', () => {
         TestHelper.checkBetaBanner(document)
       })
-  
+
       it('should have the Back link', () => {
         TestHelper.checkBackLink(document)
       })
-  
+
       it('should have the correct page heading', () => {
         const element = document.querySelector('.govuk-fieldset__legend')
         expect(element).toBeTruthy()
@@ -67,7 +67,7 @@ describe('/eligibility-checker/taken-from-species route', () => {
           `Was the replacement ivory taken from the ${mockSpecies.toLowerCase()} on or after 1 January 1975?`
         )
       })
-  
+
       it('should have the correct radio buttons', () => {
         TestHelper.checkRadioOption(
           document,
@@ -75,14 +75,14 @@ describe('/eligibility-checker/taken-from-species route', () => {
           'Yes',
           'Yes'
         )
-  
+
         TestHelper.checkRadioOption(
           document,
           elementIds.takenFromSpecies2,
           'No',
           'No'
         )
-  
+
         TestHelper.checkRadioOption(
           document,
           elementIds.takenFromSpecies3,
@@ -90,7 +90,7 @@ describe('/eligibility-checker/taken-from-species route', () => {
           'I don’t know'
         )
       })
-  
+
       it('should have the correct Call to Action button', () => {
         const element = document.querySelector(`#${elementIds.continue}`)
         expect(element).toBeTruthy()
@@ -106,12 +106,12 @@ describe('/eligibility-checker/taken-from-species route', () => {
       beforeEach(async () => {
         document = await TestHelper.submitGetRequest(server, getOptions)
       })
-  
+
       it('should have the correct page heading', () => {
         const element = document.querySelector('.govuk-fieldset__legend')
         expect(element).toBeTruthy()
         expect(TestHelper.getTextContent(element)).toEqual(
-          `Was the replacement ivory taken from the species on or after 1 January 1975?`
+          'Was the replacement ivory taken from the species on or after 1 January 1975?'
         )
       })
     })
@@ -205,7 +205,7 @@ describe('/eligibility-checker/taken-from-species route', () => {
             response,
             'takenFromSpecies',
             'takenFromSpecies-error',
-            `You must tell us whether the replacement ivory was taken from the species on or after 1 January 1975`
+            'You must tell us whether the replacement ivory was taken from the species on or after 1 January 1975'
           )
         })
       })
