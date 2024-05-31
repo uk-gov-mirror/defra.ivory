@@ -13,6 +13,9 @@ const {
 } = require('../../utils/constants')
 const { buildErrorSummary, Validators } = require('../../utils/validation')
 const { getStandardOptions } = require('../../utils/general')
+const {
+  Species
+} = require('../../utils/constants')
 
 const handlers = {
   get: async (request, h) => {
@@ -71,21 +74,32 @@ const handlers = {
 }
 
 const _getContext = async request => {
-  const species = (await RedisHelper.getSpecies(request)).toLowerCase()
+  const speciesValue = (await RedisHelper.getSpecies(request)).toLowerCase()
+  let speciesString = 'species'
+
+  if (Object.values(Species).map(item => item.toLowerCase()).includes(speciesValue)) {
+    speciesString = speciesValue
+  }
 
   return {
-    pageTitle: `Was the replacement ivory taken from the ${species} on or after 1 January 1975?`,
+    pageTitle: `Was the replacement ivory taken from the ${speciesString} on or after 1 January 1975?`,
     items: getStandardOptions(),
-    species
+    species: speciesString
   }
 }
 
 const _validateForm = (payload, context) => {
   const errors = []
   if (Validators.empty(payload.takenFromSpecies)) {
+    let speciesString = 'species'
+
+    if (Object.values(Species).map(item => item.toLowerCase()).includes(context.species)) {
+      speciesString = context.species
+    }
+
     errors.push({
       name: 'takenFromSpecies',
-      text: `You must tell us whether the replacement ivory was taken from the ${context.species} on or after 1 January 1975`
+      text: `You must tell us whether the replacement ivory was taken from the ${speciesString} on or after 1 January 1975`
     })
   }
   return errors
