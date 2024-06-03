@@ -33,10 +33,6 @@ describe('/eligibility-checker/taken-from-species route', () => {
     await server.stop()
   })
 
-  beforeEach(() => {
-    _createMocks()
-  })
-
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -47,53 +43,77 @@ describe('/eligibility-checker/taken-from-species route', () => {
       url
     }
 
-    beforeEach(async () => {
-      document = await TestHelper.submitGetRequest(server, getOptions)
+    describe('When specific species has been selected', () => {
+      beforeEach(() => {
+        _createMocksSpecificSpecies()
+      })
+
+      beforeEach(async () => {
+        document = await TestHelper.submitGetRequest(server, getOptions)
+      })
+
+      it('should have the Beta banner', () => {
+        TestHelper.checkBetaBanner(document)
+      })
+
+      it('should have the Back link', () => {
+        TestHelper.checkBackLink(document)
+      })
+
+      it('should have the correct page heading', () => {
+        const element = document.querySelector('.govuk-fieldset__legend')
+        expect(element).toBeTruthy()
+        expect(TestHelper.getTextContent(element)).toEqual(
+          `Was the replacement ivory taken from the ${mockSpecies.toLowerCase()} on or after 1 January 1975?`
+        )
+      })
+
+      it('should have the correct radio buttons', () => {
+        TestHelper.checkRadioOption(
+          document,
+          elementIds.takenFromSpecies,
+          'Yes',
+          'Yes'
+        )
+
+        TestHelper.checkRadioOption(
+          document,
+          elementIds.takenFromSpecies2,
+          'No',
+          'No'
+        )
+
+        TestHelper.checkRadioOption(
+          document,
+          elementIds.takenFromSpecies3,
+          'I don’t know',
+          'I don’t know'
+        )
+      })
+
+      it('should have the correct Call to Action button', () => {
+        const element = document.querySelector(`#${elementIds.continue}`)
+        expect(element).toBeTruthy()
+        expect(TestHelper.getTextContent(element)).toEqual('Continue')
+      })
     })
 
-    it('should have the Beta banner', () => {
-      TestHelper.checkBetaBanner(document)
-    })
+    describe('When two or more species or I\'m not sure selected', () => {
+      beforeEach(() => {
+        _createMocksTwoOrMore()
+      })
 
-    it('should have the Back link', () => {
-      TestHelper.checkBackLink(document)
-    })
+      beforeEach(async () => {
+        document = await TestHelper.submitGetRequest(server, getOptions)
+      })
 
-    it('should have the correct page heading', () => {
-      const element = document.querySelector('.govuk-fieldset__legend')
-      expect(element).toBeTruthy()
-      expect(TestHelper.getTextContent(element)).toEqual(
-        `Was the replacement ivory taken from the ${mockSpecies.toLowerCase()} on or after 1 January 1975?`
-      )
-    })
-
-    it('should have the correct radio buttons', () => {
-      TestHelper.checkRadioOption(
-        document,
-        elementIds.takenFromSpecies,
-        'Yes',
-        'Yes'
-      )
-
-      TestHelper.checkRadioOption(
-        document,
-        elementIds.takenFromSpecies2,
-        'No',
-        'No'
-      )
-
-      TestHelper.checkRadioOption(
-        document,
-        elementIds.takenFromSpecies3,
-        'I don’t know',
-        'I don’t know'
-      )
-    })
-
-    it('should have the correct Call to Action button', () => {
-      const element = document.querySelector(`#${elementIds.continue}`)
-      expect(element).toBeTruthy()
-      expect(TestHelper.getTextContent(element)).toEqual('Continue')
+      it('should have the correct page heading', () => {
+        const element = document.querySelector('.govuk-fieldset__legend')
+        expect(element).toBeTruthy()
+        expect(TestHelper.getTextContent(element)).toEqual(
+          'Was the replacement ivory taken from the species on or after 1 January 1975?'
+        )
+      })
     })
   })
 
@@ -148,19 +168,46 @@ describe('/eligibility-checker/taken-from-species route', () => {
     })
 
     describe('Failure', () => {
-      it('should display a validation error message if the user does not select an item', async () => {
-        postOptions.payload.takenFromSpecies = ''
-        const response = await TestHelper.submitPostRequest(
-          server,
-          postOptions,
-          400
-        )
-        await TestHelper.checkValidationError(
-          response,
-          'takenFromSpecies',
-          'takenFromSpecies-error',
-          `You must tell us whether the replacement ivory was taken from the ${mockSpecies.toLowerCase()} on or after 1 January 1975`
-        )
+      describe('When specific species has been selected', () => {
+        beforeEach(() => {
+          _createMocksSpecificSpecies()
+        })
+
+        it('should display a validation error message if the user does not select an item', async () => {
+          postOptions.payload.takenFromSpecies = ''
+          const response = await TestHelper.submitPostRequest(
+            server,
+            postOptions,
+            400
+          )
+          await TestHelper.checkValidationError(
+            response,
+            'takenFromSpecies',
+            'takenFromSpecies-error',
+            `You must tell us whether the replacement ivory was taken from the ${mockSpecies.toLowerCase()} on or after 1 January 1975`
+          )
+        })
+      })
+
+      describe('When two or more species or I\'m not sure selected', () => {
+        beforeEach(() => {
+          _createMocksTwoOrMore()
+        })
+
+        it('should display a validation error message if the user does not select an item', async () => {
+          postOptions.payload.takenFromSpecies = ''
+          const response = await TestHelper.submitPostRequest(
+            server,
+            postOptions,
+            400
+          )
+          await TestHelper.checkValidationError(
+            response,
+            'takenFromSpecies',
+            'takenFromSpecies-error',
+            'You must tell us whether the replacement ivory was taken from the species on or after 1 January 1975'
+          )
+        })
       })
     })
   })
@@ -168,13 +215,25 @@ describe('/eligibility-checker/taken-from-species route', () => {
 
 const mockSpecies = Species.HIPPOPOTAMUS
 
-const _createMocks = () => {
+const _createMocksSpecificSpecies = () => {
   TestHelper.createMocks()
 
   RedisService.get = jest.fn((request, redisKey) => {
     const mockDataMap = {
       [RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT]: ItemType.HIGH_VALUE,
       [RedisKeys.WHAT_SPECIES]: mockSpecies
+    }
+    return mockDataMap[redisKey]
+  })
+}
+
+const _createMocksTwoOrMore = () => {
+  TestHelper.createMocks()
+
+  RedisService.get = jest.fn((request, redisKey) => {
+    const mockDataMap = {
+      [RedisKeys.WHAT_TYPE_OF_ITEM_IS_IT]: ItemType.HIGH_VALUE,
+      [RedisKeys.WHAT_SPECIES]: 'Two or more of these species'
     }
     return mockDataMap[redisKey]
   })
