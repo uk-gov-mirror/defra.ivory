@@ -191,7 +191,7 @@ const _checkPostAction = async (postOptions, server, nextUrl) => {
   expect(response.headers.location).toEqual(nextUrl)
 }
 
-const species = 'walrus'
+const species = 'elephant'
 const _createMocks = () => {
   TestHelper.createMocks()
 
