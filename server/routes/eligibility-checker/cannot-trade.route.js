@@ -4,7 +4,7 @@ const AnalyticsService = require('../../services/analytics.service')
 const RedisHelper = require('../../services/redis-helper.service')
 
 const { Paths, Views, Urls, Analytics } = require('../../utils/constants')
-const { Species } = require('../../utils/constants')
+const { getSpeciesString } = require('../../utils/general')
 
 const handlers = {
   get: async (request, h) => {
@@ -39,11 +39,8 @@ const _getContext = async request => {
 
   if (referringUrl.includes(Paths.TAKEN_FROM_SPECIES)) {
     const speciesValue = (await RedisHelper.getSpecies(request)).toLowerCase()
-    let speciesString = 'species'
 
-    if (Object.values(Species).map(item => item.toLowerCase()).includes(speciesValue)) {
-      speciesString = speciesValue
-    }
+    const speciesString = getSpeciesString(speciesValue)
 
     return {
       pageTitle,

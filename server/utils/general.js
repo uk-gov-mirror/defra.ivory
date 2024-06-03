@@ -2,7 +2,7 @@
 
 const RandomString = require('randomstring')
 
-const { ItemType, Options } = require('./constants')
+const { ItemType, Options, Species } = require('./constants')
 
 const MUSICAL_PERCENTAGE = 20
 const NON_MUSICAL_PERCENTAGE = 10
@@ -59,6 +59,16 @@ const getStandardOptions = (includeIdk = true) => {
   return items
 }
 
+const getSpeciesString = species => {
+  let speciesString = 'species'
+
+  if (Object.values(Species).map(item => item.toLowerCase()).includes(species)) {
+    speciesString = species
+  }
+
+  return speciesString
+}
+
 const PNG_IMAGE_REGEXP = /^iVBORw0KGgo/g
 
 // Returns a boolean to indicate if the base64 string parameter contains a PNG image.
@@ -87,5 +97,6 @@ module.exports = {
   generateSubmissionReference,
   getIvoryVolumePercentage,
   getStandardOptions,
-  isPngImage
+  isPngImage,
+  getSpeciesString
 }
