@@ -62,6 +62,8 @@ const getStandardOptions = (includeIdk = true) => {
 const getSpeciesString = species => {
   let speciesString = 'species'
 
+  species = species.toLowerCase()
+
   if (Object.values(Species).map(item => item.toLowerCase()).includes(species)) {
     speciesString = species
   }
