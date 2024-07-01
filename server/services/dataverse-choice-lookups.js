@@ -8,7 +8,8 @@ const {
   Intention,
   IvoryIntegralReasons,
   IvoryVolumeReasons,
-  Species
+  Species,
+  SpeciesExtraOptions
 } = require('../utils/constants')
 
 const AgeExemptionReasonLookup = {
@@ -105,7 +106,7 @@ const SpeciesLookup = {
   [Species.KILLER_WHALE]: 881990002,
   [Species.NARWHAL]: 881990003,
   [Species.SPERM_WHALE]: 881990004,
-  [Species.WALRUS]: 881990005
+  [SpeciesExtraOptions.NOT_SURE]: 881990007
 }
 
 const SpeciesReverseLookup = {
@@ -114,7 +115,7 @@ const SpeciesReverseLookup = {
   881990002: Species.KILLER_WHALE,
   881990003: Species.NARWHAL,
   881990004: Species.SPERM_WHALE,
-  881990005: Species.WALRUS
+  881990007: SpeciesExtraOptions.NOT_SURE
 }
 
 const Status = {

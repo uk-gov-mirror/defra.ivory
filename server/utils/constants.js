@@ -437,6 +437,7 @@ const RedisKeys = {
   UPLOAD_DOCUMENT: 'upload-document',
   UPLOAD_PHOTO_ERROR: 'upload-photo.error',
   UPLOAD_PHOTO: 'upload-photo',
+  USE_CHECKER: 'use-checker',
   USED_CHECKER: 'used-checker',
   WHAT_CAPACITY: 'what-capacity',
   WHAT_SPECIES: 'what-species',
@@ -453,6 +454,18 @@ const Species = {
   KILLER_WHALE: 'Killer whale',
   NARWHAL: 'Narwhal',
   SPERM_WHALE: 'Sperm whale'
+}
+
+const SpeciesExtraOptions = {
+  NOT_SURE: 'I know its ivory but I\'m not sure which species'
+}
+
+const SpeciesLowercase = {
+  ELEPHANT: 'elephant',
+  HIPPOPOTAMUS: 'hippopotamus',
+  KILLER_WHALE: 'killer whale',
+  NARWHAL: 'narwhal',
+  SPERM_WHALE: 'sperm whale'
 }
 
 const StatusCodes = {
@@ -505,6 +518,8 @@ module.exports = Object.freeze({
   PaymentResult,
   RedisKeys,
   Species,
+  SpeciesExtraOptions,
+  SpeciesLowercase,
   StatusCodes,
   UploadDocument,
   UploadPhoto,

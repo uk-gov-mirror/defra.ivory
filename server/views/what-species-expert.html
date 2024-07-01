@@ -21,18 +21,30 @@
           }
       }) %}
 
-        {{ govukRadios({
-          idPrefix: "whatSpecies",
-          name: "whatSpecies",
-          errorMessage: fieldErrors['whatSpecies'],
-          items: items
-        }) }}
+      <p class="govuk-body">You can register or apply for an exemption if you know your item is made of or contains banned ivory</p>
 
-        {{ govukDetails({
-          id: "needMoreHelp",
-          summaryText: "I'm not sure what species my item contains",
-          html: 'Use our <a id="eligibilityChecker" href="' + eligibilityCheckerUrl + '" class="govuk-link">eligibility checker</a> or <a id="guidance" href="' + guidanceUrl + '" class="govuk-link">read our guidance</a> on how to identify different species of ivory.'
-        }) }}
+      <p class="govuk-body">Banned ivory species are:</p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        {% for speciesItem in speciesItems %}
+          <li>{{ speciesItem }}</li>
+        {% endfor %}
+      </ul>
+
+      <p class="govuk-body">If you know the item contains ivory, but are not sure which species, you can continue to register or apply for an exemption at your own risk - we'll assume the item contains one or more banned species.</p>
+
+      <p class="govuk-body">Select one of these options to continue:</p>
+
+      {{ govukRadios({
+        idPrefix: "whatSpecies",
+        name: "whatSpecies",
+        errorMessage: fieldErrors['whatSpecies'],
+        items: items
+      }) }}
+
+      <p class="govuk-body">If we later find out you have given wrong or incomplete information, including if the item does not contain ivory, we may cancel your exemption.</p>
+
+      <p class="govuk-body">You could be fined up to £250,000 or face 5 years in prison if you knowingly give false information.</p>
 
       {% endcall %}
 
@@ -40,7 +52,7 @@
           attributes: {
             id: "callToAction"
           },
-          text: "Confirm and submit"
+          text: "Continue"
         })
       }}
 

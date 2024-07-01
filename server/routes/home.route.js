@@ -12,23 +12,21 @@ const {
 
 const handlers = {
   get: async (request, h) => {
-    const useChecker = request.query.useChecker
-
     const sessionCookie = CookieService.getSessionCookie(request, false)
 
     if (sessionCookie) {
-      RedisService.deleteSessionData(request)
+      await RedisService.deleteSessionData(request)
     }
     _setCookieSessionId(h)
 
-    return useChecker
-      ? h.redirect(Paths.CONTAIN_ELEPHANT_IVORY)
-      : h.redirect(Paths.HOW_CERTAIN)
+    const redirectUrl = Paths.WHAT_SPECIES_EXPERT + (request.query.useChecker ? '?useChecker=true' : '')
+
+    return h.redirect(redirectUrl)
   }
 }
 
-const _setCookieSessionId = h => {
-  h.state(DEFRA_IVORY_SESSION_KEY, uuidv4())
+const _setCookieSessionId = async h => {
+  await h.state(DEFRA_IVORY_SESSION_KEY, uuidv4())
 }
 
 module.exports = [
