@@ -3,15 +3,13 @@
 jest.mock('../../server/services/redis.service')
 const RedisService = require('../../server/services/redis.service')
 
-const { Urls } = require('../../server/utils/constants')
 const TestHelper = require('../utils/test-helper')
 
 describe('/what-species-expert route', () => {
   let server
   const url = '/what-species-expert'
-  const nextUrl = '/what-type-of-item-is-it'
+  const nextUrl = '/eligibility-checker/how-certain'
   const nextUrlNotSure = '/option-to-proceed'
-  const nextUrlNoneOfThese = '/eligibility-checker/do-not-need-service'
 
   const elementIds = {
     pageTitle: 'pageTitle',
@@ -70,7 +68,7 @@ describe('/what-species-expert route', () => {
       )
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        'What species of ivory does your item contain?'
+        'Does your item contain banned ivory?'
       )
     })
 
@@ -119,47 +117,6 @@ describe('/what-species-expert route', () => {
         false,
         ''
       )
-    })
-
-    it('should have the correct summary text title', () => {
-      const element = document.querySelector(
-        `#${elementIds.needMoreHelp} .govuk-details__summary-text`
-      )
-      expect(element).toBeTruthy()
-      expect(TestHelper.getTextContent(element)).toEqual(
-        'I\'m not sure what species my item contains'
-      )
-    })
-
-    it('should have the correct summary text details', () => {
-      const element = document.querySelector(
-        `#${elementIds.needMoreHelp} .govuk-details__text`
-      )
-      expect(element).toBeTruthy()
-    })
-
-    it('should have the correct summary text links', () => {
-      let element = document.querySelector(`#${elementIds.eligibilityChecker}`)
-      TestHelper.checkLink(
-        element,
-        'eligibility checker',
-        '/eligibility-checker/contain-elephant-ivory'
-      )
-
-      console.log('document', document)
-
-      element = document.querySelector(`#${elementIds.guidance}`)
-      TestHelper.checkLink(
-        element,
-        'read our guidance',
-        Urls.GOV_UK_TOP_OF_MAIN
-      )
-    })
-
-    it('should have the correct Call to Action button', () => {
-      const element = document.querySelector(`#${elementIds.callToAction}`)
-      expect(element).toBeTruthy()
-      expect(TestHelper.getTextContent(element)).toEqual('Confirm and submit')
     })
   })
 
@@ -220,30 +177,12 @@ describe('/what-species-expert route', () => {
         )
       })
 
-      it('should store the value in Redis and progress to the next route when the sixth option has been selected', async () => {
-        await _checkSelectedRadioAction(
-          postOptions,
-          server,
-          'Two or more of these species',
-          nextUrl
-        )
-      })
-
       it('should store the value in Redis and progress to the next route when the seventh option has been selected', async () => {
         await _checkSelectedRadioAction(
           postOptions,
           server,
-          'I\'m not sure',
+          'I know its ivory but I\'m not sure which species',
           nextUrlNotSure
-        )
-      })
-
-      it('should delete Redis and end the user journey if none are selected', async () => {
-        await _checkSelectedRadioAction(
-          postOptions,
-          server,
-          'None of these',
-          nextUrlNoneOfThese
         )
       })
     })
@@ -286,17 +225,12 @@ const _checkSelectedRadioAction = async (
 
   const response = await TestHelper.submitPostRequest(server, postOptions)
 
-  if (selectedOption === 'None of these') {
-    expect(RedisService.delete).toBeCalledTimes(1)
-    expect(RedisService.delete).toBeCalledWith(expect.any(Object), redisKey)
-  } else {
-    expect(RedisService.set).toBeCalledTimes(1)
-    expect(RedisService.set).toBeCalledWith(
-      expect.any(Object),
-      redisKey,
-      selectedOption
-    )
-  }
+  expect(RedisService.set).toBeCalledTimes(1)
+  expect(RedisService.set).toBeCalledWith(
+    expect.any(Object),
+    redisKey,
+    selectedOption
+  )
 
   expect(response.headers.location).toEqual(nextUrl)
 }

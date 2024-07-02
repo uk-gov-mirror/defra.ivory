@@ -12,8 +12,8 @@ const { RedisKeys } = require('../../../server/utils/constants')
 describe('/eligibility-checker/how-certain route', () => {
   let server
   const url = '/eligibility-checker/how-certain'
-  const nextUrlWhatSpeciesExpert = '/what-species-expert'
-  const nextUrlWhatSpecies = '/eligibility-checker/what-species'
+  const nextUrlWhatSpeciesExpert = '/eligibility-checker/selling-to-museum'
+  const nextUrlWhatSpecies = '/eligibility-checker/selling-to-museum'
 
   const elementIds = {
     help1: 'help1',
@@ -64,7 +64,7 @@ describe('/eligibility-checker/how-certain route', () => {
       const element = document.querySelector('.govuk-fieldset__legend')
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        'How certain are you that your item will qualify for exemption from the ban on dealing in ivory?'
+        'Is your item eligible for an exemption?'
       )
     })
 
@@ -80,7 +80,7 @@ describe('/eligibility-checker/how-certain route', () => {
       const element = document.querySelector(`#${elementIds.help1}`)
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        'To use this service, you must be completely certain.'
+        'If you know your item\'s eligible you can continue to either:'
       )
     })
 
@@ -88,7 +88,7 @@ describe('/eligibility-checker/how-certain route', () => {
       const element = document.querySelector(`#${elementIds.help2}`)
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        'If you’re still unsure, we can help you decide.'
+        'If you\'re not sure your item\'s eligible, you can answer a series of questions to help you find out.'
       )
     })
 
@@ -96,15 +96,15 @@ describe('/eligibility-checker/how-certain route', () => {
       TestHelper.checkRadioOption(
         document,
         elementIds.howCertain,
-        'Completely',
-        'Completely'
+        'Yes, I know my item\'s eligible',
+        'Yes, I know my item\'s eligible'
       )
 
       TestHelper.checkRadioOption(
         document,
         elementIds.howCertain2,
-        'I’d like some help to work this out',
-        'I’d like some help to work this out'
+        'I need help to find out',
+        'I need help to find out'
       )
     })
 
@@ -195,12 +195,6 @@ const _checkSelectedRadioAction = async (
     expect.any(Object),
     RedisKeys.SUBMISSION_REFERENCE,
     submissionReference
-  )
-
-  expect(RedisService.set).toBeCalledWith(
-    expect.any(Object),
-    'used-checker',
-    expectedRedisValue
   )
 
   expect(response.headers.location).toEqual(nextUrl)
