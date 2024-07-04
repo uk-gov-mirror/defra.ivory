@@ -457,7 +457,7 @@ const Species = {
 }
 
 const SpeciesExtraOptions = {
-  NOT_SURE: 'I know its ivory but I\'m not sure which species'
+  NOT_SURE: 'I know it\'s ivory but I\'m not sure which species'
 }
 
 const SpeciesLowercase = {
