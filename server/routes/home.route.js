@@ -25,8 +25,8 @@ const handlers = {
   }
 }
 
-const _setCookieSessionId = async h => {
-  await h.state(DEFRA_IVORY_SESSION_KEY, uuidv4())
+const _setCookieSessionId = h => {
+  h.state(DEFRA_IVORY_SESSION_KEY, uuidv4())
 }
 
 module.exports = [
