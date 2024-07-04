@@ -8,19 +8,22 @@ const {
   Paths,
   RedisKeys,
   Species,
+  SpeciesExtraOptions,
   Urls,
   Views
 } = require('../utils/constants')
 
 const { buildErrorSummary, Validators } = require('../utils/validation')
 
-const twoOrMoreOption = 'Two or more of these species'
-const notSureOption = 'I\'m not sure'
-const noneOfTheseOption = 'None of these'
-
 const handlers = {
   get: async (request, h) => {
     const context = await _getContext(request)
+
+    const useChecker = request.query.useChecker
+
+    if (useChecker) {
+      await RedisService.set(request, RedisKeys.USE_CHECKER, true)
+    }
 
     return h.view(Views.WHAT_SPECIES_EXPERT, {
       ...context
@@ -62,43 +65,47 @@ const handlers = {
         RedisKeys.WHAT_SPECIES,
         payload.whatSpecies
       )
-      return h.redirect(Paths.WHAT_TYPE_OF_ITEM_IS_IT)
+
+      const useChecker = await getUseChecker(request)
+
+      if (useChecker) {
+        return h.redirect(Paths.SELLING_TO_MUSEUM)
+      } else {
+        return h.redirect(Paths.HOW_CERTAIN)
+      }
 
     // If not sure display a screen giving the user the option to proceed or end their journey
-    } else if (payload.whatSpecies === twoOrMoreOption) {
-      await RedisService.set(
-        request,
-        RedisKeys.WHAT_SPECIES,
-        payload.whatSpecies
-      )
-      return h.redirect(Paths.WHAT_TYPE_OF_ITEM_IS_IT)
-
-    // If not sure display a screen giving the user the option to proceed or end their journey
-    } else if (payload.whatSpecies === notSureOption) {
+    } else {
       await RedisService.set(
         request,
         RedisKeys.WHAT_SPECIES,
         payload.whatSpecies
       )
       return h.redirect(Paths.OPTION_TO_PROCEED)
-
-    // If none of these then end the journey
-    } else {
-      await RedisService.delete(request, RedisKeys.WHAT_SPECIES)
-
-      return h.redirect(Paths.DO_NOT_NEED_SERVICE)
     }
   }
 }
 
 const _getContext = async request => {
   return {
-    pageTitle: 'What species of ivory does your item contain?',
+    pageTitle: 'Does your item contain banned ivory?',
     speciesItems: await _getSpeciesItems(request),
     items: await _getOptions(request),
     eligibilityCheckerUrl: Paths.CONTAIN_ELEPHANT_IVORY,
     guidanceUrl: Urls.GOV_UK_TOP_OF_MAIN
   }
+}
+
+const getUseChecker = async request => {
+  const useChecker = await RedisService.get(request, RedisKeys.USE_CHECKER)
+
+  if (useChecker) {
+    await RedisService.set(request, RedisKeys.USED_CHECKER, true)
+  }
+
+  await RedisService.delete(request, RedisKeys.USE_CHECKER)
+
+  return useChecker
 }
 
 const _getSpeciesItems = () => {
@@ -107,6 +114,9 @@ const _getSpeciesItems = () => {
 
 const _getOptions = async request => {
   const whatSpecies = await RedisService.get(request, RedisKeys.WHAT_SPECIES)
+  const useChecker = await RedisService.get(request, RedisKeys.USE_CHECKER)
+
+  console.log('useChecker', useChecker)
 
   const speciesOptions = Object.values(Species).map(species => {
     return {
@@ -118,22 +128,9 @@ const _getOptions = async request => {
 
   const otherOptions = [
     {
-      divider: 'or'
-    },
-    {
-      value: twoOrMoreOption,
-      text: twoOrMoreOption,
-      checked: whatSpecies === twoOrMoreOption
-    },
-    {
-      value: notSureOption,
-      text: notSureOption,
-      checked: whatSpecies === notSureOption
-    },
-    {
-      value: noneOfTheseOption,
-      text: noneOfTheseOption,
-      checked: whatSpecies === noneOfTheseOption
+      value: SpeciesExtraOptions.NOT_SURE,
+      text: SpeciesExtraOptions.NOT_SURE,
+      checked: whatSpecies === SpeciesExtraOptions.NOT_SURE
     }
   ]
 

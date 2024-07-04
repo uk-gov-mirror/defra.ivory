@@ -2,7 +2,7 @@
 
 const RandomString = require('randomstring')
 
-const { ItemType, Options, Species } = require('./constants')
+const { ItemType, Options, SpeciesLowercase } = require('./constants')
 
 const MUSICAL_PERCENTAGE = 20
 const NON_MUSICAL_PERCENTAGE = 10
@@ -64,7 +64,7 @@ const getSpeciesString = species => {
 
   species = species.toLowerCase()
 
-  if (Object.values(Species).map(item => item.toLowerCase()).includes(species)) {
+  if (Object.values(SpeciesLowercase).includes(species)) {
     speciesString = species
   }
 
