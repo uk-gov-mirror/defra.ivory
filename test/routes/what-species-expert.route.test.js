@@ -157,58 +157,73 @@ describe('/what-species-expert route', () => {
     })
 
     describe('Success', () => {
-      it('should store the value in Redis and progress to the next route when the first option has been selected', async () => {
-        await _checkSelectedRadioAction(
-          postOptions,
-          server,
-          'Elephant',
-          nextUrl
-        )
+      describe('useChecker is set to true', () => {
+        // Mock redis get to return true
+        beforeEach(() => {
+          RedisService.get = jest.fn().mockResolvedValue(true)
+        })
+
+        it('should redirect to SELLING TO MUSEUM page', async () => {
+          postOptions.payload.whatSpecies = 'Elephant'
+          const response = await TestHelper.submitPostRequest(server, postOptions)
+          expect(response.headers.location).toEqual('/eligibility-checker/selling-to-museum')
+        })
       })
 
-      it('should store the value in Redis and progress to the next route when the second option has been selected', async () => {
-        await _checkSelectedRadioAction(
-          postOptions,
-          server,
-          'Hippopotamus',
-          nextUrl
-        )
-      })
+      describe('useChecker is not set', () => {
+        it('should store the value in Redis and progress to the next route when the first option has been selected', async () => {
+          await _checkSelectedRadioAction(
+            postOptions,
+            server,
+            'Elephant',
+            nextUrl
+          )
+        })
 
-      it('should store the value in Redis and progress to the next route when the third option has been selected', async () => {
-        await _checkSelectedRadioAction(
-          postOptions,
-          server,
-          'Killer whale',
-          nextUrl
-        )
-      })
+        it('should store the value in Redis and progress to the next route when the second option has been selected', async () => {
+          await _checkSelectedRadioAction(
+            postOptions,
+            server,
+            'Hippopotamus',
+            nextUrl
+          )
+        })
 
-      it('should store the value in Redis and progress to the next route when the fourth option has been selected', async () => {
-        await _checkSelectedRadioAction(
-          postOptions,
-          server,
-          'Narwhal',
-          nextUrl
-        )
-      })
+        it('should store the value in Redis and progress to the next route when the third option has been selected', async () => {
+          await _checkSelectedRadioAction(
+            postOptions,
+            server,
+            'Killer whale',
+            nextUrl
+          )
+        })
 
-      it('should store the value in Redis and progress to the next route when the fifth option has been selected', async () => {
-        await _checkSelectedRadioAction(
-          postOptions,
-          server,
-          'Sperm whale',
-          nextUrl
-        )
-      })
+        it('should store the value in Redis and progress to the next route when the fourth option has been selected', async () => {
+          await _checkSelectedRadioAction(
+            postOptions,
+            server,
+            'Narwhal',
+            nextUrl
+          )
+        })
 
-      it('should store the value in Redis and progress to the next route when the seventh option has been selected', async () => {
-        await _checkSelectedRadioAction(
-          postOptions,
-          server,
-          'I know its ivory but I\'m not sure which species',
-          nextUrlNotSure
-        )
+        it('should store the value in Redis and progress to the next route when the fifth option has been selected', async () => {
+          await _checkSelectedRadioAction(
+            postOptions,
+            server,
+            'Sperm whale',
+            nextUrl
+          )
+        })
+
+        it('should store the value in Redis and progress to the next route when the seventh option has been selected', async () => {
+          await _checkSelectedRadioAction(
+            postOptions,
+            server,
+            'I know its ivory but I\'m not sure which species',
+            nextUrlNotSure
+          )
+        })
       })
     })
 
