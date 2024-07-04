@@ -220,7 +220,7 @@ describe('/what-species-expert route', () => {
           await _checkSelectedRadioAction(
             postOptions,
             server,
-            'I know its ivory but I\'m not sure which species',
+            'I know it\'s ivory but I\'m not sure which species',
             nextUrlNotSure
           )
         })
