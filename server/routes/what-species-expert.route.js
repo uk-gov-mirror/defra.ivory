@@ -75,7 +75,7 @@ const handlers = {
       }
 
     // If not sure display a screen giving the user the option to proceed or end their journey
-    } else if (payload.whatSpecies === SpeciesExtraOptions.NOT_SURE) {
+    } else {
       await RedisService.set(
         request,
         RedisKeys.WHAT_SPECIES,
