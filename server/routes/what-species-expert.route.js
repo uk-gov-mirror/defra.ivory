@@ -103,7 +103,7 @@ const getUseChecker = async request => {
     await RedisService.set(request, RedisKeys.USED_CHECKER, true)
   }
 
-  await RedisService.delete(request, RedisKeys.USE_CHECKER)
+  RedisService.delete(request, RedisKeys.USE_CHECKER)
 
   return useChecker
 }

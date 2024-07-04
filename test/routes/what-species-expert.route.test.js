@@ -2,6 +2,7 @@
 
 jest.mock('../../server/services/redis.service')
 const RedisService = require('../../server/services/redis.service')
+const { RedisKeys } = require('../../server/utils/constants')
 
 const TestHelper = require('../utils/test-helper')
 
@@ -45,78 +46,102 @@ describe('/what-species-expert route', () => {
   })
 
   describe('GET', () => {
-    const getOptions = {
-      method: 'GET',
-      url
-    }
+    describe('useChecker is set to true', () => {
+      beforeEach(async () => {
+        const getOptions = {
+          method: 'GET',
+          url: `${url}?useChecker=true`
+        }
+        document = await TestHelper.submitGetRequest(server, getOptions)
+      })
 
-    beforeEach(async () => {
-      document = await TestHelper.submitGetRequest(server, getOptions)
+      it('should store the value in Redis', async () => {
+        expect(RedisService.set).toBeCalledTimes(1)
+        expect(RedisService.set).toBeCalledWith(
+          expect.any(Object),
+          RedisKeys.USE_CHECKER,
+          true
+        )
+      })
     })
 
-    it('should have the Beta banner', () => {
-      TestHelper.checkBetaBanner(document)
-    })
+    describe('useChecker is not set', () => {
+      beforeEach(async () => {
+        const getOptions = {
+          method: 'GET',
+          url
+        }
+        document = await TestHelper.submitGetRequest(server, getOptions)
+      })
 
-    it('should have the Back link', () => {
-      TestHelper.checkBackLink(document)
-    })
+      it('should not store the value in Redis', async () => {
+        expect(RedisService.set).toBeCalledTimes(0)
+      })
 
-    it('should have the correct page heading', () => {
-      const element = document.querySelector(
-        `#${elementIds.pageTitle} > legend > h1`
-      )
-      expect(element).toBeTruthy()
-      expect(TestHelper.getTextContent(element)).toEqual(
-        'Does your item contain banned ivory?'
-      )
-    })
+      it('should have the Beta banner', () => {
+        TestHelper.checkBetaBanner(document)
+      })
 
-    it('should have the correct radio buttons', () => {
-      TestHelper.checkRadioOption(
-        document,
-        elementIds.whatSpecies,
-        'Elephant',
-        'Elephant',
-        false,
-        ''
-      )
+      it('should have the Back link', () => {
+        TestHelper.checkBackLink(document)
+      })
 
-      TestHelper.checkRadioOption(
-        document,
-        elementIds.whatSpecies2,
-        'Hippopotamus',
-        'Hippopotamus',
-        false,
-        ''
-      )
+      it('should have the correct page heading', () => {
+        const element = document.querySelector(
+          `#${elementIds.pageTitle} > legend > h1`
+        )
+        expect(element).toBeTruthy()
+        expect(TestHelper.getTextContent(element)).toEqual(
+          'Does your item contain banned ivory?'
+        )
+      })
 
-      TestHelper.checkRadioOption(
-        document,
-        elementIds.whatSpecies3,
-        'Killer whale',
-        'Killer whale',
-        false,
-        ''
-      )
+      it('should have the correct radio buttons', () => {
+        TestHelper.checkRadioOption(
+          document,
+          elementIds.whatSpecies,
+          'Elephant',
+          'Elephant',
+          false,
+          ''
+        )
 
-      TestHelper.checkRadioOption(
-        document,
-        elementIds.whatSpecies4,
-        'Narwhal',
-        'Narwhal',
-        false,
-        ''
-      )
+        TestHelper.checkRadioOption(
+          document,
+          elementIds.whatSpecies2,
+          'Hippopotamus',
+          'Hippopotamus',
+          false,
+          ''
+        )
 
-      TestHelper.checkRadioOption(
-        document,
-        elementIds.whatSpecies5,
-        'Sperm whale',
-        'Sperm whale',
-        false,
-        ''
-      )
+        TestHelper.checkRadioOption(
+          document,
+          elementIds.whatSpecies3,
+          'Killer whale',
+          'Killer whale',
+          false,
+          ''
+        )
+
+        TestHelper.checkRadioOption(
+          document,
+          elementIds.whatSpecies4,
+          'Narwhal',
+          'Narwhal',
+          false,
+          ''
+        )
+
+        TestHelper.checkRadioOption(
+          document,
+          elementIds.whatSpecies5,
+          'Sperm whale',
+          'Sperm whale',
+          false,
+          ''
+        )
+      })
     })
   })
 
