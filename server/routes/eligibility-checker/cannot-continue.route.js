@@ -1,12 +1,9 @@
 'use strict'
 
 const AnalyticsService = require('../../services/analytics.service')
-const RedisService = require('../../services/redis.service')
 
 const {
-  Options,
   Paths,
-  RedisKeys,
   Views,
   Urls,
   Analytics
@@ -41,20 +38,10 @@ const handlers = {
 }
 
 const _getContext = async request => {
-  const containsElephantIvoryIdk =
-    (await RedisService.get(request, RedisKeys.CONTAIN_ELEPHANT_IVORY)) ===
-    Options.I_DONT_KNOW
-
   return {
     pageTitle: 'You cannot continue',
-    helpText1a: `To use this service, you must know for sure whether your item ${
-      containsElephantIvoryIdk
-        ? 'contains elephant ivory.'
-        : 'qualifies for exemption.'
-    }`,
-    helpText1b: containsElephantIvoryIdk
-      ? 'If you’re uncertain about your item and you choose to declare it anyway, we’ll assume it does contain elephant ivory.'
-      : '',
+    helpText1a: 'To use this service, you must know for sure whether your item qualifies for exemption.',
+    helpText1b: 'If you’re uncertain about your item and you choose to declare it anyway, we’ll assume it does contain elephant ivory.',
     callOutText:
       'You may need to get an expert to check it for you, such as an antiques dealer or auctioneer that specialises in ivory.',
     heading2: 'What you can do with this item',

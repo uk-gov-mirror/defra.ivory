@@ -10,7 +10,6 @@ describe('/what-species-expert route', () => {
   let server
   const url = '/what-species-expert'
   const nextUrl = '/eligibility-checker/how-certain'
-  const nextUrlNotSure = '/option-to-proceed'
 
   const elementIds = {
     pageTitle: 'pageTitle',
@@ -221,7 +220,7 @@ describe('/what-species-expert route', () => {
             postOptions,
             server,
             'I know it\'s ivory but I\'m not sure which species',
-            nextUrlNotSure
+            nextUrl
           )
         })
       })

@@ -64,7 +64,7 @@ const _getContext = async request => {
   return {
     pageTitle: 'What is your ivory item?',
     items: await _getOptions(request),
-    linkUrl: Paths.CONTAIN_ELEPHANT_IVORY
+    linkUrl: Paths.SELLING_TO_MUSEUM
   }
 }
 

@@ -43,7 +43,7 @@ const handlers = {
       })
 
       return h
-        .view(Views.WHAT_SPECIES, {
+        .view(Views.WHAT_SPECIES_EXPERT, {
           ...context,
           ...buildErrorSummary(errors)
         })
@@ -56,32 +56,18 @@ const handlers = {
       label: context.pageTitle
     })
 
-    const speciesItems = _getSpeciesItems()
+    await RedisService.set(
+      request,
+      RedisKeys.WHAT_SPECIES,
+      payload.whatSpecies
+    )
 
-    // If Two or more option, then continue onto the next question
-    if (speciesItems.includes(payload.whatSpecies)) {
-      await RedisService.set(
-        request,
-        RedisKeys.WHAT_SPECIES,
-        payload.whatSpecies
-      )
+    const useChecker = await getUseChecker(request)
 
-      const useChecker = await getUseChecker(request)
-
-      if (useChecker) {
-        return h.redirect(Paths.SELLING_TO_MUSEUM)
-      } else {
-        return h.redirect(Paths.HOW_CERTAIN)
-      }
-
-    // If not sure display a screen giving the user the option to proceed or end their journey
+    if (useChecker) {
+      return h.redirect(Paths.SELLING_TO_MUSEUM)
     } else {
-      await RedisService.set(
-        request,
-        RedisKeys.WHAT_SPECIES,
-        payload.whatSpecies
-      )
-      return h.redirect(Paths.OPTION_TO_PROCEED)
+      return h.redirect(Paths.HOW_CERTAIN)
     }
   }
 }
@@ -91,7 +77,6 @@ const _getContext = async request => {
     pageTitle: 'Does your item contain banned ivory?',
     speciesItems: await _getSpeciesItems(request),
     items: await _getOptions(request),
-    eligibilityCheckerUrl: Paths.CONTAIN_ELEPHANT_IVORY,
     guidanceUrl: Urls.GOV_UK_TOP_OF_MAIN
   }
 }
