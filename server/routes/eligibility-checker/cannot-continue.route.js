@@ -37,7 +37,7 @@ const handlers = {
   }
 }
 
-const _getContext = async request => {
+const _getContext = async () => {
   return {
     pageTitle: 'You cannot continue',
     helpText1a: 'To use this service, you must know for sure whether your item qualifies for exemption.',
