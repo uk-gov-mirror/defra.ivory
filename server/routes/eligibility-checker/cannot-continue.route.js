@@ -11,7 +11,7 @@ const {
 
 const handlers = {
   get: async (request, h) => {
-    const context = await _getContext(request)
+    const context = await _getContext()
 
     AnalyticsService.sendEvent(request, {
       category: Analytics.Category.SERVICE_COMPLETE,
