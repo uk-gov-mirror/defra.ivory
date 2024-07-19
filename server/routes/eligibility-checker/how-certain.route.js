@@ -82,7 +82,7 @@ const _getContext = request => {
   const hideBanner = request.state.CookieBanner
   return {
     pageTitle:
-      'Is your item eligible for an exemption?',
+      'Do you know which exemption you want to register or apply for?',
     hideBanner
   }
 }
