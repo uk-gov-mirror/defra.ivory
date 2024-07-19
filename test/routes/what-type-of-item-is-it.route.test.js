@@ -104,7 +104,7 @@ describe('/what-type-of-item-is-it route', () => {
         'Item to be sold or hired out to a qualifying museum',
         'Item to be sold or hired out to a qualifying museum',
         false,
-        'If you’re selling or hiring out items to a qualifying museum your item must be ‘worked’ ivory. This means the ivory has been significantly altered from its natural raw state. For example, it’s been used to make a piece of jewellery or musical instrument.'
+        'If you’re selling or hiring out items to a qualifying museum your item must be ‘worked’ ivory. This means the ivory has been significantly altered from its natural raw state. For example, it’s been used to make a piece of jewellery or musical instrument. You do not need an exemption if you’re a qualifying museum selling or hiring out an item to another qualifying museum.'
       )
 
       TestHelper.checkRadioOption(
