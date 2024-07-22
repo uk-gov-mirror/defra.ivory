@@ -64,7 +64,7 @@ describe('/eligibility-checker/how-certain route', () => {
       const element = document.querySelector('.govuk-fieldset__legend')
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        'Is your item eligible for an exemption?'
+        'Do you know which exemption you want to register or apply for?'
       )
     })
 
@@ -80,7 +80,7 @@ describe('/eligibility-checker/how-certain route', () => {
       const element = document.querySelector(`#${elementIds.help1}`)
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        'If you know your item\'s eligible you can continue to either:'
+        'If you know the exemption you need you can continue to either:'
       )
     })
 
@@ -88,7 +88,7 @@ describe('/eligibility-checker/how-certain route', () => {
       const element = document.querySelector(`#${elementIds.help2}`)
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        'If you\'re not sure your item\'s eligible, you can answer a series of questions to help you find out.'
+        'If you’re not sure which exemption you need, you can answer a series of questions to help you find out.'
       )
     })
 
@@ -96,8 +96,8 @@ describe('/eligibility-checker/how-certain route', () => {
       TestHelper.checkRadioOption(
         document,
         elementIds.howCertain,
-        'Yes, I know my item\'s eligible',
-        'Yes, I know my item\'s eligible'
+        'Yes, I know which exemption I need',
+        'Yes, I know which exemption I need'
       )
 
       TestHelper.checkRadioOption(

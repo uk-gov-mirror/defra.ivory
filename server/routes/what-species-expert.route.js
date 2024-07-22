@@ -74,7 +74,7 @@ const handlers = {
 
 const _getContext = async request => {
   return {
-    pageTitle: 'Does your item contain banned ivory?',
+    pageTitle: 'Does your item contain ivory from a listed species?',
     speciesItems: await _getSpeciesItems(request),
     items: await _getOptions(request),
     guidanceUrl: Urls.GOV_UK_TOP_OF_MAIN

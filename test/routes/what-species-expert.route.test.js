@@ -91,7 +91,7 @@ describe('/what-species-expert route', () => {
         )
         expect(element).toBeTruthy()
         expect(TestHelper.getTextContent(element)).toEqual(
-          'Does your item contain banned ivory?'
+          'Does your item contain ivory from a listed species?'
         )
       })
 
