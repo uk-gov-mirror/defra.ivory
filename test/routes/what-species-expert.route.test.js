@@ -238,7 +238,7 @@ describe('/what-species-expert route', () => {
           response,
           'whatSpecies',
           'whatSpecies-error',
-          'Please choose an option'
+          'Select one of the options to continue.'
         )
       })
     })

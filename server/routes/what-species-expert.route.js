@@ -130,7 +130,7 @@ const _validateForm = payload => {
   if (Validators.empty(payload.whatSpecies)) {
     errors.push({
       name: 'whatSpecies',
-      text: 'Please choose an option'
+      text: 'Select one of the options to continue.'
     })
   }
 
