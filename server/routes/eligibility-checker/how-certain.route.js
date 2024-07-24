@@ -8,7 +8,7 @@ const { buildErrorSummary, Validators } = require('../../utils/validation')
 
 const { generateSubmissionReference } = require('../../utils/general')
 
-const completelyCertain = 'Yes, I know my item\'s eligible'
+const completelyCertain = 'Yes, I know which exemption I need'
 
 const handlers = {
   get: (request, h) => {
