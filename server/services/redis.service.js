@@ -40,10 +40,10 @@ module.exports = class RedisService {
     return client.setex(keyWithSessionId, REDIS_TTL_IN_SECONDS, value)
   }
 
-  static delete (request, key) {
+  static async delete (request, key) {
     const client = request.redis.client
     const keyWithSessionId = `${request.state[DEFRA_IVORY_SESSION_KEY]}.${key}`
-    client.del(keyWithSessionId)
+    return client.del(keyWithSessionId)
   }
 
   static async deleteSessionData (request) {

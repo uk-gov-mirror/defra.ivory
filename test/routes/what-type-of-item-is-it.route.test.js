@@ -70,14 +70,6 @@ describe('/what-type-of-item-is-it route', () => {
       )
     })
 
-    it('should have the correct introPara', () => {
-      const element = document.querySelector(`#${elementIds.introPara}`)
-      expect(element).toBeTruthy()
-      expect(TestHelper.getTextContent(element)).toEqual(
-        'Unless your item is to be sold or hired out to a qualifying museum, any replacement ivory must have been taken from an elephant before 1975 and added only for the purpose of restoring the item.'
-      )
-    })
-
     it('should have the correct radio buttons', () => {
       TestHelper.checkRadioOption(
         document,
@@ -112,7 +104,7 @@ describe('/what-type-of-item-is-it route', () => {
         'Item to be sold or hired out to a qualifying museum',
         'Item to be sold or hired out to a qualifying museum',
         false,
-        'This cannot be raw (‘unworked’) ivory. You don’t need to tell us if you are a qualifying museum that’s selling or hiring out an ivory item to another qualifying museum.'
+        'If you’re selling or hiring out items to a qualifying museum your item must be ‘worked’ ivory. This means the ivory has been significantly altered from its natural raw state. For example, it’s been used to make a piece of jewellery or musical instrument. You do not need an exemption if you’re a qualifying museum selling or hiring out an item to another qualifying museum.'
       )
 
       TestHelper.checkRadioOption(
@@ -152,7 +144,7 @@ describe('/what-type-of-item-is-it route', () => {
       TestHelper.checkLink(
         element,
         'check if you can sell or hire out your item',
-        '/eligibility-checker/contain-elephant-ivory'
+        '/eligibility-checker/selling-to-museum'
       )
     })
 

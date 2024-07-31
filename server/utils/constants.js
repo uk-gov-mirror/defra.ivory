@@ -164,6 +164,7 @@ const DataVerseFieldName = {
   SECTION_10_CASE_ID: 'cre2c_ivorysection10caseid',
   SECTION_2_CASE_ID: 'cre2c_ivorysection2caseid',
   SELLING_ON_BEHALF_OF: 'cre2c_sellingonbehalfof',
+  SPECIES: 'cre2c_species',
   STATUS: 'cre2c_status',
   SUBMISSION_DATE: 'cre2c_submissiondate',
   SUBMISSION_REFERENCE: 'cre2c_submissionreference',
@@ -264,7 +265,6 @@ const Paths = {
   CANNOT_CONTINUE: '/eligibility-checker/cannot-continue',
   CANNOT_TRADE: '/eligibility-checker/cannot-trade',
   CHECK_YOUR_ANSWERS: '/check-your-answers',
-  CONTAIN_ELEPHANT_IVORY: '/eligibility-checker/contain-elephant-ivory',
   COOKIE_POLICY: '/cookie-policy',
   DESCRIBE_THE_ITEM: '/describe-the-item',
   DO_NOT_NEED_SERVICE: '/eligibility-checker/do-not-need-service',
@@ -313,13 +313,14 @@ const Paths = {
   SERVICE_UNAVAILABLE: '/errors/service-unavailable',
   SESSION_TIMED_OUT: '/errors/session-timed-out',
   SHARE_DETAILS_OF_ITEM: '/share-details-of-item',
-  TAKEN_FROM_ELEPHANT: '/eligibility-checker/taken-from-elephant',
+  TAKEN_FROM_SPECIES: '/eligibility-checker/taken-from-species',
   UPLOAD_DOCUMENT: '/upload-document',
   UPLOAD_PHOTO: '/upload-photo',
   UPLOAD_TIMEOUT: '/errors/upload-timeout',
   USE_CHECKER: '/use-checker',
   WHAT_CAPACITY: '/what-capacity',
   WANT_TO_ADD_DOCUMENTS: '/want-to-add-documents',
+  WHAT_SPECIES_EXPERT: '/what-species-expert',
   WHAT_TYPE_OF_ITEM_IS_IT: '/what-type-of-item-is-it',
   WHO_OWNS_ITEM: '/who-owns-the-item',
   WHY_IS_ITEM_RMI: '/why-is-item-rmi',
@@ -344,7 +345,6 @@ const Views = {
   CHECK_YOUR_ANSWERS: 'check-your-answers',
   CONTACT_DETAILS_APPLICANT: 'user-details/applicant/contact-details',
   CONTACT_DETAILS_OWNER: 'user-details/owner/contact-details',
-  CONTAIN_ELEPHANT_IVORY: 'eligibility-checker/contain-elephant-ivory',
   COOKIE_POLICY: 'cookie-policy',
   DESCRIBE_THE_ITEM: 'describe-the-item',
   DO_NOT_NEED_SERVICE: 'eligibility-checker/do-not-need-service',
@@ -379,12 +379,13 @@ const Views = {
   SERVICE_UNAVAILABLE: 'errors/service-unavailable',
   SESSION_TIMED_OUT: 'errors/session-timed-out',
   SHARE_DETAILS_OF_ITEM: 'share-details-of-item',
-  TAKEN_FROM_ELEPHANT: 'eligibility-checker/taken-from-elephant',
+  TAKEN_FROM_SPECIES: 'eligibility-checker/taken-from-species',
   UPLOAD_DOCUMENT: 'upload-document',
   UPLOAD_PHOTO: 'upload-photo',
   UPLOAD_TIMEOUT: 'errors/upload-timeout',
   WANT_TO_ADD_DOCUMENTS: 'want-to-add-documents',
   WHAT_CAPACITY: 'what-capacity',
+  WHAT_SPECIES_EXPERT: 'what-species-expert',
   WHAT_TYPE_OF_ITEM_IS_IT: 'what-type-of-item-is-it',
   WHO_OWNS_ITEM: 'who-owns-the-item',
   WHY_IS_ITEM_RMI: 'why-is-item-rmi',
@@ -404,7 +405,6 @@ const RedisKeys = {
   APPLICANT_CONTACT_DETAILS: 'applicant.contact-details',
   APPLIED_BEFORE: 'applied-before',
   ARE_YOU_A_MUSEUM: 'eligibility-checker.are-you-a-museum',
-  CONTAIN_ELEPHANT_IVORY: 'eligibility-checker.contain-elephant-ivory',
   DESCRIBE_THE_ITEM: 'describe-the-item',
   INTENTION_FOR_ITEM: 'intention-for-item',
   IVORY_AGE: 'ivory-age',
@@ -427,13 +427,35 @@ const RedisKeys = {
   UPLOAD_DOCUMENT: 'upload-document',
   UPLOAD_PHOTO_ERROR: 'upload-photo.error',
   UPLOAD_PHOTO: 'upload-photo',
+  USE_CHECKER: 'use-checker',
   USED_CHECKER: 'used-checker',
   WHAT_CAPACITY: 'what-capacity',
+  WHAT_SPECIES: 'what-species',
   WHAT_TYPE_OF_ITEM_IS_IT: 'what-type-of-item-is-it',
   WHY_IS_ITEM_RMI: 'why-is-item-rmi',
   WORK_FOR_A_BUSINESS: 'work-for-a-business',
   YOUR_DOCUMENTS: 'your-documents',
   YOUR_PHOTOS: 'your-photos'
+}
+
+const Species = {
+  ELEPHANT: 'Elephant',
+  HIPPOPOTAMUS: 'Hippopotamus',
+  KILLER_WHALE: 'Killer whale',
+  NARWHAL: 'Narwhal',
+  SPERM_WHALE: 'Sperm whale'
+}
+
+const SpeciesExtraOptions = {
+  NOT_SURE: 'I know it\'s ivory but I\'m not sure which species'
+}
+
+const SpeciesLowercase = {
+  ELEPHANT: 'elephant',
+  HIPPOPOTAMUS: 'hippopotamus',
+  KILLER_WHALE: 'killer whale',
+  NARWHAL: 'narwhal',
+  SPERM_WHALE: 'sperm whale'
 }
 
 const StatusCodes = {
@@ -485,10 +507,14 @@ module.exports = Object.freeze({
   Paths,
   PaymentResult,
   RedisKeys,
+  Species,
+  SpeciesExtraOptions,
+  SpeciesLowercase,
   StatusCodes,
   UploadDocument,
   UploadPhoto,
   Urls,
   Views,
-  DEFRA_IVORY_SESSION_KEY: 'DefraIvorySession'
+  DEFRA_IVORY_SESSION_KEY: 'DefraIvorySession',
+  SERVICE_NAME: 'Declare ivory you intend to sell or hire out'
 })
