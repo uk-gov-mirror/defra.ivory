@@ -64,7 +64,7 @@ describe('/eligibility-checker/taken-from-species route', () => {
         const element = document.querySelector('.govuk-fieldset__legend')
         expect(element).toBeTruthy()
         expect(TestHelper.getTextContent(element)).toEqual(
-          `Was the replacement ivory taken from the ${mockSpecies.toLowerCase()} on or after 1 January 1975?`
+          'Was the replacement ivory taken from a listed species on or after 1 January 1975?'
         )
       })
 
@@ -111,7 +111,7 @@ describe('/eligibility-checker/taken-from-species route', () => {
         const element = document.querySelector('.govuk-fieldset__legend')
         expect(element).toBeTruthy()
         expect(TestHelper.getTextContent(element)).toEqual(
-          'Was the replacement ivory taken from the species on or after 1 January 1975?'
+          'Was the replacement ivory taken from a listed species on or after 1 January 1975?'
         )
       })
     })
@@ -184,7 +184,7 @@ describe('/eligibility-checker/taken-from-species route', () => {
             response,
             'takenFromSpecies',
             'takenFromSpecies-error',
-            `You must tell us whether the replacement ivory was taken from the ${mockSpecies.toLowerCase()} on or after 1 January 1975`
+            'You must tell us whether the replacement ivory was taken from a listed species on or after 1 January 1975'
           )
         })
       })
@@ -205,7 +205,7 @@ describe('/eligibility-checker/taken-from-species route', () => {
             response,
             'takenFromSpecies',
             'takenFromSpecies-error',
-            'You must tell us whether the replacement ivory was taken from the species on or after 1 January 1975'
+            'You must tell us whether the replacement ivory was taken from a listed species on or after 1 January 1975'
           )
         })
       })
