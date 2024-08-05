@@ -76,7 +76,7 @@ const _getContext = async request => {
   const speciesString = getSpeciesString(speciesValue)
 
   return {
-    pageTitle: `Was the replacement ivory taken from the ${speciesString} on or after 1 January 1975?`,
+    pageTitle: 'Was the replacement ivory taken from a listed species on or after 1 January 1975?',
     items: getStandardOptions(),
     species: speciesString
   }
@@ -85,11 +85,9 @@ const _getContext = async request => {
 const _validateForm = (payload, context) => {
   const errors = []
   if (Validators.empty(payload.takenFromSpecies)) {
-    const speciesString = getSpeciesString(context.species)
-
     errors.push({
       name: 'takenFromSpecies',
-      text: `You must tell us whether the replacement ivory was taken from the ${speciesString} on or after 1 January 1975`
+      text: 'You must tell us whether the replacement ivory was taken from a listed species on or after 1 January 1975'
     })
   }
   return errors
