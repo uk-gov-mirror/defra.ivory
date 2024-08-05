@@ -26,7 +26,7 @@ const handlers = {
   post: async (request, h) => {
     const context = await _getContext(request)
     const payload = request.payload
-    const errors = _validateForm(payload, context)
+    const errors = _validateForm(payload)
 
     if (errors.length) {
       AnalyticsService.sendEvent(request, {
