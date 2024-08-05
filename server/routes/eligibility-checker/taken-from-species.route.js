@@ -82,7 +82,7 @@ const _getContext = async request => {
   }
 }
 
-const _validateForm = (payload, context) => {
+const _validateForm = (payload) => {
   const errors = []
   if (Validators.empty(payload.takenFromSpecies)) {
     errors.push({
