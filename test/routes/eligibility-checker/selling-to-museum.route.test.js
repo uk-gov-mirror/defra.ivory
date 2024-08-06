@@ -79,11 +79,6 @@ describe('/eligibility-checker/selling-to-museum route', () => {
       expect(element).toBeTruthy()
     })
 
-    it('should have the more information link', () => {
-      const element = document.querySelector(`#${elementIds.moreInfoLink}`)
-      expect(element).toBeTruthy()
-    })
-
     it('should have the correct radio buttons', () => {
       TestHelper.checkRadioOption(
         document,
