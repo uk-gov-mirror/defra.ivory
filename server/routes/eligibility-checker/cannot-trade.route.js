@@ -38,7 +38,7 @@ const _getContext = async request => {
   if (referringUrl.includes(Paths.TAKEN_FROM_SPECIES)) {
     return {
       pageTitle,
-      helpText: 'Any replacement ivory that is from a listed species must have been taken from its source before 1 January 1975.'
+      helpText: 'Any replacement ivory in your item must have been taken from a listed species before 1 January 1975'
     }
   } else if (referringUrl.includes(Paths.MADE_BEFORE_1947)) {
     return {

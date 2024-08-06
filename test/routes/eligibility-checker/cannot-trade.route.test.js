@@ -139,7 +139,7 @@ describe('/eligibility-checker/cannot-trade route', () => {
       const element = document.querySelector(`#${elementIds.helpText}`)
       expect(element).toBeTruthy()
       expect(TestHelper.getTextContent(element)).toEqual(
-        'Any replacement ivory that is from a listed species must have been taken from its source before 1 January 1975.'
+        'Any replacement ivory in your item must have been taken from a listed species before 1 January 1975'
       )
     })
   })

@@ -49,24 +49,21 @@ const handlers = {
       label: context.pageTitle
     })
 
-    switch (payload.takenFromSpecies) {
-      case Options.YES:
-        return h.redirect(Paths.CANNOT_TRADE)
-      case Options.NO:
-        RedisService.set(
-          request,
-          RedisKeys.ALREADY_CERTIFIED,
-          JSON.stringify({ alreadyCertified: Options.NO })
-        )
+    if (payload.takenFromSpecies === Options.NO) {
+      RedisService.set(
+        request,
+        RedisKeys.ALREADY_CERTIFIED,
+        JSON.stringify({ alreadyCertified: Options.NO })
+      )
 
-        return h.redirect(
-          (await RedisHelper.isSection2(request))
-            ? Paths.APPLIED_BEFORE
-            : Paths.CAN_CONTINUE
-        )
-      default:
-        return h.redirect(Paths.CANNOT_CONTINUE)
+      return h.redirect(
+        (await RedisHelper.isSection2(request))
+          ? Paths.APPLIED_BEFORE
+          : Paths.CAN_CONTINUE
+      )
     }
+
+    return h.redirect(Paths.CANNOT_TRADE)
   }
 }
 
