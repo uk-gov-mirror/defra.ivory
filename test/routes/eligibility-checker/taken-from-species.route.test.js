@@ -14,7 +14,6 @@ describe('/eligibility-checker/taken-from-species route', () => {
   const nextUrlAppliedBefore = '/applied-before'
   const nextUrlCannotTrade = '/eligibility-checker/cannot-trade'
   const nextUrlCanContinue = '/can-continue'
-  const nextUrlCannotContinue = '/eligibility-checker/cannot-continue'
 
   const elementIds = {
     takenFromSpecies: 'takenFromSpecies',
@@ -162,7 +161,7 @@ describe('/eligibility-checker/taken-from-species route', () => {
           postOptions,
           server,
           'I don’t know',
-          nextUrlCannotContinue
+          nextUrlCannotTrade
         )
       })
     })

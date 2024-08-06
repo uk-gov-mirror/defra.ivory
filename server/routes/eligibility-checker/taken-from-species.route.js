@@ -50,8 +50,6 @@ const handlers = {
     })
 
     switch (payload.takenFromSpecies) {
-      case Options.YES:
-        return h.redirect(Paths.CANNOT_TRADE)
       case Options.NO:
         RedisService.set(
           request,
@@ -65,7 +63,7 @@ const handlers = {
             : Paths.CAN_CONTINUE
         )
       default:
-        return h.redirect(Paths.CANNOT_CONTINUE)
+        return h.redirect(Paths.CANNOT_TRADE)
     }
   }
 }
