@@ -26,7 +26,7 @@ const handlers = {
   post: async (request, h) => {
     const context = await _getContext(request)
     const payload = request.payload
-    const errors = _validateForm(payload, context)
+    const errors = _validateForm(payload)
 
     if (errors.length) {
       AnalyticsService.sendEvent(request, {
@@ -49,24 +49,21 @@ const handlers = {
       label: context.pageTitle
     })
 
-    switch (payload.takenFromSpecies) {
-      case Options.YES:
-        return h.redirect(Paths.CANNOT_TRADE)
-      case Options.NO:
-        RedisService.set(
-          request,
-          RedisKeys.ALREADY_CERTIFIED,
-          JSON.stringify({ alreadyCertified: Options.NO })
-        )
+    if (payload.takenFromSpecies === Options.NO) {
+      RedisService.set(
+        request,
+        RedisKeys.ALREADY_CERTIFIED,
+        JSON.stringify({ alreadyCertified: Options.NO })
+      )
 
-        return h.redirect(
-          (await RedisHelper.isSection2(request))
-            ? Paths.APPLIED_BEFORE
-            : Paths.CAN_CONTINUE
-        )
-      default:
-        return h.redirect(Paths.CANNOT_CONTINUE)
+      return h.redirect(
+        (await RedisHelper.isSection2(request))
+          ? Paths.APPLIED_BEFORE
+          : Paths.CAN_CONTINUE
+      )
     }
+
+    return h.redirect(Paths.CANNOT_TRADE)
   }
 }
 
@@ -76,20 +73,18 @@ const _getContext = async request => {
   const speciesString = getSpeciesString(speciesValue)
 
   return {
-    pageTitle: `Was the replacement ivory taken from the ${speciesString} on or after 1 January 1975?`,
+    pageTitle: 'Was the replacement ivory taken from a listed species on or after 1 January 1975?',
     items: getStandardOptions(),
     species: speciesString
   }
 }
 
-const _validateForm = (payload, context) => {
+const _validateForm = (payload) => {
   const errors = []
   if (Validators.empty(payload.takenFromSpecies)) {
-    const speciesString = getSpeciesString(context.species)
-
     errors.push({
       name: 'takenFromSpecies',
-      text: `You must tell us whether the replacement ivory was taken from the ${speciesString} on or after 1 January 1975`
+      text: 'You must tell us whether the replacement ivory was taken from a listed species on or after 1 January 1975'
     })
   }
   return errors
