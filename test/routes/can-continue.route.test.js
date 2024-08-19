@@ -38,8 +38,6 @@ describe('/can-continue route', () => {
   const section10Description =
     'Musical instrument made before 1975 with less than 20% ivory'
 
-  const SLA = 35
-
   let document
 
   beforeAll(async () => {
@@ -157,7 +155,7 @@ describe('/can-continue route', () => {
           element = document.querySelector(`#${elementIds.step7}`)
           expect(element).toBeTruthy()
           expect(TestHelper.getTextContent(element)).toEqual(
-            `We will aim to respond to your application within ${SLA} working days, if it is going to take longer, we will let you know.`
+            `It may take up to approximately 3 months to assess your application.`
           )
         })
 
@@ -177,7 +175,7 @@ describe('/can-continue route', () => {
           )
           expect(element).toBeTruthy()
           expect(TestHelper.getTextContent(element)).toEqual(
-            `After you’ve paid for your application, it will be sent to an expert for assessment. We'll aim to let you know the outcome of your application within ${SLA} working days, we'll let you know if it is going to take longer. Once we've received this assessment, we'll decide whether to award the item an exemption certificate. If your application is unsuccessful, we will tell you the reasons why. You cannot deal in this item until it has an exemption certificate.`
+            'After you’ve paid for your application it will be reviewed by APHA. If they are content that all the required information has been provided and the item is not one that clearly fails to meet the conditions for this exemption, it will be sent to an expert for assessment. It may take up to approximately 3 months to assess your application. Once we’ve received this assessment, we’ll decide whether to award the item an exemption certificate. If your application is unsuccessful, we will tell you the reasons why. You cannot deal in this item until it has an exemption certificate.'
           )
         })
 
@@ -286,7 +284,7 @@ describe('/can-continue route', () => {
           element = document.querySelector(`#${elementIds.step7}`)
           expect(element).toBeTruthy()
           expect(TestHelper.getTextContent(element)).toEqual(
-            `We will aim to respond to your application within ${SLA} working days, if it is going to take longer, we will let you know.`
+            `It may take up to approximately 3 months to assess your application.`
           )
         })
 
@@ -306,7 +304,7 @@ describe('/can-continue route', () => {
           )
           expect(element).toBeTruthy()
           expect(TestHelper.getTextContent(element)).toEqual(
-            `After you’ve paid for your application, it will be sent to an expert for assessment. We'll aim to let you know the outcome of your application within ${SLA} working days, we'll let you know if it is going to take longer. Once we've received this assessment, we'll decide whether to award the item an exemption certificate. If your application is unsuccessful, we will tell you the reasons why. You cannot deal in this item until it has an exemption certificate.`
+            'After you’ve paid for your application it will be reviewed by APHA. If they are content that all the required information has been provided and the item is not one that clearly fails to meet the conditions for this exemption, it will be sent to an expert for assessment. It may take up to approximately 3 months to assess your application. Once we’ve received this assessment, we’ll decide whether to award the item an exemption certificate. If your application is unsuccessful, we will tell you the reasons why. You cannot deal in this item until it has an exemption certificate.'
           )
         })
 
@@ -410,7 +408,7 @@ describe('/can-continue route', () => {
           element = document.querySelector(`#${elementIds.step7}`)
           expect(element).toBeTruthy()
           expect(TestHelper.getTextContent(element)).toEqual(
-            `We will aim to respond to your application within ${SLA} working days, if it is going to take longer, we will let you know.`
+            'It may take up to approximately 3 months to assess your application.'
           )
         })
 
@@ -430,7 +428,7 @@ describe('/can-continue route', () => {
           )
           expect(element).toBeTruthy()
           expect(TestHelper.getTextContent(element)).toEqual(
-            `After you’ve paid for your application, it will be sent to an expert for assessment. We'll aim to let you know the outcome of your application within ${SLA} working days, we'll let you know if it is going to take longer. Once we've received this assessment, we'll decide whether to award the item an exemption certificate. If your application is unsuccessful, we will tell you the reasons why. You cannot deal in this item until it has an exemption certificate.`
+            'After you’ve paid for your application it will be reviewed by APHA. If they are content that all the required information has been provided and the item is not one that clearly fails to meet the conditions for this exemption, it will be sent to an expert for assessment. It may take up to approximately 3 months to assess your application. Once we’ve received this assessment, we’ll decide whether to award the item an exemption certificate. If your application is unsuccessful, we will tell you the reasons why. You cannot deal in this item until it has an exemption certificate.'
           )
         })
 
@@ -527,7 +525,7 @@ describe('/can-continue route', () => {
           element = document.querySelector(`#${elementIds.step7}`)
           expect(element).toBeTruthy()
           expect(TestHelper.getTextContent(element)).toEqual(
-            `We will aim to respond to your application within ${SLA} working days, if it is going to take longer, we will let you know.`
+            'It may take up to approximately 3 months to assess your application.'
           )
         })
 
@@ -547,7 +545,7 @@ describe('/can-continue route', () => {
           )
           expect(element).toBeTruthy()
           expect(TestHelper.getTextContent(element)).toEqual(
-            `After you’ve paid for your application, it will be sent to an expert for assessment. We'll aim to let you know the outcome of your application within ${SLA} working days, we'll let you know if it is going to take longer. Once we've received this assessment, we'll decide whether to award the item an exemption certificate. If your application is unsuccessful, we will tell you the reasons why. You cannot deal in this item until it has an exemption certificate.`
+            'After you’ve paid for your application it will be reviewed by APHA. If they are content that all the required information has been provided and the item is not one that clearly fails to meet the conditions for this exemption, it will be sent to an expert for assessment. It may take up to approximately 3 months to assess your application. Once we’ve received this assessment, we’ll decide whether to award the item an exemption certificate. If your application is unsuccessful, we will tell you the reasons why. You cannot deal in this item until it has an exemption certificate.'
           )
         })
 
