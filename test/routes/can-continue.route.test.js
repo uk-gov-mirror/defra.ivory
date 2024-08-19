@@ -155,7 +155,7 @@ describe('/can-continue route', () => {
           element = document.querySelector(`#${elementIds.step7}`)
           expect(element).toBeTruthy()
           expect(TestHelper.getTextContent(element)).toEqual(
-            `It may take up to approximately 3 months to assess your application.`
+            'It may take up to approximately 3 months to assess your application.'
           )
         })
 
@@ -284,7 +284,7 @@ describe('/can-continue route', () => {
           element = document.querySelector(`#${elementIds.step7}`)
           expect(element).toBeTruthy()
           expect(TestHelper.getTextContent(element)).toEqual(
-            `It may take up to approximately 3 months to assess your application.`
+            'It may take up to approximately 3 months to assess your application.'
           )
         })
 
