@@ -20,7 +20,6 @@ const {
 } = require('../utils/constants')
 
 const APHA_EMAIL = 'IvoryAct@apha.gov.uk'
-const SLA = 35
 
 const handlers = {
   get: async (request, h) => {
@@ -111,8 +110,7 @@ const _getContext = async (request, itemType, ownedByApplicant) => {
     initialHelpText: _getInitialHelpText(isSection2, isAlreadyCertified),
     nextSteps: _getNextSteps(isSection2, isAlreadyCertified),
     hideBackLink: true,
-    aphaEmail: isSection2 && !isAlreadyCertified ? APHA_EMAIL : null,
-    sla: SLA
+    aphaEmail: isSection2 && !isAlreadyCertified ? APHA_EMAIL : null
   }
 }
 
@@ -158,7 +156,7 @@ const _getNextSteps = (isSection2, isAlreadyCertified) => {
         'Your application will now be sent to an expert for assessment. '
       )
       helpText.push(
-        `We’ll aim to let you know the outcome of your application within ${SLA}  working days, we’ll let you know if it is going to take longer.`
+        'It may take up to approximately 3 months to assess your application.'
       )
       helpText.push(
         'Following advice from the expert, we will determine whether to award the item an exemption certificate. We’ll contact you if we need more information.'
