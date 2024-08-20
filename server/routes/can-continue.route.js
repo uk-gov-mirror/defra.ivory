@@ -13,8 +13,6 @@ const {
   Views
 } = require('../utils/constants')
 
-const SLA = 35
-
 const sessionTimeoutInHours = config.cookieTimeout / 1000 / 3600
 
 const handlers = {
@@ -61,8 +59,7 @@ const _getContext = async request => {
     isRevoked: await RedisHelper.isRevoked(request),
     hasAppliedBefore: await RedisHelper.hasAppliedBefore(request),
     isAlreadyCertified: await RedisHelper.isAlreadyCertified(request),
-    cancelLink: Urls.GOV_UK_TOP_OF_MAIN,
-    sla: SLA
+    cancelLink: Urls.GOV_UK_TOP_OF_MAIN
   }
 
   context.pageTitle = _getPageTitle(context)
@@ -112,7 +109,7 @@ const _getSteps = context => {
       'Confirm the information on the certificate remains accurate and complete.',
     RECEIVE_CONFIRMATION:
       'Receive confirmation you can now sell or hire out your item.',
-    WAIT: `We will aim to respond to your application within ${SLA} working days, if it is going to take longer, we will let you know.`
+    WAIT: 'It may take up to approximately 3 months to assess your application.'
   }
   const steps = []
 

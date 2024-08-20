@@ -35,8 +35,6 @@ describe('/service-complete route', () => {
     feedbackLink: 'feedbackLink'
   }
 
-  const SLA = 35
-
   let document
 
   beforeAll(async () => {
@@ -237,7 +235,7 @@ describe('/service-complete route', () => {
           element = document.querySelector(`#${elementIds.step2}`)
           expect(element).toBeTruthy()
           expect(TestHelper.getTextContent(element)).toEqual(
-            `We’ll aim to let you know the outcome of your application within ${SLA}  working days, we’ll let you know if it is going to take longer.`
+            'It may take up to approximately 3 months to assess your application.'
           )
 
           element = document.querySelector(`#${elementIds.step3}`)
@@ -253,7 +251,7 @@ describe('/service-complete route', () => {
           )
           expect(element).toBeTruthy()
           expect(TestHelper.getTextContent(element)).toEqual(
-            `If you have not heard from us within ${SLA} working days, you can contact us at IvoryAct@apha.gov.uk. Make sure you have your submission reference number, so we can find your details.`
+            'If you have not heard from us within 3 months, you can contact us at IvoryAct@apha.gov.uk. Make sure you have your submission reference number, so we can find your details.'
           )
         })
 
