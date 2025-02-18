@@ -15,6 +15,10 @@ const {
 
 const { buildErrorSummary, Validators } = require('../utils/validation')
 
+const COOKIE_TTL_DAYS = 365 // 1 year, three times out of four
+
+const speciesItems = Object.values(Species)
+
 const handlers = {
   get: async (request, h) => {
     const context = await _getContext(request)
@@ -34,6 +38,17 @@ const handlers = {
     const context = await _getContext(request)
     const payload = request.payload
     const errors = _validateForm(payload)
+
+    if (payload.cookies) {
+      h.state('CookieBanner', 'Hidden', {
+        ttl: 24 * 60 * 60 * 1000 * COOKIE_TTL_DAYS,
+        path: '/'
+      })
+      return h.view(Views.WHAT_SPECIES_EXPERT, {
+        ...context,
+        hideBanner: true
+      })
+    }
 
     if (errors.length) {
       AnalyticsService.sendEvent(request, {
@@ -73,11 +88,13 @@ const handlers = {
 }
 
 const _getContext = async request => {
+  const hideBanner = request.state.CookieBanner
   return {
     pageTitle: 'Does your item contain ivory from a listed species?',
-    speciesItems: await _getSpeciesItems(request),
+    speciesItems,
     items: await _getOptions(request),
-    guidanceUrl: Urls.GOV_UK_TOP_OF_MAIN
+    guidanceUrl: Urls.GOV_UK_TOP_OF_MAIN,
+    hideBanner
   }
 }
 
@@ -91,10 +108,6 @@ const getUseChecker = async request => {
   await RedisService.delete(request, RedisKeys.USE_CHECKER)
 
   return useChecker
-}
-
-const _getSpeciesItems = () => {
-  return Object.values(Species)
 }
 
 const _getOptions = async request => {

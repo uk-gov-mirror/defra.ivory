@@ -1,53 +1,48 @@
 'use strict'
 
-const AdalNode = require('adal-node')
+const msal = require('@azure/msal-node')
 
 const config = require('../utils/config')
 
 module.exports = class ActiveDirectoryAuthService {
   static async getToken () {
-    return new Promise((resolve, reject) => {
-      const authorityHostUrl = config.dataverseAuthorityHostUrl
-      const tenant = config.dataverseTenant
+    // Retaining for backwards compatibility of code, the getToken function gets a token for the Dataverse
+    return this.getTokenForDataverse()
+  }
 
-      const authorityUrl = `${authorityHostUrl}/${tenant}`
+  static async getTokenForDataverse () {
+    return this._getTokenForResource(config.dataverseResource)
+  }
 
-      // Application Id of app registered under AAD
-      const clientId = config.dataverseClientId
+  static async getTokenForAddressLookup () {
+    return this._getTokenForResource(config.addressLookupResource)
+  }
 
-      // Secret generated for app. Read this environment constiable.
-      const clientSecret = config.dataverseClientSecret
+  static async _getTokenForResource (resource) {
+    const msalConfig = {
+      auth: {
+        clientId: config.dataverseClientId,
+        authority: `${config.dataverseAuthorityHostUrl}/${config.dataverseTenant}`,
+        clientSecret: config.dataverseClientSecret
+      }
+    }
 
-      // URI that identifies the resource for which the token is valid
-      const resource = config.dataverseResource
+    const cca = new msal.ConfidentialClientApplication(msalConfig)
 
-      const AuthenticationContext = AdalNode.AuthenticationContext
-      const context = new AuthenticationContext(authorityUrl)
+    const clientCredentialRequest = {
+      scopes: [resource + '/.default']
+    }
 
-      context.acquireTokenWithClientCredentials(
-        resource,
-        clientId,
-        clientSecret,
-        (err, tokenResponse) => {
-          if (err) {
-            console.error(err.message)
-            reject(err)
-          } else {
-            const token = tokenResponse.accessToken
-            if (token) {
-              resolve(token)
-            } else {
-              const error = new Error(
-                `Error obtaining Active Directory auth token: ${JSON.stringify(
-                  tokenResponse
-                )}`
-              )
-              console.error(err.message)
-              reject(error)
-            }
-          }
-        }
-      )
-    })
+    try {
+      const tokenResponse = await cca.acquireTokenByClientCredential(clientCredentialRequest)
+      const token = tokenResponse.accessToken
+      if (!token) {
+        throw new Error(`Error obtaining Active Directory auth token: ${JSON.stringify(tokenResponse)}`)
+      }
+      return token
+    } catch (err) {
+      console.error(err.message)
+      throw err
+    }
   }
 }
