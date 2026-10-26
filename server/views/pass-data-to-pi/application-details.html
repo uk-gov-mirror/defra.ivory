@@ -60,7 +60,7 @@
 
       {% set photoRows = [] %}
       {% for photo in photoSummary %}
-        {% set photoHtml %}<img id="photo{{ loop.index }}" class="govuk-!-padding-bottom-5" src="data:image;base64,{{ photo.file }}" alt="Photo {{ loop.index }}" width="200">{% endset %}
+        {% set photoHtml %}<img id="photo{{ loop.index }}" class="govuk-!-padding-bottom-5" src="data:image;base64,{{ photo.file }}" alt="Uploaded photo {{ loop.index }}" width="200">{% endset %}
         {% set _ = photoRows.push({
           key: { text: "Photo " + loop.index },
           value: { html: photoHtml },

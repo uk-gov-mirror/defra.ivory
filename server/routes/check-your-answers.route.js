@@ -1,6 +1,6 @@
 'use strict'
 
-const path = require('path')
+const path = require('node:path')
 
 const AnalyticsService = require('../services/analytics.service')
 const RedisHelper = require('../services/redis-helper.service')

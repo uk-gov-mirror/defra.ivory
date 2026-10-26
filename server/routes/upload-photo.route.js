@@ -1,8 +1,8 @@
 'use strict'
 
-const fs = require('fs')
+const fs = require('node:fs')
 
-const path = require('path')
+const path = require('node:path')
 const sharp = require('sharp')
 const { v4: uuidv4 } = require('uuid')
 

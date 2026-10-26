@@ -1,6 +1,6 @@
 'use strict'
 
-const path = require('path')
+const path = require('node:path')
 
 const RedisService = require('../services/redis.service')
 const config = require('./config')
@@ -16,7 +16,7 @@ const sanitiseFilename = filename => {
   }
 
   const base = path
-    .basename(filename.replace(/\\/g, '/'))
+    .basename(filename.replaceAll('\\', '/'))
     .replace(/[\u0000-\u001f\u007f]/g, '') // eslint-disable-line no-control-regex
     .replace(/[^\p{L}\p{N}._\-() ]/gu, '_')
     .trim()

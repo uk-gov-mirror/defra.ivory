@@ -25,7 +25,7 @@
 
         {% set rows = [] %}
         {% for photo in photos %}
-          {% set photoHtml %}<img src="data:image/{{ photo.extension }};base64,{{ photo.data }}" alt="Photo {{ loop.index }}" width="200">{% endset %}
+          {% set photoHtml %}<img src="data:image/{{ photo.extension }};base64,{{ photo.data }}" alt="Uploaded photo {{ loop.index }}" width="200">{% endset %}
           {% set _ = rows.push({
             key: { text: "Photo " + loop.index },
             classes: "ivory-summary-list",

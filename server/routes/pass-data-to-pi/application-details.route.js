@@ -113,7 +113,7 @@ const _getExemptionReasonSummary = entity => {
     const reasonText =
       reason === `${AgeExemptionReasonLookup[AgeExemptionReasons.OTHER_REASON]}`
         ? whyAgeExemptOtherReason
-        : AgeExemptionReasonReverseLookup[parseInt(reason)]
+        : AgeExemptionReasonReverseLookup[Number.parseInt(reason)]
 
     return `<li id="ivoryAgeReason${index}">${reasonText}</li>`
   })
