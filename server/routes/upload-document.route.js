@@ -1,7 +1,7 @@
 'use strict'
 
-const fs = require('fs')
-const path = require('path')
+const fs = require('node:fs')
+const path = require('node:path')
 const { PDFDocument } = require('pdf-lib')
 
 const AnalyticsService = require('../services/analytics.service')
@@ -19,7 +19,11 @@ const {
   Views
 } = require('../utils/constants')
 const { buildErrorSummary } = require('../utils/validation')
-const { checkForDuplicates, checkForFileSizeError } = require('../utils/upload')
+const {
+  checkForDuplicates,
+  checkForFileSizeError,
+  sanitiseFilename
+} = require('../utils/upload')
 
 const handlers = {
   get: async (request, h) => {
@@ -52,6 +56,7 @@ const handlers = {
   post: async (request, h) => {
     const context = await _getContext(request)
     const payload = request.payload
+    payload.files.filename = sanitiseFilename(payload.files.filename)
     const filename = payload.files.filename
 
     const uploadData = context.uploadData
@@ -243,8 +248,9 @@ module.exports = [
     handler: handlers.post,
     options: {
       plugins: {
-        // Disinfect disabled on this route as caused an issue with the payload code below.
-        // Note that while the payload isn't being sanitised no text boxes allowing user input should be used on this page.
+        // Disinfect is disabled as it is intended for HTML text, not multipart file metadata.
+        // The filename is instead sanitised in the handler using sanitiseFilename.
+        // No text boxes allowing user input should be used on this page.
         disinfect: false
       },
       payload: {

@@ -92,25 +92,14 @@ const _getDocumentSummary = (entity, key) => {
     }
   }
 
-  uploadDocuments.forEach((uploadDocument, index) => {
-    uploadDocument.row = `<p id="document${index}">${uploadDocument.filename}</p>`
-  })
-
-  return uploadDocuments.map((uploadDocument, index) => {
-    return _getSummaryListRow(
-      `Document ${index + 1}`,
-      uploadDocument.row,
-      _getChangeItems(
-        `${Paths.PASS_DATA_TO_PI_DOCUMENTS}?record_id=${
-          entity[DataVerseFieldName.SECTION_2_CASE_ID]
-        }&dataverseFieldName=${uploadDocument.dataverseFieldName}&filename=${
-          uploadDocument.filename
-        }&key=${key}`,
-        `Document ${index + 1}`
-      ),
-      true
-    )
-  })
+  return uploadDocuments.map(uploadDocument => ({
+    filename: uploadDocument.filename,
+    href: `${Paths.PASS_DATA_TO_PI_DOCUMENTS}?record_id=${
+      entity[DataVerseFieldName.SECTION_2_CASE_ID]
+    }&dataverseFieldName=${uploadDocument.dataverseFieldName}&filename=${
+      uploadDocument.filename
+    }&key=${key}`
+  }))
 }
 
 const _getExemptionReasonSummary = entity => {
@@ -124,7 +113,7 @@ const _getExemptionReasonSummary = entity => {
     const reasonText =
       reason === `${AgeExemptionReasonLookup[AgeExemptionReasons.OTHER_REASON]}`
         ? whyAgeExemptOtherReason
-        : AgeExemptionReasonReverseLookup[parseInt(reason)]
+        : AgeExemptionReasonReverseLookup[Number.parseInt(reason)]
 
     return `<li id="ivoryAgeReason${index}">${reasonText}</li>`
   })
@@ -309,25 +298,10 @@ const _getPhotoSummary = (entity, key) => {
     }
   }
 
-  uploadPhotos.forEach((uploadPhoto, index) => {
-    const imageFile = `data:image;base64,${uploadPhoto.file}`
-
-    uploadPhoto.row = `<img id="photo${index +
-      1}" class="govuk-!-padding-bottom-5" src=${imageFile} alt="Photo ${index +
-      1}" width="200">`
-  })
-
-  return uploadPhotos.map((uploadPhoto, index) => {
-    return _getSummaryListRow(
-      `Photo ${index + 1}`,
-      uploadPhoto.row,
-      _getChangeItems(
-        `${Paths.PASS_DATA_TO_PI_PHOTOS}?record_id=${recordId}&index=${uploadPhoto.index}&key=${key}`,
-        `Photo ${index + 1}`
-      ),
-      true
-    )
-  })
+  return uploadPhotos.map(uploadPhoto => ({
+    file: uploadPhoto.file,
+    href: `${Paths.PASS_DATA_TO_PI_PHOTOS}?record_id=${recordId}&index=${uploadPhoto.index}&key=${key}`
+  }))
 }
 
 const _getSummaryListRow = (key, value, items = null, isHtml = false) => {
@@ -352,17 +326,6 @@ const _getSummaryListRow = (key, value, items = null, isHtml = false) => {
 
   return row
 }
-
-const _getChangeItems = (href, visuallyHiddenText) => [
-  {
-    href,
-    visuallyHiddenText,
-    attributes: {
-      target: '_blank',
-      rel: 'noopener noreferrer'
-    }
-  }
-]
 
 module.exports = [
   {

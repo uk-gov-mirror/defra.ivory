@@ -58,9 +58,26 @@
 
       <h2 id="photosSubHeading" class="govuk-heading-m">Photos of the item</h2>
 
+      {% set photoRows = [] %}
+      {% for photo in photoSummary %}
+        {% set photoHtml %}<img id="photo{{ loop.index }}" class="govuk-!-padding-bottom-5" src="data:image;base64,{{ photo.file }}" alt="Uploaded photo {{ loop.index }}" width="200">{% endset %}
+        {% set _ = photoRows.push({
+          key: { text: "Photo " + loop.index },
+          value: { html: photoHtml },
+          actions: {
+            items: [{
+              href: photo.href,
+              text: "Download",
+              visuallyHiddenText: "Photo " + loop.index,
+              attributes: { target: "_blank", rel: "noopener noreferrer" }
+            }]
+          }
+        }) %}
+      {% endfor %}
+
       {{ govukSummaryList({
         classes: 'govuk-!-margin-bottom-9 ivory-summary-list',
-        rows: photoSummary,
+        rows: photoRows,
         attributes: {
           id: "photoSummary"
         }
@@ -70,9 +87,26 @@
 
         <h2 id="documentsSummaryHeading" class="govuk-heading-m">Supporting evidence</h2>
 
+        {% set documentRows = [] %}
+        {% for document in documentSummary %}
+          {% set documentHtml %}<p id="document{{ loop.index0 }}">{{ document.filename }}</p>{% endset %}
+          {% set _ = documentRows.push({
+            key: { text: "Document " + loop.index },
+            value: { html: documentHtml },
+            actions: {
+              items: [{
+                href: document.href,
+                text: "Download",
+                visuallyHiddenText: "Document " + loop.index,
+                attributes: { target: "_blank", rel: "noopener noreferrer" }
+              }]
+            }
+          }) %}
+        {% endfor %}
+
         {{ govukSummaryList({
           classes: 'govuk-!-margin-bottom-9',
-          rows: documentSummary,
+          rows: documentRows,
           attributes: {
             id: "documentSummary"
           }

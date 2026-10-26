@@ -26,9 +26,15 @@
       {% if not isAlreadyCertified %}
         <h2 id="photosSubHeading" class="govuk-heading-m">Photos of the item</h2>
 
+        {% set photosHtml %}{% for photo in photoSummary.photos %}<img id="photo{{ loop.index0 }}" class="govuk-!-padding-bottom-5" src="data:image/{{ photo.extension }};base64,{{ photo.data }}" alt="Uploaded photo {{ loop.index }}" width="200">{% endfor %}{% endset %}
+
         {{ govukSummaryList({
           classes: 'govuk-!-margin-bottom-9 ivory-summary-list',
-          rows: photoSummary,
+          rows: [{
+            key: { text: "Your photos" },
+            value: { html: photosHtml },
+            actions: { items: photoSummary.changeItems }
+          }],
           attributes: {
             id: "photoSummary"
           }
@@ -63,9 +69,15 @@
       {% if not isAlreadyCertified and documentSummary %}
         <h2 id="documentsSummaryHeading" class="govuk-heading-m">Supporting evidence</h2>
 
+        {% set documentsHtml %}{% for file in documentSummary.files %}<p id="document{{ loop.index0 }}">{{ file }}</p>{% else %}No files added{% endfor %}{% endset %}
+
         {{ govukSummaryList({
           classes: 'govuk-!-margin-bottom-9',
-          rows: documentSummary,
+          rows: [{
+            key: { text: "Your files" },
+            value: { html: documentsHtml },
+            actions: { items: documentSummary.changeItems }
+          }],
           attributes: {
             id: "documentSummary"
           }
