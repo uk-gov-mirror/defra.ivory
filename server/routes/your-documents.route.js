@@ -43,30 +43,8 @@ const _getContext = async request => {
     }
   }
 
-  const rows = uploadData.files.map((file, index) => {
-    return {
-      key: {
-        text: `File ${index + 1}`
-      },
-      classes: 'ivory-summary-list',
-      value: {
-        html: `<p id="filename-${index}">${file}</p>`
-      },
-      actions: {
-        items: [
-          {
-            href: `/remove-document/${index + 1}`,
-            text: 'Remove',
-            visuallyHiddenText: `file ${index + 1}`
-          }
-        ]
-      }
-    }
-  })
-
   return {
     uploadData,
-    rows,
     pageTitle: 'Your supporting evidence',
     addPhotoUrl: Paths.UPLOAD_DOCUMENT,
     maxPhotos: MAX_PHOTOS,

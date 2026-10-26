@@ -23,6 +23,23 @@
 
         <p class="govuk-body" id="helpText">You can add up to {{ maxPhotos }} photos.</p>
 
+        {% set rows = [] %}
+        {% for photo in photos %}
+          {% set photoHtml %}<img src="data:image/{{ photo.extension }};base64,{{ photo.data }}" alt="Photo {{ loop.index }}" width="200">{% endset %}
+          {% set _ = rows.push({
+            key: { text: "Photo " + loop.index },
+            classes: "ivory-summary-list",
+            value: { html: photoHtml },
+            actions: {
+              items: [{
+                href: "/remove-photo/" + loop.index,
+                text: "Remove",
+                visuallyHiddenText: "photo " + loop.index
+              }]
+            }
+          }) %}
+        {% endfor %}
+
         {{ govukSummaryList({
           rows: rows
         }) }}

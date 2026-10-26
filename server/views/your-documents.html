@@ -23,6 +23,23 @@
 
         <p class="govuk-body" id="helpText">You can add up to {{ maxPhotos }} files.</p>
 
+        {% set rows = [] %}
+        {% for file in uploadData.files %}
+          {% set fileHtml %}<p id="filename-{{ loop.index0 }}">{{ file }}</p>{% endset %}
+          {% set _ = rows.push({
+            key: { text: "File " + loop.index },
+            classes: "ivory-summary-list",
+            value: { html: fileHtml },
+            actions: {
+              items: [{
+                href: "/remove-document/" + loop.index,
+                text: "Remove",
+                visuallyHiddenText: "file " + loop.index
+              }]
+            }
+          }) %}
+        {% endfor %}
+
         {{ govukSummaryList({
           rows: rows
         }) }}

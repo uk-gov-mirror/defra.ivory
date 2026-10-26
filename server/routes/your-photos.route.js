@@ -53,32 +53,13 @@ const _getContext = async request => {
     }
   }
 
-  const rows = uploadData.thumbnailData.map((imageThumbnailFile, index) => {
-    const extension = path.extname(uploadData.thumbnails[index]).substring(1)
-    const imageFile = `data:image/${extension};base64,${imageThumbnailFile}`
-
-    return {
-      key: {
-        text: `Photo ${index + 1}`
-      },
-      classes: 'ivory-summary-list',
-      value: {
-        html: `<img src=${imageFile} alt="Photo ${index + 1}" width="200">`
-      },
-      actions: {
-        items: [
-          {
-            href: `/remove-photo/${index + 1}`,
-            text: 'Remove',
-            visuallyHiddenText: `photo ${index + 1}`
-          }
-        ]
-      }
-    }
-  })
+  const photos = uploadData.thumbnailData.map((imageThumbnailFile, index) => ({
+    extension: path.extname(uploadData.thumbnails[index]).substring(1),
+    data: imageThumbnailFile
+  }))
 
   return {
-    rows,
+    photos,
     uploadData,
     pageTitle: 'Your photos',
     addPhotoUrl: Paths.UPLOAD_PHOTO,

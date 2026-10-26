@@ -136,7 +136,7 @@ const _validateForm = (payload, context) => {
       text: 'You must provide the description of item'
     })
   }
-  if (Validators.empty(context.photoSummary[0].value.html)) {
+  if (!context.photoSummary.photos.length) {
     errors.push({
       name: 'photoSummary',
       text: 'You must provide the photos of the item'
@@ -183,20 +183,10 @@ const _getDocumentSummary = async request => {
     }
   }
 
-  const documentRows = uploadDocuments.files.map(
-    (file, index) => `<p id="document${index}">${file}</p>`
-  )
-
-  return [
-    _getSummaryListRow(
-      'Your files',
-      documentRows && documentRows.length
-        ? documentRows.join('')
-        : NO_DOCUMENTS_ADDED,
-      _getChangeItems(Paths.YOUR_DOCUMENTS, CHANGE_LINK_HINT.YourFiles),
-      true
-    )
-  ]
+  return {
+    files: uploadDocuments.files,
+    changeItems: _getChangeItems(Paths.YOUR_DOCUMENTS, CHANGE_LINK_HINT.YourFiles).map(item => ({ ...item, text: 'Change' }))
+  }
 }
 
 const _getExemptionReasonSummary = async (
@@ -880,26 +870,17 @@ const _getPhotoSummary = async request => {
     }
   }
 
-  const imageRows = uploadPhotos.thumbnailData.map(
-    (imageThumbnailFile, index) => {
-      const extension = path
-        .extname(uploadPhotos.thumbnails[index])
-        .substring(1)
-      const imageFile = `data:image/${extension};base64,${imageThumbnailFile}`
-
-      return `<img id="photo${index}" class="govuk-!-padding-bottom-5" src=${imageFile} alt="Photo ${index +
-        1}" width="200">`
-    }
+  const photos = uploadPhotos.thumbnailData.map(
+    (imageThumbnailFile, index) => ({
+      extension: path.extname(uploadPhotos.thumbnails[index]).substring(1),
+      data: imageThumbnailFile
+    })
   )
 
-  return [
-    _getSummaryListRow(
-      'Your photos',
-      imageRows && imageRows.length ? imageRows.join('') : '',
-      _getChangeItems(Paths.YOUR_PHOTOS, CHANGE_LINK_HINT.YourPhotos),
-      true
-    )
-  ]
+  return {
+    photos,
+    changeItems: _getChangeItems(Paths.YOUR_PHOTOS, CHANGE_LINK_HINT.YourPhotos).map(item => ({ ...item, text: 'Change' }))
+  }
 }
 
 const _getSaleIntentionSummary = async request => [
@@ -1010,4 +991,3 @@ const LEGAL_ASSERTIONS = {
 
 const NONE = 'None'
 const NOTHING_ENTERED = 'Nothing entered'
-const NO_DOCUMENTS_ADDED = 'No files added'
